@@ -59,9 +59,9 @@ where it is measured and applied; Input Colour follows the clip's colour-space t
 deterministic, keyframeable and exports as a 33³ `.cube` LUT.
 
 Optional **AI Look** target: when the Higgins Post engine from Background Native (Qwen-Image-Edit-2511 + Lightning)
-and the colour-grade-transfer LoRA are installed, the engine recolours the analysis frame once and the plugin measures
-that instead of the Reference — for references of a different scene. Without an engine the plugin works fully on
-Reference statistics.
+is installed, the engine recolours the analysis frame once and the plugin measures that instead of the Reference — for
+references of a different scene. The installer offers to download the colour-grade-transfer LoRA (236 MB). Without an
+engine the plugin works fully on Reference statistics.
 
 **Download:** see the [Releases](../../releases) page.
 
@@ -73,7 +73,7 @@ Reference statistics.
 ### Models and licences (AI Look only)
 - Qwen-Image-Edit-2511 and Qwen-Image-Lightning — Apache-2.0 (installed by Background Native).
 - QIE-2511-Color-Grade-Transfer-LoRA — ovi054 / piczify.com; no licence stated on the model page, check with the
-  author before commercial use. Not bundled.
+  author before commercial use. Not bundled; the installer downloads it on request.
 
 ## Additive Key Native
 
