@@ -54,9 +54,11 @@ Matches one clip's colour to another — black / white point, tone (luminance cu
 statistics — in pure C++ inside Flame, no models to download. Three stages with their own amounts:
 Levels, Tone (the Front's luminance distribution remapped onto the Reference's) and Covariance
 (Monge-Kantorovich transform fitted in a YCbCr basis, so it matches means and channel relationships without
-rotating hues). Up to 12 frames of each clip are pooled so the match holds over a shot; the Front's matte limits
-where it is measured and applied; Input Colour follows the clip's colour-space tag on Flame 2026.1+. The transform is
-deterministic, keyframeable and exports as a 33³ `.cube` LUT.
+rotating hues). Up to 12 frames of each clip are pooled so the match holds over a shot, or the match follows the
+current frame; Reference Frame locks the reference to one frame, and **Anchor** mode makes a still or paint that already
+matches the plate at that frame follow the plate's lighting over the shot. The Front's matte limits where it is measured
+and applied; Input Colour follows the clip's colour-space tag on Flame 2026.1+. The transform is deterministic,
+keyframeable and exports as a 33³ `.cube` LUT.
 
 Optional **AI Look** target: when the Higgins Post engine from Background Native (Qwen-Image-Edit-2511 + Lightning)
 is installed, the engine recolours the analysis frame once and the plugin measures that instead of the Reference — for
@@ -67,8 +69,8 @@ engine the plugin works fully on Reference statistics.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `ColourMatchNative-Tester-0.1.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `ColourMatchNative-Linux-0.1.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `ColourMatchNative-Tester-0.2.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `ColourMatchNative-Linux-0.2.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 ### Models and licences (AI Look only)
 - Qwen-Image-Edit-2511 and Qwen-Image-Lightning — Apache-2.0 (installed by Background Native).
