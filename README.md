@@ -48,4 +48,50 @@ Python environment.
 - SeedVR2 weights — ByteDance Seed, Apache-2.0 (packaged by numz/SeedVR2_comfyUI); inference code vendored
   from ComfyUI-SeedVR2_VideoUpscaler (Apache-2.0).
 
+## Colour Match Native
+
+Matches one clip's colour to another — black / white point, tone (luminance curve), contrast and colour
+statistics — in pure C++ inside Flame, no models to download. Three stages with their own amounts:
+Levels, Tone (the Front's luminance distribution remapped onto the Reference's) and Covariance
+(Monge-Kantorovich transform fitted in a YCbCr basis, so it matches means and channel relationships without
+rotating hues). Up to 12 frames of each clip are pooled so the match holds over a shot; the Front's matte limits
+where it is measured and applied; Input Colour follows the clip's colour-space tag on Flame 2026.1+. The transform is
+deterministic, keyframeable and exports as a 33³ `.cube` LUT.
+
+Optional **AI Look** target: when the Higgins Post engine from Background Native (Qwen-Image-Edit-2511 + Lightning)
+and the colour-grade-transfer LoRA are installed, the engine recolours the analysis frame once and the plugin measures
+that instead of the Reference — for references of a different scene. Without an engine the plugin works fully on
+Reference statistics.
+
+**Download:** see the [Releases](../../releases) page.
+
+| Build | File | Requirements |
+|---|---|---|
+| macOS | `ColourMatchNative-Tester-0.1.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `ColourMatchNative-Linux-0.1.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+
+### Models and licences (AI Look only)
+- Qwen-Image-Edit-2511 and Qwen-Image-Lightning — Apache-2.0 (installed by Background Native).
+- QIE-2511-Color-Grade-Transfer-LoRA — ovi054 / piczify.com; no licence stated on the model page, check with the
+  author before commercial use. Not bundled.
+
+## Additive Key Native
+
+An additive keyer in the spirit of the crok_additive_key Matchbox, re-implemented in C++ with more control.
+Instead of punching a hole and comping, it adds the background back into the edges, hair and transparency where
+the despill removed the screen colour. Inputs: **Front** (the original screen plate, its matte socket = the key
+matte), **FG Despilled**, **Back** (its matte socket = optional holdout, so a core matte stops the FG being punched
+through in the darks). Two methods — Spill Difference (luminance / max / green / blue difference matte with levels,
+gamma, gain, blur, clamp and an edge-only limit; background prep with blur, saturation, gamma, gain, offset, tint +
+tint mix; Add / Screen / Lighten with RGB gain and mix) and Pixel Spread (screen colour estimated by spreading the
+matte outside inwards, subtracted, with global / darks / highlights restore). Output modes for the comp, the additive
+FG on its own, the added layer, the spill matte and the processed Back. No models, no engine.
+
+**Download:** see the [Releases](../../releases) page.
+
+| Build | File | Requirements |
+|---|---|---|
+| macOS | `AdditiveKeyNative-Tester-0.1.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `AdditiveKeyNative-Linux-0.1.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+
 These are test builds from Higgins Post, provided as-is, no warranty.
