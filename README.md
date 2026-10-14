@@ -95,7 +95,7 @@ FG on its own, the added layer, the spill matte and the processed Back. No model
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `AdditiveKeyNative-Tester-0.1.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `AdditiveKeyNative-Linux-0.1.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `AdditiveKeyNative-Tester-0.2.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `AdditiveKeyNative-Linux-0.2.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 These are test builds from Higgins Post, provided as-is, no warranty.
