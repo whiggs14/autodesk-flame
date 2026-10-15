@@ -113,14 +113,16 @@ point lights bloom into iris-shaped discs. Iris: blades, rounding, angle, anamor
 centre darkening, or your own aperture image, with presets (and Star / Heart). Chroma Warp adds longitudinal and
 lateral colour fringing. Focal Distance animates for rack focus, Pick Focal Distance reads it off the Z at a point in
 the viewer, and Show > Depth draws the focal plane as a line through the shot. Two-plate comp: Front + matte at its Z
-over a Background at its own Z, defocused together as one scene. Inputs: **Front** (+ matte), **Back** (Background),
+over a Background at its own Z, defocused together as one scene. The Front matte is a Flame-style blur mask by default (white = defocus,
+black = untouched), or the foreground alpha for the comp, or — with no Z at all — the blur amount itself (white = full Radius,
+for painted ramps and tilt-shift). Inputs: **Front** (+ matte), **Back** (Background),
 **Input3** Z Depth, **Input4** Back Z Depth, **Input5** Iris image.
 
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `LensBlurNative-Tester-0.5.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `LensBlurNative-Linux-0.5.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `LensBlurNative-Tester-0.6.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `LensBlurNative-Linux-0.6.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 These are test builds from Higgins Post, provided as-is, no warranty.
