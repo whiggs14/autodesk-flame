@@ -55,6 +55,30 @@ Python environment.
 - SeedVR2 weights — ByteDance Seed, Apache-2.0 (packaged by numz/SeedVR2_comfyUI); inference code vendored
   from ComfyUI-SeedVR2_VideoUpscaler (Apache-2.0).
 
+## Depth Native
+
+Depth maps with ByteDance Seed's **Depth Anything 3** (Large: best edges and geometry, relative depth, frames processed in
+overlapping windows so a shot hangs together; Metric: the same in real-world metres) or **Video Depth Anything Small**
+(fast, flicker-free; also the one-click Preview). Press Analyze once — the depth is stored with the node and renders
+instantly, with live Auto Range / Near / Far / Gamma / Invert. A flow-guided Stabilize filter removes the shimmer DA3
+leaves between windows. Input Colour is read from the clip's colour-space tag on Flame 2026.1+. Built to feed
+Lens Blur Native's Input3, but it is a plain grey depth pass (near = black) you can use anywhere.
+
+**Download:** see the [Releases](../../releases) page.
+
+| Build | File | Requirements |
+|---|---|---|
+| macOS | `DepthNative-Tester-0.1.zip` | Apple Silicon Mac, 16 GB minimum (32 GB recommended), Flame 2026/2027 |
+| Linux | `DepthNative-Linux-0.1.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM (16 GB for DA3 at 1008 px), Flame 2027 |
+
+The installer downloads DA3 Large (1.6 GB) and Video Depth Anything Small (0.1 GB); DA3 Metric (1.3 GB) is optional —
+all Apache-2.0, no Hugging Face account needed. Shares the engine folder with Matte LTX Native / Upscale Native if present.
+
+### Models and licences
+- Depth Anything 3 (code, Large and Metric weights) — ByteDance Seed, Apache-2.0.
+- Video Depth Anything (code and Small weights) — Apache-2.0. The Large weights ("Stable" in the Model menu) are
+  CC BY-NC 4.0 and are **not** installed by the kit; selecting that model fetches them on first use, for non-commercial tests only.
+
 ## Colour Match Native
 
 Matches one clip's colour to another — black / white point, tone (luminance curve), contrast and colour
