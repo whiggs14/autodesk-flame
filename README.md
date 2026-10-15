@@ -103,4 +103,24 @@ FG on its own, the added layer, the spill matte and the processed Back. No model
 | macOS | `AdditiveKeyNative-Tester-0.3.zip` | Apple Silicon Mac, Flame 2026/2027 |
 | Linux | `AdditiveKeyNative-Linux-0.3.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
+## Lens Blur Native
+
+Depth-of-field / lens defocus with real bokeh, pure C++ inside Flame (FFT convolution on all cores, no engine). Feed it
+a Z depth from Depth Native or any depth pass. The image is split into depth layers by circle of confusion, each layer
+is convolved with the iris at its own radius and the layers are accumulated near to far, so out-of-focus foreground
+spills over the background and sharp foreground occludes what is behind it; highlights are boosted before the blur so
+point lights bloom into iris-shaped discs. Iris: blades, rounding, angle, anamorphic aspect, soft edge, bright rim,
+centre darkening, or your own aperture image, with presets (and Star / Heart). Chroma Warp adds longitudinal and
+lateral colour fringing. Focal Distance animates for rack focus, Pick Focal Distance reads it off the Z at a point in
+the viewer, and Show > Depth draws the focal plane as a line through the shot. Two-plate comp: Front + matte at its Z
+over a Background at its own Z, defocused together as one scene. Inputs: **Front** (+ matte), **Back** (Background),
+**Input3** Z Depth, **Input4** Back Z Depth, **Input5** Iris image.
+
+**Download:** see the [Releases](../../releases) page.
+
+| Build | File | Requirements |
+|---|---|---|
+| macOS | `LensBlurNative-Tester-0.4.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `LensBlurNative-Linux-0.4.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+
 These are test builds from Higgins Post, provided as-is, no warranty.
