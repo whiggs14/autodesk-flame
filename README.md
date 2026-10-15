@@ -15,8 +15,8 @@ runs on small subjects, and a built-in Track Box tracker drives that box without
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `MatteLTXNative-Tester-0.6.zip` | Apple Silicon Mac, 128 GB recommended (64 GB minimum), Flame 2026/2027 |
-| Linux | `MatteLTXNative-Linux-0.6.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB+ VRAM (60 GB+ runs fully on the GPU), Flame 2027 |
+| macOS | `MatteLTXNative-Tester-0.7.zip` | Apple Silicon Mac, 128 GB recommended (64 GB minimum), Flame 2026/2027 |
+| Linux | `MatteLTXNative-Linux-0.7.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB+ VRAM (60 GB+ runs fully on the GPU), Flame 2027 |
 
 Each zip contains the plugin, the Python engine and an installer; the installer downloads the models
 (~56 GB) under your own Hugging Face account. Read `Read Me First.txt` / `README.txt` inside the zip.
@@ -39,8 +39,8 @@ scene-linear) so log plates are converted for the model and back.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `UpscaleNative-Tester-0.1.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for the 7B models), Flame 2026/2027 |
-| Linux | `UpscaleNative-Linux-0.1.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB+ for 7B), Flame 2027 |
+| macOS | `UpscaleNative-Tester-0.2.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for the 7B models), Flame 2026/2027 |
+| Linux | `UpscaleNative-Linux-0.2.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB+ for 7B), Flame 2027 |
 
 The installer downloads SeedVR2 3B + VAE (7 GB; the 7B models are optional, 16.5 GB each) — Apache-2.0, no
 Hugging Face account needed. If Matte LTX Native is installed, Upscale Native shares its engine folder and
@@ -71,8 +71,8 @@ engine the plugin works fully on Reference statistics.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `ColourMatchNative-Tester-0.3.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `ColourMatchNative-Linux-0.3.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `ColourMatchNative-Tester-0.4.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `ColourMatchNative-Linux-0.4.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 ### Models and licences (AI Look only)
 - Qwen-Image-Edit-2511 and Qwen-Image-Lightning — Apache-2.0 (installed by Background Native).
@@ -95,7 +95,7 @@ FG on its own, the added layer, the spill matte and the processed Back. No model
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `AdditiveKeyNative-Tester-0.2.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `AdditiveKeyNative-Linux-0.2.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `AdditiveKeyNative-Tester-0.3.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `AdditiveKeyNative-Linux-0.3.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 These are test builds from Higgins Post, provided as-is, no warranty.
