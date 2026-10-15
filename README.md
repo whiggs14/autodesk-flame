@@ -76,8 +76,8 @@ all Apache-2.0, no Hugging Face account needed. Shares the engine folder with Ma
 
 ### Models and licences
 - Depth Anything 3 (code, Large and Metric weights) — ByteDance Seed, Apache-2.0.
-- Video Depth Anything (code and Small weights) — Apache-2.0. The Large weights ("Stable" in the Model menu) are
-  CC BY-NC 4.0 and are **not** installed by the kit; selecting that model fetches them on first use, for non-commercial tests only.
+- Video Depth Anything (code and Small weights) — Apache-2.0. (The Large weights are CC BY-NC 4.0 and are not part of
+  the public build.)
 
 ## Colour Match Native
 
