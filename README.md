@@ -163,8 +163,8 @@ is convolved with the iris at its own radius and the layers are accumulated near
 spills over the background and sharp foreground occludes what is behind it; highlights are boosted before the blur so
 point lights bloom into iris-shaped discs. Iris: blades, rounding, angle, anamorphic aspect, soft edge, bright rim,
 centre darkening, or your own aperture image, with presets (and Star / Heart). Chroma Warp adds longitudinal and
-lateral colour fringing. Focal Distance animates for rack focus, Pick Focal Distance reads it off the Z at a point in
-a Pick Point (in pixels, shown as a cyan crosshair), or Focus Follows Pick Point tracks the depth under an animated point
+lateral colour fringing. Focal Distance animates for rack focus, Pick Focal Distance reads it off the Z under
+the Pick Point (in pixels, shown as a cyan crosshair), or Focus Follows Pick Point tracks the depth under an animated point
 for a rack focus; Show > Depth / Focus Overlay draw the focal plane as a green line through the shot (yellow lines mark
 the DOF band; Focus Line Width sets their thickness). Two-plate comp: Front + matte at its Z
 over a Background at its own Z, defocused together as one scene. The Front matte is a Flame-style blur mask by default (white = defocus,
