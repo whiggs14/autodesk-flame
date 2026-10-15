@@ -120,7 +120,7 @@ over a Background at its own Z, defocused together as one scene. Inputs: **Front
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `LensBlurNative-Tester-0.4.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `LensBlurNative-Linux-0.4.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `LensBlurNative-Tester-0.5.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `LensBlurNative-Linux-0.5.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 These are test builds from Higgins Post, provided as-is, no warranty.
