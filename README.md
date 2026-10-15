@@ -79,6 +79,34 @@ all Apache-2.0, no Hugging Face account needed. Shares the engine folder with Ma
 - Video Depth Anything (code and Small weights) — Apache-2.0. (The Large weights are CC BY-NC 4.0 and are not part of
   the public build.)
 
+## Background Native
+
+Generates a background or clean plate inside a matte: plate in, matte (white = the area to build) on the Matte socket,
+an optional reference image and a prompt, press Generate — the result is stored with the node and composited over the
+plate. Local engines: Alibaba's **Qwen-Image-Edit-2511** with the Lightning 8-step LoRA (best quality) or Black Forest
+Labs' **FLUX.2 Klein 4B** (lighter, faster). Cloud engine: Google's **Nano Banana Pro**, using your own Google API key
+(the installer asks for it, or add it to the engine's `settings.json` afterwards — the Read Me explains how; nothing
+leaves the workstation unless that engine is selected). Moving mode propagates the still through a shot with LTX
+in/outpainting when Matte LTX Native is installed alongside. Variations, seed, reference strength, Matte Area
+(chroma screen / paint grey), Input Colour from the clip's colour-space tag on Flame 2026.1+.
+
+**Download:** see the [Releases](../../releases) page.
+
+| Build | File | Requirements |
+|---|---|---|
+| macOS | `BackgroundNative-Tester-0.1.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for Qwen-Image-Edit), Flame 2026/2027 |
+| Linux | `BackgroundNative-Linux-0.1.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB for Qwen-Image-Edit), Flame 2027 |
+
+The installer downloads the local model(s) you choose — Qwen-Image-Edit-2511 + Lightning (55 GB) and/or FLUX.2 Klein 4B
+(15 GB), both Apache-2.0, no Hugging Face account needed — and offers the gated LTX In/Outpainting IC-LoRA for Moving
+mode when a Matte LTX Native engine is present. Shares the engine folder with the other Higgins Post plugins.
+
+### Models and licences
+- Qwen-Image-Edit-2511 — Alibaba Qwen, Apache-2.0; Lightning 8-step LoRA — lightx2v, Apache-2.0.
+- FLUX.2 Klein 4B — Black Forest Labs, Apache-2.0.
+- LTX In/Outpainting IC-LoRA (Moving mode, optional) — Lightricks LTX-2 Community License.
+- Nano Banana Pro — Google's Gemini API terms apply to your own account; images are generated on Google's servers.
+
 ## Colour Match Native
 
 Matches one clip's colour to another — black / white point, tone (luminance curve), contrast and colour
