@@ -28,7 +28,7 @@ once after installing. (Shared by all the engine-backed nodes here.)
 
 > **Hooks hotfix 1.1** — the hook shipped with Matte LTX 0.8, Upscale 0.3, Depth 0.1 and Background 0.1 polled the
 > batch every 5 s, which resets the Media Panel selection (clips deselect themselves on the Desktop). The current
-> kits (Matte LTX 0.9, Upscale 0.4, Depth 0.2, Background 0.2, Element 0.3, HDR 0.1) include the fix; for the older
+> kits (Matte LTX 0.9, Upscale 0.4, Depth 0.2, Background 0.2, Element 0.3, HDR 0.2) include the fix; for the older
 > ones install `FlameHooks-Hotfix-1.1.zip` from the Releases page (Mac and Linux, one zip).
 
 All the engine-backed nodes share a few things as of the current kits:
@@ -154,14 +154,15 @@ gain map against the SDR at the working resolution and is multiplied into the fu
 all its detail; mid-tones are normalised so the plate's exposure is untouched. **Range = Highlights only** (default) applies
 the gain above a chosen SDR level and never darkens; Whole image gives the model's full tonal re-interpretation. Highlight
 Start, HDR Strength and Range are live; Gain map and SDR-linearised outputs for checking. A matte on the Front limits where
-it applies.
+it applies. Optional **Depth**, **Normals** and **Hero Matte** passes (Depth Anything 3, LTX Alpha Gen) come out of the same
+Generate as extra Output choices — with a Link Key, one compute feeds an HDR / depth / normals / matte set of nodes.
 
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `HDRNative-Tester-0.1.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `HDRNative-Linux-0.1.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `HDRNative-Tester-0.2.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `HDRNative-Linux-0.2.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus a 1.3 GB LoRA that is gated on Hugging Face:
 accept the licence on the model page, and the installer downloads it under your login.
