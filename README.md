@@ -277,4 +277,76 @@ an installed Higgins Post kit, adds the flow engine files and the weights, insta
 ### Models and licences
 - SEA-RAFT code and weights — Princeton Vision & Learning Lab, BSD-3-Clause.
 
+## Relight Native
+
+Relights a shot with Lightricks' LTX relighting IC-LoRAs on the LTX-2.5 base. **Sun Direction** (exteriors): put the sun
+where you want it — rotation around the subject and elevation — in one of the 12 looks the model was trained on (hard
+directional, low golden side sun, soft overcast, strong backlight with rim…), with the shadows recast. **Day To Night**:
+daylight to night, with an optional description. The Front's matte limits where it applies (Blend mixes it in), Input
+Colour follows the clip's tag on Flame 2026.1+, and a Z depth on Input3 gives a Normals output. Press Generate once — the
+result is stored with the node and renders instantly.
+
+**Download:** see the [Releases](../../releases) page.
+
+| Build | File | Requirements |
+|---|---|---|
+| macOS | `RelightNative-Tester-0.1.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `RelightNative-Linux-0.1.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+
+Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus two LoRAs (Relight, Day-To-Night) that are
+gated on Hugging Face: accept the licences on the model pages, and the installer downloads them under your login.
+
+### Models and licences
+- LTX-2.5, the Relight (LTX-2.3) and Day-To-Night IC-LoRAs — Lightricks LTX-2 Community License (gated; accepted under your own account).
+
+## Object Removal Native
+
+Removes objects from a shot: matte what has to go (the matte can move), press Remove, and the area is filled with what
+should be behind it, consistent over time, by **LTX-2.5 with the In/Outpainting IC-LoRA** — the plate outside the matte is
+untouched. For static backgrounds it can first paint the object out of the first frame with Qwen-Image-Edit or FLUX.2 Klein
+(when Background Native's models are installed) and lock LTX to it; **Clean Plate** mode uses Lightricks' Clean Plate
+IC-LoRA to remove every person and vehicle (and their shadows) by prompt, the matte limiting where it is used. Matte grow /
+feather, optional notes about what is behind the object, Input Colour from the clip's tag on Flame 2026.1+.
+
+**Download:** see the [Releases](../../releases) page.
+
+| Build | File | Requirements |
+|---|---|---|
+| macOS | `ObjectRemovalNative-Tester-0.1.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `ObjectRemovalNative-Linux-0.1.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+
+Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus the In/Outpainting and Clean Plate IC-LoRAs
+(gated on Hugging Face; an In/Outpainting LoRA Background Native already downloaded is reused).
+
+### Models and licences
+- LTX-2.5, the In/Outpainting (LTX-2.3) and Clean Plate IC-LoRAs — Lightricks LTX-2 Community License (gated).
+- Qwen-Image-Edit-2511 / FLUX.2 Klein (optional, via Background Native) — Apache-2.0.
+- The ComfyUI version's MiniMax-Remover and ProPainter are non-commercial and are not part of the public build.
+
+## Face UV Native
+
+Automatic face track to a UV pass: a face detector (RetinaFace or BlazeFace) finds the face on every frame and MediaPipe's
+478-point face mesh is fitted to it — or the **FLAME** head model (ears, neck, scalp; identity solved once over the clip,
+expression and pose per frame). Outputs a **UV pass** (R = U, G = V, alpha = face matte), a face matte, or the plate
+**unwrapped** into UV space: paint once on the unwrap and wrap it back with Flame's UV tools so it follows the skin.
+Optional **BootsTAPIR** dense-track refine nudges the mesh onto tracked skin points between the landmarks. Track once —
+the mesh per frame is stored with the node and the passes are drawn at plate resolution, instantly.
+
+**Download:** see the [Releases](../../releases) page.
+
+| Build | File | Requirements |
+|---|---|---|
+| macOS | `FaceUVNative-Tester-0.1.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
+| Linux | `FaceUVNative-Linux-0.1.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, Flame 2027, **a Higgins Post engine kit installed** |
+
+The face models (RetinaFace, BlazeFace, MediaPipe mesh) and FLAME 2023 Open ship in the kit; the installer adds uniface and
+ONNX Runtime to the engine's Python and downloads the BootsTAPIR checkpoint (200 MB) from Google DeepMind.
+
+### Models and licences
+- uniface and the RetinaFace weights — MIT; MediaPipe Face Landmarker and BlazeFace — Google, Apache-2.0.
+- FLAME 2023 Open — MPI for Intelligent Systems, CC BY 4.0 (Li, Bolkart, Black, Li, Romero, *Learning a model of facial
+  shape and expression from 4D scans*, SIGGRAPH Asia 2017); FLAME / MediaPipe correspondence from SMIRK — MIT.
+- BootsTAPIR — Google DeepMind, Apache-2.0.
+- SCRFD (InsightFace research weights) and CoTracker3 (CC BY-NC) are not part of the public build.
+
 These are test builds from Higgins Post, provided as-is, no warranty.
