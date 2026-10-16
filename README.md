@@ -26,6 +26,11 @@ parameter changes, so without it the viewer keeps showing the pass-through until
 notices when the engine has finished and nudges the node, so the stored result appears on its own. Restart Flame
 once after installing. (Shared by all the engine-backed nodes here.)
 
+> **Hooks hotfix 1.1** — the hook shipped with Matte LTX 0.8, Upscale 0.3, Depth 0.1 and Background 0.1 polled the
+> batch every 5 s, which resets the Media Panel selection (clips deselect themselves on the Desktop). Install
+> `FlameHooks-Hotfix-1.1.zip` from the Releases page over any of those kits (Mac and Linux, one zip); kits from
+> Element Native 0.2 on already include the fix.
+
 ### Models and licences
 The plugin downloads models that carry their own terms — check they fit your use, especially paid client work:
 - LTX-2.5 and the Alpha Gen IC-LoRA — Lightricks LTX-2 Community License (free below the revenue threshold stated in the licence).
@@ -106,6 +111,28 @@ mode when a Matte LTX Native engine is present. Shares the engine folder with th
 - FLUX.2 Klein 4B — Black Forest Labs, Apache-2.0.
 - LTX In/Outpainting IC-LoRA (Moving mode, optional) — Lightricks LTX-2 Community License.
 - Nano Banana Pro — Google's Gemini API terms apply to your own account; images are generated on Google's servers.
+
+## Element Native
+
+Generates a stock element — smoke, steam, dust, fog, rain, snow, embers, sparks, fire, birds, leaves, bubbles, or
+anything you describe — with Lightricks' **LTX-2.5** (text-to-video on black), keys it off its black background and
+places it inside a matte on the plate: draw a matte where the element should live (it can move), pick a preset, add to
+the prompt, press Generate. The node stores the element with its own alpha and outputs it premultiplied + alpha for your
+own comp, or a quick Over / Screen / Add in place. Fit to matte (stretch / inside / cover), plate colour match, fade at
+the matte edge, luminance key with threshold / softness / grow, Input Colour from the clip's tag on Flame 2026.1+.
+
+**Download:** see the [Releases](../../releases) page.
+
+| Build | File | Requirements |
+|---|---|---|
+| macOS | `ElementNative-Tester-0.2.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `ElementNative-Linux-0.2.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+
+No downloads: it uses the LTX-2.5 model and Python engine that Matte LTX Native installs. The installer finds that
+engine folder, adds the Element engine files and the plugin, and updates the Flame hooks.
+
+### Models and licences
+- LTX-2.5 — Lightricks LTX-2 Community License (installed by Matte LTX Native under your own Hugging Face account).
 
 ## Colour Match Native
 
