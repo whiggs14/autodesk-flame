@@ -269,18 +269,19 @@ and backward motion and an ST map chained from a Reference Frame are stored with
   is unreliable so they never smear.
 - **Export Tracks**: up to four points followed through the shot, written as Flame Stabilizer `.ascii` files (absolute and
   relative) to import into any tracker — Action Axis, 2D Transform, GMask. Lost points stay lost instead of following
-  whatever covered them.
+  whatever covered them. Place the points by dragging them in the viewer (Output: Tracks (check)); the
+  tracks show there as soon as Analyze is done.
 - **Export GMask**: outline a shape on the Reference Frame (a GMask's matte into Paint / Shape) and every region becomes
   its own animated GMask in one **GMask Tracer** setup (`<run>_shapes.mask`), keyed every frame; covered vertices follow
   the rest of the shape. The `aifx_autorefresh` hook adds a GMask Tracer node loaded with it to the Batch, wired to the
-  same clip.
+  same clip. GMask (check) previews the shapes, and follows the GMask by itself while you edit it.
 
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `MotionVectorsNative-Tester-0.1.2.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
-| Linux | `MotionVectorsNative-Linux-0.1.2.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM, Flame 2027, **a Higgins Post engine kit installed** |
+| macOS | `MotionVectorsNative-Tester-0.1.3.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
+| Linux | `MotionVectorsNative-Linux-0.1.3.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM, Flame 2027, **a Higgins Post engine kit installed** |
 
 No downloads: the SEA-RAFT weights (Small 34 MB, Medium 75 MB) ship in the kit. The installer finds the engine folder of
 an installed Higgins Post kit, adds the flow engine files and the weights, installs the plugin and updates the Flame hooks.
