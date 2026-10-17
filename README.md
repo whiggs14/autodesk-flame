@@ -15,8 +15,8 @@ runs on small subjects, and a built-in Track Box tracker drives that box without
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `MatteLTXNative-Tester-0.9.1.zip` | Apple Silicon Mac, 128 GB recommended (64 GB minimum), Flame 2026/2027 |
-| Linux | `MatteLTXNative-Linux-0.9.1.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB+ VRAM (60 GB+ runs fully on the GPU), Flame 2027 |
+| macOS | `MatteLTXNative-Tester-0.9.2.zip` | Apple Silicon Mac, 128 GB recommended (64 GB minimum), Flame 2026/2027 |
+| Linux | `MatteLTXNative-Linux-0.9.2.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB+ VRAM (60 GB+ runs fully on the GPU), Flame 2027 |
 
 Each zip contains the plugin, the Python engine and an installer; the installer downloads the models
 (~56 GB) under your own Hugging Face account. Read `Read Me First.txt` / `README.txt` inside the zip.
@@ -40,6 +40,12 @@ All the engine-backed nodes share a few things as of the current kits:
   map) are `Raw`, HDR Native reports Linear Rec.709 or ACEScg. No view transform on data, no guessing downstream.
 - Results appear in the viewer by themselves when the engine finishes (the `aifx_autorefresh` hook), and the hook
   leaves Flame alone otherwise.
+- **Gemma text encoder**: Matte LTX Native leaves out the 26 GB Gemma-4 prompt encoder (it never needs a prompt). The
+  nodes that send LTX a prompt — Element, Background (Moving mode), Relight, Object Removal — download it in their own
+  installers from the current kits on (it was missing before: their first render stopped).
+- **natten**: the LTX engine log used to suggest installing natten. Don't: it is NVIDIA-only (on a Mac it breaks every LTX
+  render) and on Linux it is pinned to a PyTorch / CUDA build that can replace the engine's own. The current engine log
+  says so instead.
 - **Node icons**: every node shows its Higgins Post tile in the node bin and schematic (the x.y.1 point releases add
   them; the plugins are otherwise unchanged). Those releases also carry the current shared engine server and hooks, so
   installing any kit after another never rolls the shared engine back.
@@ -113,12 +119,13 @@ in/outpainting when Matte LTX Native is installed alongside. Variations, seed, r
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `BackgroundNative-Tester-0.2.1.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for Qwen-Image-Edit), Flame 2026/2027 |
-| Linux | `BackgroundNative-Linux-0.2.1.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB for Qwen-Image-Edit), Flame 2027 |
+| macOS | `BackgroundNative-Tester-0.2.2.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for Qwen-Image-Edit), Flame 2026/2027 |
+| Linux | `BackgroundNative-Linux-0.2.2.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB for Qwen-Image-Edit), Flame 2027 |
 
 The installer downloads the local model(s) you choose — Qwen-Image-Edit-2511 + Lightning (55 GB) and/or FLUX.2 Klein 4B
 (15 GB), both Apache-2.0, no Hugging Face account needed — and offers the gated LTX In/Outpainting IC-LoRA for Moving
-mode when a Matte LTX Native engine is present. Shares the engine folder with the other Higgins Post plugins.
+mode when a Matte LTX Native engine is present, together with the Gemma-4 12B text encoder (26 GB) Moving mode needs for
+its prompt. Shares the engine folder with the other Higgins Post plugins.
 
 ### Models and licences
 - Qwen-Image-Edit-2511 — Alibaba Qwen, Apache-2.0; Lightning 8-step LoRA — lightx2v, Apache-2.0.
@@ -139,11 +146,13 @@ the matte edge, luminance key with threshold / softness / grow, Input Colour fro
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `ElementNative-Tester-0.3.1.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `ElementNative-Linux-0.3.1.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `ElementNative-Tester-0.3.2.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `ElementNative-Linux-0.3.2.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
-No downloads: it uses the LTX-2.5 model and Python engine that Matte LTX Native installs. The installer finds that
-engine folder, adds the Element engine files and the plugin, and updates the Flame hooks.
+It uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus the **Gemma-4 12B text encoder** (26 GB,
+from the same gated Lightricks/LTX-2.5 repository) that LTX needs for the prompt — Matte LTX Native does not install it, so
+the installer downloads it under your login or links a copy you already have. It also adds the Element engine files and
+the plugin, and updates the Flame hooks.
 
 ### Models and licences
 - LTX-2.5 — Lightricks LTX-2 Community License (installed by Matte LTX Native under your own Hugging Face account).
@@ -164,8 +173,8 @@ Generate as extra Output choices — with a Link Key, one compute feeds an HDR /
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `HDRNative-Tester-0.2.1.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `HDRNative-Linux-0.2.1.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `HDRNative-Tester-0.2.2.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `HDRNative-Linux-0.2.2.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus a 1.3 GB LoRA that is gated on Hugging Face:
 accept the licence on the model page, and the installer downloads it under your login.
@@ -290,11 +299,12 @@ result is stored with the node and renders instantly.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `RelightNative-Tester-0.1.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `RelightNative-Linux-0.1.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `RelightNative-Tester-0.1.1.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `RelightNative-Linux-0.1.1.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
-Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus two LoRAs (Relight, Day-To-Night) that are
-gated on Hugging Face: accept the licences on the model pages, and the installer downloads them under your login.
+Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus two LoRAs (Relight, Day-To-Night) and the
+Gemma-4 12B text encoder for the prompt (26 GB; Matte LTX Native does not install it), all gated on Hugging Face: accept
+the licences on the model pages, and the installer downloads them under your login (or links copies you have).
 
 ### Models and licences
 - LTX-2.5, the Relight (LTX-2.3) and Day-To-Night IC-LoRAs — Lightricks LTX-2 Community License (gated; accepted under your own account).
@@ -312,11 +322,12 @@ feather, optional notes about what is behind the object, Input Colour from the c
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `ObjectRemovalNative-Tester-0.1.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `ObjectRemovalNative-Linux-0.1.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `ObjectRemovalNative-Tester-0.1.1.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `ObjectRemovalNative-Linux-0.1.1.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus the In/Outpainting and Clean Plate IC-LoRAs
-(gated on Hugging Face; an In/Outpainting LoRA Background Native already downloaded is reused).
+and the Gemma-4 12B text encoder for the prompt (26 GB; Matte LTX Native does not install it) — all gated on Hugging Face;
+files Background Native already downloaded are reused.
 
 ### Models and licences
 - LTX-2.5, the In/Outpainting (LTX-2.3) and Clean Plate IC-LoRAs — Lightricks LTX-2 Community License (gated).
