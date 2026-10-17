@@ -258,6 +258,26 @@ iris image) is held on every frame.
 | macOS | `LensBlurNative-Tester-0.9.4.zip` | Apple Silicon Mac, Flame 2026/2027 |
 | Linux | `LensBlurNative-Linux-0.9.4.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
+## Regrain Native
+
+Puts the plate's grain back on a comp — the job of Flame's Match Grain and Nuke's DasGrain — pure C++ inside Flame (all
+cores, no engine). Connect the comp, the degrained plate and the original plate and press **Analyze**: it measures the
+grain's strength per channel across the brightness range (RGB response curves, drawn in the viewer, with points you can
+drag). Where the comp is unchanged the plate's own grain comes back exactly; where it changed (paint, CG, set extensions,
+removals — found automatically, from a matte, or both) new grain is built from the plate's own grain in a **Sample Box**
+(Voronoi cells re-shuffled every frame, draggable in the viewer) and matched to the comp's brightness, so nothing of what
+was removed shows through. Modes for plate grain only or new grain everywhere; grain size, softness and gain per channel.
+**Grain profiles** save the curves, settings and the grain itself to reuse on CG, clean plates or other shots (drop-down,
+Previous / Next, delete with a week to undo). QC views: the grain on grey, the changed-area key, and result vs original x10.
+Inputs: **Front** (comp), **Back** (Degrained), **Input3** Original, **Input4** Matte, **Input5** Grain from another Regrain.
+
+**Download:** see the [Releases](../../releases) page.
+
+| Build | File | Requirements |
+|---|---|---|
+| macOS | `RegrainNative-Tester-0.1.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `RegrainNative-Linux-0.1.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+
 ## Motion Vectors Native
 
 Dense optical flow with Princeton's **SEA-RAFT** (Small or Medium), put to work inside Flame. Press Analyze once — forward
