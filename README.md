@@ -241,8 +241,8 @@ spills over the background and sharp foreground occludes what is behind it; high
 point lights bloom into iris-shaped discs. Iris: blades, rounding, angle, anamorphic aspect, soft edge, bright rim,
 centre darkening, or your own aperture image, with presets (and Star / Heart). Chroma Warp adds longitudinal and
 lateral colour fringing. Focal Distance animates for rack focus, Pick Focal Distance reads it off the Z under
-the Pick Point (in pixels, shown as a cyan crosshair), or Focus Follows Pick Point tracks the depth under an animated point
-for a rack focus; Show > Depth / Focus Overlay draw the focal plane as a green line through the shot (yellow lines mark
+the Pick Point (a cyan crosshair you drag in the viewer), Focus Follows Pick Point tracks the depth under an animated point
+for a rack focus, or Lock Focus Depth holds the distance under the crosshair for the whole shot through a camera move; Show > Depth / Focus Overlay draw the focal plane as a green line through the shot (yellow lines mark
 the DOF band; Focus Line Width sets their thickness). Two-plate comp: Front + matte at its Z
 over a Background at its own Z, defocused together as one scene. The Front matte is a Flame-style blur mask by default (white = defocus,
 black = untouched — the matte itself defocuses with the picture, and with a Background connected the element is comped over
@@ -255,8 +255,8 @@ iris image) is held on every frame.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `LensBlurNative-Tester-0.9.2.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `LensBlurNative-Linux-0.9.2.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `LensBlurNative-Tester-0.9.3.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `LensBlurNative-Linux-0.9.3.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 ## Motion Vectors Native
 
