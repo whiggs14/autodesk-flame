@@ -260,6 +260,25 @@ iris image) is held on every frame.
 | macOS | `LensBlurNative-Tester-0.9.4.zip` | Apple Silicon Mac, Flame 2026/2027 |
 | Linux | `LensBlurNative-Linux-0.9.4.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
+## Denoise Native
+
+Motion-compensated video denoise, pure C++ inside Flame (all cores, no engine; about 1.2 s per 4K frame on an M2 Ultra).
+It measures the plate's noise per channel, detail size and brightness (on every frame, or once with **Analyze Noise**),
+aligns the neighbour frames by motion — refined at every pixel so hair strands and edges line up — and averages them in
+where they truly match. **Ghost Guard** rejects slightly misaligned neighbours, so moving people, hair and hands stay
+crisp with no soft double edges. What is left is removed per detail size, gently on brightness shading and harder on
+colour noise; **Strand Detail** smooths along hair, lashes and wires (never across them) and **Recover Detail** puts back
+softened texture. **Noise Level (%)** shifts the whole profile in one move. Also: noise-gated sharpen, Mix Original,
+global or zoned **Deflicker**, inside / outside the Front matte, and QC views (Compare wipe, Removed Noise, Detail Loss,
+Temporal Coverage, Measure Sharpness). Input: **Front** (the plate).
+
+**Download:** see the [Releases](../../releases) page.
+
+| Build | File | Requirements |
+|---|---|---|
+| macOS | `DenoiseNative-Tester-0.1.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `DenoiseNative-Linux-0.1.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+
 ## Regrain Native
 
 Puts the plate's grain back on a comp — the job of Flame's Match Grain and Nuke's DasGrain — pure C++ inside Flame (all
