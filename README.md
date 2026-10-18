@@ -225,14 +225,15 @@ through in the darks). Two methods — Spill Difference (luminance / max / green
 gamma, gain, blur, clamp and an edge-only limit; background prep with blur, saturation, gamma, gain, offset, tint +
 tint mix; Add / Screen / Lighten with RGB gain and mix) and Pixel Spread (screen colour estimated by spreading the
 matte outside inwards, subtracted, with global / darks / highlights restore). Output modes for the comp, the additive
-FG on its own, the added layer, the spill matte and the processed Back. No models, no engine.
+FG on its own, the added layer, the spill matte and the processed Back. No models, no engine; runs on the GPU (Metal on the
+Mac, Vulkan on Linux; Use GPU checkbox), else all CPU cores.
 
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `AdditiveKeyNative-Tester-0.3.2.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `AdditiveKeyNative-Linux-0.3.2.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `AdditiveKeyNative-Tester-0.4.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `AdditiveKeyNative-Linux-0.4.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 ## Lens Blur Native
 
@@ -285,8 +286,8 @@ Temporal Coverage, Measure Sharpness). Input: **Front** (the plate).
 
 ## Regrain Native
 
-Puts the plate's grain back on a comp — the job of Flame's Match Grain and Nuke's DasGrain — pure C++ inside Flame (all
-cores, no engine). Connect the comp, the degrained plate and the original plate and press **Analyze**: it measures the
+Puts the plate's grain back on a comp — the job of Flame's Match Grain and Nuke's DasGrain — native inside Flame, no engine:
+on the GPU (Metal on the Mac, Vulkan on Linux; Use GPU checkbox), else all CPU cores. Connect the comp, the degrained plate and the original plate and press **Analyze**: it measures the
 grain's strength per channel across the brightness range (RGB response curves, drawn in the viewer, with points you can
 drag). Where the comp is unchanged the plate's own grain comes back exactly; where it changed (paint, CG, set extensions,
 removals — found automatically, from a matte, or both) new grain is built from the plate's own grain in a **Sample Box**
@@ -300,8 +301,8 @@ Inputs: **Front** (comp), **Back** (Degrained), **Input3** Original, **Input4** 
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `RegrainNative-Tester-0.1.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `RegrainNative-Linux-0.1.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `RegrainNative-Tester-0.2.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `RegrainNative-Linux-0.2.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 ## Motion Vectors Native
 
