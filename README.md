@@ -236,7 +236,8 @@ FG on its own, the added layer, the spill matte and the processed Back. No model
 
 ## Lens Blur Native
 
-Depth-of-field / lens defocus with real bokeh, pure C++ inside Flame (FFT convolution on all cores, no engine). Feed it
+Depth-of-field / lens defocus with real bokeh, native inside Flame, no engine: on the Mac the depth layers and their FFT convolutions run on the GPU (Metal,
+about 4x faster than the CPU path, so it scrubs at half res; Use GPU checkbox), on Linux on all CPU cores (GPU version coming). Feed it
 a Z depth from Depth Native or any depth pass. The image is split into depth layers by circle of confusion, each layer
 is convolved with the iris at its own radius and the layers are accumulated near to far, so out-of-focus foreground
 spills over the background and sharp foreground occludes what is behind it; highlights are boosted before the blur so
@@ -257,7 +258,7 @@ iris image) is held on every frame.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `LensBlurNative-Tester-0.9.4.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| macOS | `LensBlurNative-Tester-0.9.5.zip` | Apple Silicon Mac, Flame 2026/2027 |
 | Linux | `LensBlurNative-Linux-0.9.4.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 ## Denoise Native
