@@ -17,8 +17,8 @@ and its motion blur; Auto picks the repeat per frame from a quick motion analysi
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `MatteLTXNative-Tester-0.9.5.zip` | Apple Silicon Mac, 128 GB recommended (64 GB minimum), Flame 2026/2027 |
-| Linux | `MatteLTXNative-Linux-0.9.5.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB+ VRAM (60 GB+ runs fully on the GPU), Flame 2027 |
+| macOS | `MatteLTXNative-Tester-0.9.6.zip` | Apple Silicon Mac, 128 GB recommended (64 GB minimum), Flame 2026/2027 |
+| Linux | `MatteLTXNative-Linux-0.9.6.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB+ VRAM (60 GB+ runs fully on the GPU), Flame 2027 |
 
 Each zip contains the plugin, the Python engine and an installer; the installer downloads the models
 (~56 GB) under your own Hugging Face account. Read `Read Me First.txt` / `README.txt` inside the zip.
@@ -72,8 +72,8 @@ scene-linear) so log plates are converted for the model and back.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `UpscaleNative-Tester-0.4.5.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for the 7B models), Flame 2026/2027 |
-| Linux | `UpscaleNative-Linux-0.4.5.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB+ for 7B), Flame 2027 |
+| macOS | `UpscaleNative-Tester-0.4.6.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for the 7B models), Flame 2026/2027 |
+| Linux | `UpscaleNative-Linux-0.4.6.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB+ for 7B), Flame 2027 |
 
 The installer downloads SeedVR2 3B + VAE (7 GB; the 7B models are optional, 16.5 GB each) — Apache-2.0, no
 Hugging Face account needed. If Matte LTX Native is installed, Upscale Native shares its engine folder and
@@ -91,13 +91,15 @@ overlapping windows so a shot hangs together; Metric: the same in real-world met
 instantly, with live Auto Range / Near / Far / Gamma / Invert. A flow-guided Stabilize filter removes the shimmer DA3
 leaves between windows. Input Colour is read from the clip's colour-space tag on Flame 2026.1+. Built to feed
 Lens Blur Native's Input3, but it is a plain grey depth pass (near = black) you can use anywhere.
+DA3 Metric depth comes out in real metres (scaled by the field of view DA3-Large estimates), and Output: Raw Depth feeds
+Lens Blur Native's Physical Camera.
 
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `DepthNative-Tester-0.2.5.zip` | Apple Silicon Mac, 16 GB minimum (32 GB recommended), Flame 2026/2027 |
-| Linux | `DepthNative-Linux-0.2.5.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM (16 GB for DA3 at 1008 px), Flame 2027 |
+| macOS | `DepthNative-Tester-0.2.6.zip` | Apple Silicon Mac, 16 GB minimum (32 GB recommended), Flame 2026/2027 |
+| Linux | `DepthNative-Linux-0.2.6.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM (16 GB for DA3 at 1008 px), Flame 2027 |
 
 The installer downloads DA3 Large (1.6 GB) and Video Depth Anything Small (0.1 GB); DA3 Metric (1.3 GB) is optional —
 all Apache-2.0, no Hugging Face account needed. Shares the engine folder with Matte LTX Native / Upscale Native if present.
@@ -123,8 +125,8 @@ in/outpainting when Matte LTX Native is installed alongside. Variations, seed, r
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `BackgroundNative-Tester-0.2.5.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for Qwen-Image-Edit), Flame 2026/2027 |
-| Linux | `BackgroundNative-Linux-0.2.5.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB for Qwen-Image-Edit), Flame 2027 |
+| macOS | `BackgroundNative-Tester-0.2.6.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for Qwen-Image-Edit), Flame 2026/2027 |
+| Linux | `BackgroundNative-Linux-0.2.6.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB for Qwen-Image-Edit), Flame 2027 |
 
 The installer downloads the local model(s) you choose — Qwen-Image-Edit-2511 + Lightning (55 GB) and/or FLUX.2 Klein 4B
 (15 GB), both Apache-2.0, no Hugging Face account needed — and offers the gated LTX In/Outpainting IC-LoRA for Moving
@@ -150,8 +152,8 @@ the matte edge, luminance key with threshold / softness / grow, Input Colour fro
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `ElementNative-Tester-0.3.5.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `ElementNative-Linux-0.3.5.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `ElementNative-Tester-0.3.6.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `ElementNative-Linux-0.3.6.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 It uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus the **Gemma-4 12B text encoder** (26 GB,
 from the same gated Lightricks/LTX-2.5 repository) that LTX needs for the prompt — Matte LTX Native does not install it, so
@@ -177,8 +179,8 @@ Generate as extra Output choices — with Follow Duplicates, one compute feeds a
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `HDRNative-Tester-0.2.5.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `HDRNative-Linux-0.2.5.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `HDRNative-Tester-0.2.6.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `HDRNative-Linux-0.2.6.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus a 1.3 GB LoRA that is gated on Hugging Face:
 accept the licence on the model page, and the installer downloads it under your login.
@@ -207,8 +209,8 @@ engine the plugin works fully on Reference statistics.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `ColourMatchNative-Tester-0.4.5.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `ColourMatchNative-Linux-0.4.5.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `ColourMatchNative-Tester-0.4.6.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `ColourMatchNative-Linux-0.4.6.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 ### Models and licences (AI Look only)
 - Qwen-Image-Edit-2511 and Qwen-Image-Lightning — Apache-2.0 (installed by Background Native).
@@ -226,14 +228,16 @@ gamma, gain, blur, clamp and an edge-only limit; background prep with blur, satu
 tint mix; Add / Screen / Lighten with RGB gain and mix) and Pixel Spread (screen colour estimated by spreading the
 matte outside inwards, subtracted, with global / darks / highlights restore). Output modes for the comp, the additive
 FG on its own, the added layer, the spill matte and the processed Back. No models, no engine; runs on the GPU (Metal on the
-Mac, Vulkan on Linux; Use GPU checkbox), else all CPU cores.
+Mac, Vulkan on Linux; Use GPU checkbox), else all CPU cores. New in 0.5: **Working Space** (S-Log3 / LogC3 / LogC4 / ACEScct — the add
+is done in linear), **Add Beyond the Matte** (unmixes soft and defocused edges against the Background; with a despill it
+clears the light despilled-screen line on blue / green screen) and **Screen Sample Inset** for Pixel Spread.
 
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `AdditiveKeyNative-Tester-0.4.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `AdditiveKeyNative-Linux-0.4.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `AdditiveKeyNative-Tester-0.5.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `AdditiveKeyNative-Linux-0.5.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 ## Lens Blur Native
 
@@ -255,13 +259,17 @@ it premultiplied), or the foreground alpha for the comp, or — with no Z at all
 for painted ramps and tilt-shift). Inputs: **Front** (+ matte), **Back** (Background),
 **Input3** Z Depth, **Input4** Back Z Depth, **Input5** Iris image. An input shorter than the plate (a one-frame Z, a still
 iris image) is held on every frame.
+**Physical Camera** mode turns a metric Z (Depth Native, DA3 Metric, Output: Raw Depth) into a real lens — sensor, focal
+length, f-stop and focus distance in metres on a Camera tab, with Analyze Camera to estimate the field of view and optional
+focus breathing. A Focus Pull tab keys a rack focus between two picked points, Refine Z to Plate snaps a low-res Z onto the
+picture's edges, and out-of-focus foreground edges stay soft over a sharp background.
 
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `LensBlurNative-Tester-0.9.5.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `LensBlurNative-Linux-0.9.5.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `LensBlurNative-Tester-0.9.6.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `LensBlurNative-Linux-0.9.6.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 ## Denoise Native
 
@@ -328,8 +336,8 @@ and backward motion and an ST map chained from a Reference Frame are stored with
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `MotionVectorsNative-Tester-0.1.4.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
-| Linux | `MotionVectorsNative-Linux-0.1.4.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM, Flame 2027, **a Higgins Post engine kit installed** |
+| macOS | `MotionVectorsNative-Tester-0.1.5.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
+| Linux | `MotionVectorsNative-Linux-0.1.5.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM, Flame 2027, **a Higgins Post engine kit installed** |
 
 No downloads: the SEA-RAFT weights (Small 34 MB, Medium 75 MB) ship in the kit. The installer finds the engine folder of
 an installed Higgins Post kit, adds the flow engine files and the weights, installs the plugin and updates the Flame hooks.
@@ -350,8 +358,8 @@ result is stored with the node and renders instantly.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `RelightNative-Tester-0.1.4.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `RelightNative-Linux-0.1.4.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `RelightNative-Tester-0.1.5.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `RelightNative-Linux-0.1.5.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus two LoRAs (Relight, Day-To-Night) and the
 Gemma-4 12B text encoder for the prompt (26 GB; Matte LTX Native does not install it), all gated on Hugging Face: accept
@@ -373,8 +381,8 @@ feather, optional notes about what is behind the object, Input Colour from the c
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `ObjectRemovalNative-Tester-0.1.4.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `ObjectRemovalNative-Linux-0.1.4.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `ObjectRemovalNative-Tester-0.1.5.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `ObjectRemovalNative-Linux-0.1.5.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus the In/Outpainting and Clean Plate IC-LoRAs
 and the Gemma-4 12B text encoder for the prompt (26 GB; Matte LTX Native does not install it) — all gated on Hugging Face;
@@ -398,8 +406,8 @@ the mesh per frame is stored with the node and the passes are drawn at plate res
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `FaceUVNative-Tester-0.1.4.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
-| Linux | `FaceUVNative-Linux-0.1.4.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, Flame 2027, **a Higgins Post engine kit installed** |
+| macOS | `FaceUVNative-Tester-0.1.5.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
+| Linux | `FaceUVNative-Linux-0.1.5.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, Flame 2027, **a Higgins Post engine kit installed** |
 
 The face models (RetinaFace, BlazeFace, MediaPipe mesh) and FLAME 2023 Open ship in the kit; the installer adds uniface and
 ONNX Runtime to the engine's Python and downloads the BootsTAPIR checkpoint (200 MB) from Google DeepMind.
