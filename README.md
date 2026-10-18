@@ -262,9 +262,11 @@ iris image) is held on every frame.
 
 ## Denoise Native
 
-Motion-compensated video denoise, pure C++ inside Flame (all cores, no engine; about 1.2 s per 4K frame on an M2 Ultra).
+Motion-compensated video denoise inside Flame, on the GPU (**Metal** on the Mac, **Vulkan** on Linux; about 0.12 s per 4K
+frame on an M2 Ultra, ~10x the CPU path, so it scrubs in the viewer) or on all CPU cores - no engine. Neighbour frames stay
+on the GPU between renders, so scrubbing or changing a slider re-uses them.
 It measures the plate's noise per channel, detail size and brightness (on every frame, or once with **Analyze Noise**),
-aligns the neighbour frames by motion — refined at every pixel so hair strands and edges line up — and averages them in
+aligns the neighbour frames by motion - refined at every pixel so hair strands and edges line up - and averages them in
 where they truly match. **Ghost Guard** rejects slightly misaligned neighbours, so moving people, hair and hands stay
 crisp with no soft double edges. What is left is removed per detail size, gently on brightness shading and harder on
 colour noise; **Strand Detail** smooths along hair, lashes and wires (never across them) and **Recover Detail** puts back
@@ -276,8 +278,8 @@ Temporal Coverage, Measure Sharpness). Input: **Front** (the plate).
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `DenoiseNative-Tester-0.1.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `DenoiseNative-Linux-0.1.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `DenoiseNative-Tester-0.2.zip` | Apple Silicon Mac, Flame 2026/2027 (GPU: Metal) |
+| Linux | `DenoiseNative-Linux-0.2.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 (GPU: NVIDIA driver with Vulkan; CPU otherwise) |
 
 ## Regrain Native
 
