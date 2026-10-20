@@ -68,12 +68,14 @@ Flame cannot change a node's resolution, so: Resize the plate to the final size,
 Input Colour is read from the clip's colour-space tag automatically on Flame 2026.1+ (S-Log3, ARRI LogC3/LogC4,
 scene-linear) so log plates are converted for the model and back.
 
+**0.4.9:** engine only - pressing Upscale again while a run is going restarts it with the new frames (the old run no longer finishes into the new job); status from the first second instead of Queued 0% for minutes.
+
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `UpscaleNative-Tester-0.4.8.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for the 7B models), Flame 2026/2027 |
-| Linux | `UpscaleNative-Linux-0.4.8.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB+ for 7B), Flame 2027 |
+| macOS | `UpscaleNative-Tester-0.4.9.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for the 7B models), Flame 2026/2027 |
+| Linux | `UpscaleNative-Linux-0.4.9.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB+ for 7B), Flame 2027 |
 
 The installer downloads SeedVR2 3B + VAE (7 GB; the 7B models are optional, 16.5 GB each) — Apache-2.0, no
 Hugging Face account needed. If Matte LTX Native is installed, Upscale Native shares its engine folder and
@@ -236,12 +238,14 @@ Mac, Vulkan on Linux; Use GPU checkbox), else all CPU cores. New in 0.5: **Worki
 is done in linear), **Add Beyond the Matte** (unmixes soft and defocused edges against the Background; with a despill it
 clears the light despilled-screen line on blue / green screen) and **Screen Sample Inset** for Pixel Spread.
 
+**0.7.1:** **Light-Limited Matte** (the add is capped by the light the Front has, black floor read from the picture - no hard black rims), **Unmix Strength**, Matte Output **Key (light-limited)**, hard input ranges, scene-linear negatives handled.
+
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `AdditiveKeyNative-Tester-0.7.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `AdditiveKeyNative-Linux-0.7.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `AdditiveKeyNative-Tester-0.7.1.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `AdditiveKeyNative-Linux-0.7.1.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 ## Lens Blur Native
 
@@ -344,14 +348,16 @@ and backward motion and an ST map chained from a Reference Frame are stored with
   the rest of the shape. The `aifx_autorefresh` hook adds a GMask Tracer node loaded with it to the Batch, wired to the
   same clip. GMask (check) previews the shapes, and follows the GMask by itself while you edit it.
 
+**0.1.8:** Paint Carry's **matte output** is the carried paint's matte again (it rendered solid white with Over Front on); engine re-submit / Delete Result handling.
+
 **0.1.7:** **Off-Frame Paint** (Inpaint / Fade out / Clamp) - Paint Carry no longer streaks where the carried frame has left the picture; GMask shapes track both ways from the Reference Frame when a matte touches the frame edge.
 
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `MotionVectorsNative-Tester-0.1.7.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
-| Linux | `MotionVectorsNative-Linux-0.1.7.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM, Flame 2027, **a Higgins Post engine kit installed** |
+| macOS | `MotionVectorsNative-Tester-0.1.8.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
+| Linux | `MotionVectorsNative-Linux-0.1.8.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM, Flame 2027, **a Higgins Post engine kit installed** |
 
 No downloads: the SEA-RAFT weights (Small 34 MB, Medium 75 MB) ship in the kit. The installer finds the engine folder of
 an installed Higgins Post kit, adds the flow engine files and the weights, installs the plugin and updates the Flame hooks.
@@ -391,12 +397,14 @@ untouched. For static backgrounds it can first paint the object out of the first
 IC-LoRA to remove every person and vehicle (and their shadows) by prompt, the matte limiting where it is used. Matte grow /
 feather, optional notes about what is behind the object, Input Colour from the clip's tag on Flame 2026.1+.
 
+**0.1.8:** engine only - pressing Remove again while a run is going restarts it with the new settings; Delete Result stops a run.
+
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `ObjectRemovalNative-Tester-0.1.7.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `ObjectRemovalNative-Linux-0.1.7.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `ObjectRemovalNative-Tester-0.1.8.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `ObjectRemovalNative-Linux-0.1.8.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus the In/Outpainting and Clean Plate IC-LoRAs
 and the Gemma-4 12B text encoder for the prompt (26 GB; Matte LTX Native does not install it) — all gated on Hugging Face;
@@ -416,14 +424,16 @@ expression and pose per frame). Outputs a **UV pass** (R = U, G = V, alpha = fac
 Optional **BootsTAPIR** dense-track refine nudges the mesh onto tracked skin points between the landmarks. Track once —
 the mesh per frame is stored with the node and the passes are drawn at plate resolution, instantly.
 
+**0.2.1:** Unwrap Margin direction fixed in the Texture wrap (the paint landed smaller than its unwrap); engine re-submit / Delete Result handling.
+
 **0.2:** **Show Mesh** overlay with **Nudge** (move / scale / rotate, keyframed), **Pins** (click a vertex, drag it, falloff) and **Snap** (fix one frame, then the node finds that frame's eyes / nose / mouth / jaw on the others and pins them) to fix a track by hand; a **Texture** input wrapped and comped in the node (paint on the Unwrap, or straight on the plate at one frame); dense FLAME head refit on all 468 landmarks; Detect Res to 4096 with accurate defaults; installer fix (einshape for the BootsTAPIR refine).
 
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `FaceUVNative-Tester-0.2.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
-| Linux | `FaceUVNative-Linux-0.2.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, Flame 2027, **a Higgins Post engine kit installed** |
+| macOS | `FaceUVNative-Tester-0.2.1.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
+| Linux | `FaceUVNative-Linux-0.2.1.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, Flame 2027, **a Higgins Post engine kit installed** |
 
 The face models (RetinaFace, BlazeFace, MediaPipe mesh) and FLAME 2023 Open ship in the kit; the installer adds uniface and
 ONNX Runtime to the engine's Python and downloads the BootsTAPIR checkpoint (200 MB) from Google DeepMind.
