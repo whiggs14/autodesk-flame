@@ -268,14 +268,16 @@ length, f-stop and focus distance in metres on a Camera tab, with Analyze Camera
 focus breathing. A Focus Pull tab keys a rack focus between two picked points, Refine Z to Plate snaps a low-res Z onto the
 picture's edges, and out-of-focus foreground edges stay soft over a sharp background.
 
+**0.9.9:** 17 **named lens presets** in the Iris menu - Cooke S4 / Speed Panchro, Zeiss Super Speed / Master Prime / Ultra Prime, Canon K-35, Leica Summilux-C, Panavision Primo / C-series / E-series, Lomo-Kowa, Hawk V-Lite, Helios 44-2, Petzval, Meyer Trioplan, a catadioptric and a modern zoom - each setting the iris, cat's eye and chromatic aberration together.
+
 **0.9.8:** **Input Colour** - log plates (Auto from Flame's tag, S-Log3, LogC3/4, ACEScct) are defocused in linear light, so highlights bloom into proper bokeh.
 
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `LensBlurNative-Tester-0.9.8.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `LensBlurNative-Linux-0.9.8.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `LensBlurNative-Tester-0.9.9.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `LensBlurNative-Linux-0.9.9.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 ## Denoise Native
 
