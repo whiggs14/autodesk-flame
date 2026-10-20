@@ -414,12 +414,14 @@ expression and pose per frame). Outputs a **UV pass** (R = U, G = V, alpha = fac
 Optional **BootsTAPIR** dense-track refine nudges the mesh onto tracked skin points between the landmarks. Track once —
 the mesh per frame is stored with the node and the passes are drawn at plate resolution, instantly.
 
+**0.2:** **Show Mesh** overlay with **Nudge** (move / scale / rotate, keyframed), **Pins** (click a vertex, drag it, falloff) and **Snap** (fix one frame, then the node finds that frame's eyes / nose / mouth / jaw on the others and pins them) to fix a track by hand; a **Texture** input wrapped and comped in the node (paint on the Unwrap, or straight on the plate at one frame); dense FLAME head refit on all 468 landmarks; Detect Res to 4096 with accurate defaults; installer fix (einshape for the BootsTAPIR refine).
+
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `FaceUVNative-Tester-0.1.7.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
-| Linux | `FaceUVNative-Linux-0.1.7.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, Flame 2027, **a Higgins Post engine kit installed** |
+| macOS | `FaceUVNative-Tester-0.2.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
+| Linux | `FaceUVNative-Linux-0.2.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, Flame 2027, **a Higgins Post engine kit installed** |
 
 The face models (RetinaFace, BlazeFace, MediaPipe mesh) and FLAME 2023 Open ship in the kit; the installer adds uniface and
 ONNX Runtime to the engine's Python and downloads the BootsTAPIR checkpoint (200 MB) from Google DeepMind.
@@ -430,5 +432,16 @@ ONNX Runtime to the engine's Python and downloads the BootsTAPIR checkpoint (200
   shape and expression from 4D scans*, SIGGRAPH Asia 2017); FLAME / MediaPipe correspondence from SMIRK — MIT.
 - BootsTAPIR — Google DeepMind, Apache-2.0.
 - SCRFD (InsightFace research weights) and CoTracker3 (CC BY-NC) are not part of the public build.
+
+## UV Wrap Native
+
+Wraps a texture painted in UV space (Face UV Native's Unwrap, or any UV / ST map's texture) back onto the picture through a UV pass and comps it over the plate: the other half of Face UV Native - Unwrap, paint, UV Wrap. Front = the painted texture (+ its matte), Back = the plate (+ holdout), Input3 = the UV pass (+ face matte). Nearest / bilinear / bicubic with supersampling, a texture transform to slide the patch, matte erode / feather, Over / Add / Screen in linear light, Hold Frame for a painted still. Pure C++ on the GPU (Metal / Vulkan), no engine.
+
+**Download:** see the [Releases](../../releases) page.
+
+| Build | File | Requirements |
+|---|---|---|
+| macOS | `UVWrapNative-Tester-0.1.1.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `UVWrapNative-Linux-0.1.1.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 These are test builds from Higgins Post, provided as-is, no warranty.
