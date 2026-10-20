@@ -437,11 +437,13 @@ ONNX Runtime to the engine's Python and downloads the BootsTAPIR checkpoint (200
 
 Wraps a texture painted in UV space (Face UV Native's Unwrap, or any UV / ST map's texture) back onto the picture through a UV pass and comps it over the plate: the other half of Face UV Native - Unwrap, paint, UV Wrap. Front = the painted texture (+ its matte), Back = the plate (+ holdout), Input3 = the UV pass (+ face matte). Nearest / bilinear / bicubic with supersampling, a texture transform to slide the patch, matte erode / feather, Over / Add / Screen in linear light, Hold Frame for a painted still. Pure C++ on the GPU (Metal / Vulkan), no engine.
 
+**0.3:** **Unwrap** output (any UV pass: the picture flattened into UV space - paint, then wrap back), **Edge Extend** (no halo round a patch), **Light Follow** (the patch takes on the face's shading as it turns), **Motion Blur** along the UV motion, a **UV Check** grid, **Anisotropic** sampling by default, and an **ST map** mode (distort / undistort through a lens map).
+
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `UVWrapNative-Tester-0.1.1.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `UVWrapNative-Linux-0.1.1.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `UVWrapNative-Tester-0.3.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `UVWrapNative-Linux-0.3.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 These are test builds from Higgins Post, provided as-is, no warranty.
