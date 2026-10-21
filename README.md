@@ -3,6 +3,21 @@
 Native OFX plugins for Autodesk Flame that run AI models locally on the workstation.
 No ComfyUI, no shared folders, no cloud.
 
+## Install or update everything in one go
+
+**macOS:** download [`Higgins Post Updater.command`](../../raw/main/Higgins%20Post%20Updater.command), double-click it (right-click > Open the first time). It asks GitHub for the latest release of every plugin, shows what you have against what is published, and installs or updates what you pick - each plugin's own installer runs, so the shared engine and models are handled the same way as a manual install.
+
+**Linux (and macOS from a terminal):**
+```
+curl -fsSL https://raw.githubusercontent.com/whiggs14/autodesk-flame/main/hp-update.sh -o hp-update.sh
+bash hp-update.sh              # interactive menu
+bash hp-update.sh --check      # just the table
+bash hp-update.sh --all --yes  # install / update everything, answering the installers' prompts with their defaults
+bash hp-update.sh --only lensblur,faceuv
+bash hp-update.sh --uninstall lensblur,faceuv     # or: --uninstall all [--purge]   (--purge also deletes the shared engine and the models)
+```
+Run it again whenever you like: it only downloads what is newer than what you have. Restart Flame afterwards.
+
 ## Matte LTX Native
 
 Pulls a soft, hair-detailed matte from a plate with Lightricks' **LTX-2.5 Alpha Gen** model.
