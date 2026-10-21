@@ -375,7 +375,7 @@ and backward motion and an ST map chained from a Reference Frame are stored with
   the rest of the shape. The `aifx_autorefresh` hook adds a GMask Tracer node loaded with it to the Batch, wired to the
   same clip. GMask (check) previews the shapes, and follows the GMask by itself while you edit it.
 
-**0.1.9:** Export GMask **Keyframes On** - shape vertices, the GMask's axis, or axis + residual vertices; **Free Engine Memory** + release after a render; linear plates.
+**0.1.9:** Export GMask **Keyframes On** - shape vertices, the GMask's axis, or axis + residual vertices; **Free Engine Memory** + release after a render; linear plates. *(Mac installer re-uploaded 21 Oct evening: it now finds / installs `uv` itself - the first upload failed with "No module named pip" on a Mac where `uv` was not on the PATH.)*
 
 **0.1.8:** Paint Carry's **matte output** is the carried paint's matte again (it rendered solid white with Over Front on); engine re-submit / Delete Result handling.
 
@@ -457,7 +457,7 @@ expression and pose per frame). Outputs a **UV pass** (R = U, G = V, alpha = fac
 Optional **BootsTAPIR** dense-track refine nudges the mesh onto tracked skin points between the landmarks. Track once —
 the mesh per frame is stored with the node and the passes are drawn at plate resolution, instantly.
 
-**0.2.2:** refine no longer fails on a missing `dm-tree` (installer adds it; the track carries on without refine and says so); **Free Engine Memory** + release after a render; linear plates.
+**0.2.2:** refine no longer fails on a missing `dm-tree` (installer adds it; the track carries on without refine and says so); **Free Engine Memory** + release after a render; linear plates. *(Mac installer re-uploaded 21 Oct evening: it now finds / installs `uv` itself - the first upload failed with "No module named pip" on a Mac where `uv` was not on the PATH.)*
 
 **0.2.1:** Unwrap Margin direction fixed in the Texture wrap (the paint landed smaller than its unwrap); engine re-submit / Delete Result handling.
 
