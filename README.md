@@ -3,6 +3,8 @@
 Native OFX plugins for Autodesk Flame that run AI models locally on the workstation.
 No ComfyUI, no shared folders, no cloud.
 
+> **21 Oct evening re-upload (all engine kits, same version numbers):** the engine refused every job on a Mac / Linux box without Matte LTX Native installed (`No module named 'ltx_matte'`). Re-download the kit and run its installer again - it only re-copies the engine files. If you would rather not re-download: in `engine/engine_server.py` under the engine folder, move the line `from ltx_matte import LTXMatteEngine` at the top of `_process` down to just above `_engine = LTXMatteEngine(`, then stop the engine (`pkill -f engine_server.py`).
+
 ## Install or update everything in one go
 
 **macOS:** download [`Higgins Post Updater.command`](../../raw/main/Higgins%20Post%20Updater.command), double-click it (right-click > Open the first time). It asks GitHub for the latest release of every plugin, shows what you have against what is published, and installs or updates what you pick - each plugin's own installer runs, so the shared engine and models are handled the same way as a manual install.
