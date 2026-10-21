@@ -5,6 +5,8 @@ No ComfyUI, no shared folders, no cloud.
 
 > **21 Oct evening re-upload (all engine kits, same version numbers):** the engine refused every job on a Mac / Linux box without Matte LTX Native installed (`No module named 'ltx_matte'`). Re-download the kit and run its installer again - it only re-copies the engine files. If you would rather not re-download: in `engine/engine_server.py` under the engine folder, move the line `from ltx_matte import LTXMatteEngine` at the top of `_process` down to just above `_engine = LTXMatteEngine(`, then stop the engine (`pkill -f engine_server.py`).
 
+> **22 Oct - jobs from files, no Flame needed (every engine kit, same version numbers, re-uploaded):** the engine takes `analyze_files` - an EXR sequence on disk plus a job a node made as the template for the settings - and `tools/aifx_queue.py` (installed next to the engine) queues it from any shell or script; the node collects the result through its Analysis Job field. See `tools/ANALYZE_FILES.md` in the engine folder.
+
 ## Install or update everything in one go
 
 **macOS:** download [`Higgins Post Updater.command`](../../raw/main/Higgins%20Post%20Updater.command), double-click it (right-click > Open the first time). It asks GitHub for the latest release of every plugin, shows what you have against what is published, and installs or updates what you pick - each plugin's own installer runs, so the shared engine and models are handled the same way as a manual install.
@@ -326,14 +328,16 @@ softened texture. **Noise Level (%)** shifts the whole profile in one move. Also
 global or zoned **Deflicker**, inside / outside the Front matte, and QC views (Compare wipe, Removed Noise, Detail Loss,
 Temporal Coverage, Measure Sharpness). Input: **Front** (the plate).
 
+**0.3.1:** the noise profile's sensor curve is a real sensor model now (no term can go negative): whole-frame profiles on log plates no longer under-read the mid-tones by 2-3x, which left grain on walls and shadows. Press Analyze Noise again on saved profiles.
+
 **0.3:** Analyze Noise with a resizable, auto-rated Sample Box and keyframed profiles along the shot, a Profile Library, Spatial settings auto-populated from the analysis (Noise Map), Sharpen, Dead Pixels, cut / duplicate skip, Input Colour (log plates denoised in linear light), and **Matte Output = Grain profile for Regrain** - wire the blue matte out to Regrain Native's blue Grain Profile input and the grain that goes back on is the noise that came off.
 
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `DenoiseNative-Tester-0.3.zip` | Apple Silicon Mac, Flame 2026/2027 (GPU: Metal) |
-| Linux | `DenoiseNative-Linux-0.3.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 (GPU: NVIDIA driver with Vulkan; CPU otherwise) |
+| macOS | `DenoiseNative-Tester-0.3.1.zip` | Apple Silicon Mac, Flame 2026/2027 (GPU: Metal) |
+| Linux | `DenoiseNative-Linux-0.3.1.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 (GPU: NVIDIA driver with Vulkan; CPU otherwise) |
 
 ## Regrain Native
 
