@@ -361,6 +361,25 @@ Inputs: **Front** (comp), **Back** (Degrained), **Input3** Original, **Input4** 
 | macOS | `RegrainNative-Tester-0.3.zip` | Apple Silicon Mac, Flame 2026/2027 |
 | Linux | `RegrainNative-Linux-0.3.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
+## Pixel Spread Native
+
+Fills the hole in a matte from the picture around it — pure C++ inside Flame, no engine. Connect the plate with the
+matte of the hole on its matte socket (white = fill) and pick a **Method**: **Pixel Spread** (the pixels along one
+direction smeared in — Flame's Pixel Spread, with Spread From / Distance / Softness), **Push-Pull** (the surroundings
+averaged inward at every scale — smooth, for sky, walls and soft backgrounds), **Diffusion** (the smoothest fill,
+gradients run through the hole) or **Texture** (PatchMatch: the surrounding texture rebuilt inside the hole, Draft /
+Normal / Fine). **Width** limits the fill to a band in from the matte's edge, as in Flame. **From Other Frames**: with
+Motion Vectors Native's Forward Vectors on Input3, every hole pixel is followed through the motion to the nearest frame
+where that part of the picture is uncovered and taken from there (tone-matched); only what no frame ever shows gets the
+spatial fill. On the Mac the fill runs on the GPU (Metal); Linux runs on every core.
+
+**Download:** see the [Releases](../../releases) page.
+
+| Build | File | Requirements |
+|---|---|---|
+| macOS | `PixelSpreadNative-Tester-0.4.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `PixelSpreadNative-Linux-0.4.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+
 ## Motion Vectors Native
 
 Dense optical flow with Princeton's **SEA-RAFT** (Small or Medium), put to work inside Flame. Press Analyze once — forward
