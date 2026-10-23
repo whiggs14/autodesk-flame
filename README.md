@@ -12,6 +12,10 @@ No ComfyUI, no shared folders, no cloud.
 > machine the node runs on, so a setup saved on one workstation finds its renders and jobs on another. An optional `~/.aifx/path_map.json`
 > adds rules of its own and a `<jobs>` token for the Render Folder - see `tools/PATH_MAP.md` next to the engine.
 
+> **23 Oct evening re-upload (Background, Camera Track, Depth, Face UV, Matte LTX, Motion Vectors, Upscale - same version numbers):** the installers no longer run
+> `curl https://astral.sh/uv/install.sh | sh`. They download uv 0.13.5 as a pinned release from github.com/astral-sh/uv, check it against its
+> published SHA-256 and keep it inside the engine folder (`bin/uv`). Nothing changes for an existing install - re-download only if you are installing fresh.
+
 ## Install or update everything in one go
 
 **macOS:** download [`Higgins Post Updater.command`](../../raw/main/Higgins%20Post%20Updater.command), double-click it (right-click > Open the first time). It asks GitHub for the latest release of every plugin, shows what you have against what is published, and installs or updates what you pick - each plugin's own installer runs, so the shared engine and models are handled the same way as a manual install.
