@@ -14,7 +14,10 @@ No ComfyUI, no shared folders, no cloud.
 
 > **23 Oct evening re-upload (Background, Camera Track, Depth, Face UV, Matte LTX, Motion Vectors, Upscale - same version numbers):** the installers no longer run
 > `curl https://astral.sh/uv/install.sh | sh`. They download uv 0.13.5 as a pinned release from github.com/astral-sh/uv, check it against its
-> published SHA-256 and keep it inside the engine folder (`bin/uv`). Nothing changes for an existing install - re-download only if you are installing fresh.
+> published SHA-256 and keep it inside the engine folder (`bin/uv`). The Python packages are pinned to the versions the kits were tested with
+> (torch 2.14.1, torchvision 0.29.1, transformers 5.14.1, diffusers 0.41.0, ...; on Linux the CUDA wheel index follows the driver: cu130 on 580+, cu126 below).
+> Engine: every checkpoint is loaded with `torch.load(weights_only=True)` and SeedVR2's config `eval` resolver only does arithmetic.
+> Nothing changes for an existing install - re-download only if you are installing fresh.
 
 ## Install or update everything in one go
 
