@@ -361,6 +361,38 @@ Inputs: **Front** (comp), **Back** (Degrained), **Input3** Original, **Input4** 
 | macOS | `RegrainNative-Tester-0.3.zip` | Apple Silicon Mac, Flame 2026/2027 |
 | Linux | `RegrainNative-Linux-0.3.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
+## Camera Track Native
+
+A 3D camera tracker for Flame, running locally: Depth Anything 3 initialises the solve, feature tracks are bundle-adjusted
+on the GPU (camera path, 3D points, focal length and lens distortion), movers are held out (a Front matte and / or SAM3
+finding people and cars itself). **Solve Mode** Auto / 3D / Tripod — a pan is solved as a rotation-only camera when that
+fits better. **Consistent Depth** fuses each frame's depth with its neighbours through the solved cameras, so the depth
+stops shimmering. Points (check) shows every point coloured by error with trails, **Residual Arrows**, box / click select,
+Select Worst (%), Delete / Re-solve Without; the Error Graph carries the numbers. **Set Ground** / Set X Axis / Set Origin
+line the scene up with the set; **cards** and **surfaces** (a thin-plate spline through chosen points) get Flame-style
+ring gizmos for tilt / roll / spin / offset. **Projection** puts paint done on one frame back on every frame through the
+depth, a card or the whole set, with occlusion — from up to three paint frames, morphing between them with an optical
+flow over a Blend Width. **Stabilize** to a point, a card or the camera's rotation and **Unstabilize** the paint back.
+Lens & Scale: solved or typed distortion, Undistort / Redistort and ST maps, Lens Grid check, **lens presets** per
+focal + sensor, scale from a measured distance. Outputs: depth (near..far and metric metres, for Lens Blur Native's
+Physical Camera), world position, normals, the 3D Scene viewer with a dense cloud. Export: **FBX** camera + points +
+cards straight into an Action in the Batch, **GMask Tracer** from points (axis / shape / both), a **corner pin** from a
+card. Engine jobs can be queued from EXR sequences on disk (`tools/aifx_queue.py`).
+
+**Download:** see the [Releases](../../releases) page.
+
+| Build | File | Requirements |
+|---|---|---|
+| macOS | `CameraTrackNative-Tester-0.2.zip` | Apple Silicon Mac, 32 GB minimum, Flame 2026/2027 |
+
+The installer shares the engine folder of any other Higgins Post engine node already installed, adds SciPy and
+Depth Anything 3 (Large, 1.6 GB, Apache-2.0 — no Hugging Face account needed) and the Flame hooks. Isolate (SAM3) uses
+Matte LTX Native's model when that kit is installed. Linux build to follow.
+
+### Models and licences
+- Depth Anything 3 (code and Large weights) — ByteDance Seed, Apache-2.0.
+- SAM3 (optional, via Matte LTX Native) — Meta's SAM licence.
+
 ## Pixel Spread Native
 
 Fills the hole in a matte from the picture around it — pure C++ inside Flame, no engine. Connect the plate with the
