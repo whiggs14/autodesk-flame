@@ -7,6 +7,11 @@ No ComfyUI, no shared folders, no cloud.
 
 > **22 Oct - jobs from files, no Flame needed (every engine kit, same version numbers, re-uploaded):** the engine takes `analyze_files` - an EXR sequence on disk plus a job a node made as the template for the settings - and `tools/aifx_queue.py` (installed next to the engine) queues it from any shell or script; the node collects the result through its Analysis Job field. See `tools/ANALYZE_FILES.md` in the engine folder.
 
+> **23 Oct - path translation (every engine kit + Camera Track):** the Render Folder and the Analysis Job folder a node stores are now
+> translated through Flame's own path translation table (`/opt/Autodesk/cfg/pathTranslation.cfg`, Flame Setup > Path Translation) on the
+> machine the node runs on, so a setup saved on one workstation finds its renders and jobs on another. An optional `~/.aifx/path_map.json`
+> adds rules of its own and a `<jobs>` token for the Render Folder - see `tools/PATH_MAP.md` next to the engine.
+
 ## Install or update everything in one go
 
 **macOS:** download [`Higgins Post Updater.command`](../../raw/main/Higgins%20Post%20Updater.command), double-click it (right-click > Open the first time). It asks GitHub for the latest release of every plugin, shows what you have against what is published, and installs or updates what you pick - each plugin's own installer runs, so the shared engine and models are handled the same way as a manual install.
@@ -32,14 +37,16 @@ runs on small subjects, and a built-in Track Box tracker drives that box without
 **Motion Detail** (x2 / x4 / x8 / Auto) repeats frames inside LTX's 8-frame latents so fast motion keeps its matte
 and its motion blur; Auto picks the repeat per frame from a quick motion analysis and only spends the time on fast frames.
 
+**0.9.10:** Output group on the first tab, Render Location on Setup (tab layout fix); **Path translation:** Render Folder and Analysis Job honour Flame's path translation table (`/opt/Autodesk/cfg/pathTranslation.cfg`), plus an optional `~/.aifx/path_map.json` (`tools/PATH_MAP.md`).
+
 **0.9.9:** **Free Engine Memory** button + automatic release after a render; linear plates no longer clipped.
 
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `MatteLTXNative-Tester-0.9.9.zip` | Apple Silicon Mac, 128 GB recommended (64 GB minimum), Flame 2026/2027 |
-| Linux | `MatteLTXNative-Linux-0.9.9.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB+ VRAM (60 GB+ runs fully on the GPU), Flame 2027 |
+| macOS | `MatteLTXNative-Tester-0.9.10.zip` | Apple Silicon Mac, 128 GB recommended (64 GB minimum), Flame 2026/2027 |
+| Linux | `MatteLTXNative-Linux-0.9.10.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB+ VRAM (60 GB+ runs fully on the GPU), Flame 2027 |
 
 Each zip contains the plugin, the Python engine and an installer; the installer downloads the models
 (~56 GB) under your own Hugging Face account. Read `Read Me First.txt` / `README.txt` inside the zip.
@@ -89,6 +96,8 @@ Flame cannot change a node's resolution, so: Resize the plate to the final size,
 Input Colour is read from the clip's colour-space tag automatically on Flame 2026.1+ (S-Log3, ARRI LogC3/LogC4,
 scene-linear) so log plates are converted for the model and back.
 
+**0.5.1:** **Path translation:** Render Folder and Analysis Job honour Flame's path translation table (`/opt/Autodesk/cfg/pathTranslation.cfg`), plus an optional `~/.aifx/path_map.json` (`tools/PATH_MAP.md`).
+
 **0.5.0:** **Free Engine Memory** button + automatic release after a render.
 
 **0.4.9:** engine only - pressing Upscale again while a run is going restarts it with the new frames (the old run no longer finishes into the new job); status from the first second instead of Queued 0% for minutes.
@@ -97,8 +106,8 @@ scene-linear) so log plates are converted for the model and back.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `UpscaleNative-Tester-0.5.0.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for the 7B models), Flame 2026/2027 |
-| Linux | `UpscaleNative-Linux-0.5.0.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB+ for 7B), Flame 2027 |
+| macOS | `UpscaleNative-Tester-0.5.1.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for the 7B models), Flame 2026/2027 |
+| Linux | `UpscaleNative-Linux-0.5.1.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB+ for 7B), Flame 2027 |
 
 The installer downloads SeedVR2 3B + VAE (7 GB; the 7B models are optional, 16.5 GB each) — Apache-2.0, no
 Hugging Face account needed. If Matte LTX Native is installed, Upscale Native shares its engine folder and
@@ -119,14 +128,16 @@ Lens Blur Native's Input3, but it is a plain grey depth pass (near = black) you 
 DA3 Metric depth comes out in real metres (scaled by the field of view DA3-Large estimates), and Output: Raw Depth feeds
 Lens Blur Native's Physical Camera.
 
+**0.3.0:** **Path translation:** Render Folder and Analysis Job honour Flame's path translation table (`/opt/Autodesk/cfg/pathTranslation.cfg`), plus an optional `~/.aifx/path_map.json` (`tools/PATH_MAP.md`).
+
 **0.2.9:** **Free Engine Memory** button + automatic release after a render; linear plates no longer clipped.
 
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `DepthNative-Tester-0.2.9.zip` | Apple Silicon Mac, 16 GB minimum (32 GB recommended), Flame 2026/2027 |
-| Linux | `DepthNative-Linux-0.2.9.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM (16 GB for DA3 at 1008 px), Flame 2027 |
+| macOS | `DepthNative-Tester-0.3.0.zip` | Apple Silicon Mac, 16 GB minimum (32 GB recommended), Flame 2026/2027 |
+| Linux | `DepthNative-Linux-0.3.0.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM (16 GB for DA3 at 1008 px), Flame 2027 |
 
 The installer downloads DA3 Large (1.6 GB) and Video Depth Anything Small (0.1 GB); DA3 Metric (1.3 GB) is optional —
 all Apache-2.0, no Hugging Face account needed. Shares the engine folder with Matte LTX Native / Upscale Native if present.
@@ -148,14 +159,16 @@ leaves the workstation unless that engine is selected). Moving mode propagates t
 in/outpainting when Matte LTX Native is installed alongside. Variations, seed, reference strength, Matte Area
 (chroma screen / paint grey), Input Colour from the clip's colour-space tag on Flame 2026.1+.
 
+**0.3.0:** **Path translation:** Render Folder and Analysis Job honour Flame's path translation table (`/opt/Autodesk/cfg/pathTranslation.cfg`), plus an optional `~/.aifx/path_map.json` (`tools/PATH_MAP.md`).
+
 **0.2.9:** **Free Engine Memory** button + automatic release after a render; ACEScg / linear plates no longer clipped.
 
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `BackgroundNative-Tester-0.2.9.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for Qwen-Image-Edit), Flame 2026/2027 |
-| Linux | `BackgroundNative-Linux-0.2.9.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB for Qwen-Image-Edit), Flame 2027 |
+| macOS | `BackgroundNative-Tester-0.3.0.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for Qwen-Image-Edit), Flame 2026/2027 |
+| Linux | `BackgroundNative-Linux-0.3.0.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB for Qwen-Image-Edit), Flame 2027 |
 
 The installer downloads the local model(s) you choose — Qwen-Image-Edit-2511 + Lightning (55 GB) and/or FLUX.2 Klein 4B
 (15 GB), both Apache-2.0, no Hugging Face account needed — and offers the gated LTX In/Outpainting IC-LoRA for Moving
@@ -177,6 +190,8 @@ the prompt, press Generate. The node stores the element with its own alpha and o
 own comp, or a quick Over / Screen / Add in place. Fit to matte (stretch / inside / cover), plate colour match, fade at
 the matte edge, luminance key with threshold / softness / grow, Input Colour from the clip's tag on Flame 2026.1+.
 
+**0.4.2:** **Path translation:** Render Folder and Analysis Job honour Flame's path translation table (`/opt/Autodesk/cfg/pathTranslation.cfg`), plus an optional `~/.aifx/path_map.json` (`tools/PATH_MAP.md`).
+
 **0.4.1:** **Free Engine Memory** button + automatic release after a render; linear plates no longer clipped.
 
 **0.4:** **Motion** controls - Wind Direction / Strength, Turbulence, Vortex, Density, Speed, Detail Scale, Lighting - with a draggable wind icon in the viewer; a full-frame white matte is accepted; the comp is done in linear light.
@@ -185,8 +200,8 @@ the matte edge, luminance key with threshold / softness / grow, Input Colour fro
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `ElementNative-Tester-0.4.1.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `ElementNative-Linux-0.4.1.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `ElementNative-Tester-0.4.2.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `ElementNative-Linux-0.4.2.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 It uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus the **Gemma-4 12B text encoder** (26 GB,
 from the same gated Lightricks/LTX-2.5 repository) that LTX needs for the prompt — Matte LTX Native does not install it, so
@@ -208,14 +223,16 @@ Start, HDR Strength and Range are live; Gain map and SDR-linearised outputs for 
 it applies. Optional **Depth**, **Normals** and **Hero Matte** passes (Depth Anything 3, LTX Alpha Gen) come out of the same
 Generate as extra Output choices — with Follow Duplicates, one compute feeds an HDR / depth / normals / matte set of nodes.
 
+**0.3.0:** **Path translation:** Render Folder and Analysis Job honour Flame's path translation table (`/opt/Autodesk/cfg/pathTranslation.cfg`), plus an optional `~/.aifx/path_map.json` (`tools/PATH_MAP.md`).
+
 **0.2.9:** **Free Engine Memory** button + automatic release after a render; linear plates no longer clipped.
 
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `HDRNative-Tester-0.2.9.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `HDRNative-Linux-0.2.9.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `HDRNative-Tester-0.3.0.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `HDRNative-Linux-0.3.0.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus a 1.3 GB LoRA that is gated on Hugging Face:
 accept the licence on the model page, and the installer downloads it under your login.
@@ -303,6 +320,8 @@ length, f-stop and focus distance in metres on a Camera tab, with Analyze Camera
 focus breathing. A Focus Pull tab keys a rack focus between two picked points, Refine Z to Plate snaps a low-res Z onto the
 picture's edges, and out-of-focus foreground edges stay soft over a sharp background.
 
+**0.9.10:** **Inpaint Behind Matte** - the plate behind a matted element is filled (Push-Pull / Diffusion / Texture, Inpaint Grow) before the defocus, so no sharp halo along the foreground edge; Focus & Inpaint on one tab.
+
 **0.9.9:** 17 **named lens presets** in the Iris menu - Cooke S4 / Speed Panchro, Zeiss Super Speed / Master Prime / Ultra Prime, Canon K-35, Leica Summilux-C, Panavision Primo / C-series / E-series, Lomo-Kowa, Hawk V-Lite, Helios 44-2, Petzval, Meyer Trioplan, a catadioptric and a modern zoom - each setting the iris, cat's eye and chromatic aberration together.
 
 **0.9.8:** **Input Colour** - log plates (Auto from Flame's tag, S-Log3, LogC3/4, ACEScct) are defocused in linear light, so highlights bloom into proper bokeh.
@@ -311,8 +330,8 @@ picture's edges, and out-of-focus foreground edges stay soft over a sharp backgr
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `LensBlurNative-Tester-0.9.9.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `LensBlurNative-Linux-0.9.9.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `LensBlurNative-Tester-0.9.10.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `LensBlurNative-Linux-0.9.10.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 ## Denoise Native
 
@@ -379,11 +398,13 @@ Physical Camera), world position, normals, the 3D Scene viewer with a dense clou
 cards straight into an Action in the Batch, **GMask Tracer** from points (axis / shape / both), a **corner pin** from a
 card. Engine jobs can be queued from EXR sequences on disk (`tools/aifx_queue.py`).
 
+**0.2.1:** **Path translation:** Render Folder and Analysis Job honour Flame's path translation table (`/opt/Autodesk/cfg/pathTranslation.cfg`), plus an optional `~/.aifx/path_map.json` (`tools/PATH_MAP.md`).
+
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `CameraTrackNative-Tester-0.2.zip` | Apple Silicon Mac, 32 GB minimum, Flame 2026/2027 |
+| macOS | `CameraTrackNative-Tester-0.2.1.zip` | Apple Silicon Mac, 32 GB minimum, Flame 2026/2027 |
 
 The installer shares the engine folder of any other Higgins Post engine node already installed, adds SciPy and
 Depth Anything 3 (Large, 1.6 GB, Apache-2.0 — no Hugging Face account needed) and the Flame hooks. Isolate (SAM3) uses
@@ -432,6 +453,8 @@ and backward motion and an ST map chained from a Reference Frame are stored with
   the rest of the shape. The `aifx_autorefresh` hook adds a GMask Tracer node loaded with it to the Batch, wired to the
   same clip. GMask (check) previews the shapes, and follows the GMask by itself while you edit it.
 
+**0.2.0:** **Path translation:** Render Folder and Analysis Job honour Flame's path translation table (`/opt/Autodesk/cfg/pathTranslation.cfg`), plus an optional `~/.aifx/path_map.json` (`tools/PATH_MAP.md`).
+
 **0.1.9:** Export GMask **Keyframes On** - shape vertices, the GMask's axis, or axis + residual vertices; **Free Engine Memory** + release after a render; linear plates. *(Mac installer re-uploaded 21 Oct evening: it now finds / installs `uv` itself - the first upload failed with "No module named pip" on a Mac where `uv` was not on the PATH.)*
 
 **0.1.8:** Paint Carry's **matte output** is the carried paint's matte again (it rendered solid white with Over Front on); engine re-submit / Delete Result handling.
@@ -442,8 +465,8 @@ and backward motion and an ST map chained from a Reference Frame are stored with
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `MotionVectorsNative-Tester-0.1.9.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
-| Linux | `MotionVectorsNative-Linux-0.1.9.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM, Flame 2027, **a Higgins Post engine kit installed** |
+| macOS | `MotionVectorsNative-Tester-0.2.0.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
+| Linux | `MotionVectorsNative-Linux-0.2.0.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM, Flame 2027, **a Higgins Post engine kit installed** |
 
 No downloads: the SEA-RAFT weights (Small 34 MB, Medium 75 MB) ship in the kit. The installer finds the engine folder of
 an installed Higgins Post kit, adds the flow engine files and the weights, installs the plugin and updates the Flame hooks.
@@ -460,14 +483,16 @@ daylight to night, with an optional description. The Front's matte limits where 
 Colour follows the clip's tag on Flame 2026.1+, and a Z depth on Input3 gives a Normals output. Press Generate once — the
 result is stored with the node and renders instantly.
 
+**0.1.9:** **Path translation:** Render Folder and Analysis Job honour Flame's path translation table (`/opt/Autodesk/cfg/pathTranslation.cfg`), plus an optional `~/.aifx/path_map.json` (`tools/PATH_MAP.md`).
+
 **0.1.8:** **Free Engine Memory** button + automatic release after a render; linear plates no longer clipped.
 
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `RelightNative-Tester-0.1.8.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `RelightNative-Linux-0.1.8.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `RelightNative-Tester-0.1.9.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `RelightNative-Linux-0.1.9.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus two LoRAs (Relight, Day-To-Night) and the
 Gemma-4 12B text encoder for the prompt (26 GB; Matte LTX Native does not install it), all gated on Hugging Face: accept
@@ -485,6 +510,8 @@ untouched. For static backgrounds it can first paint the object out of the first
 IC-LoRA to remove every person and vehicle (and their shadows) by prompt, the matte limiting where it is used. Matte grow /
 feather, optional notes about what is behind the object, Input Colour from the clip's tag on Flame 2026.1+.
 
+**0.2.0:** **Path translation:** Render Folder and Analysis Job honour Flame's path translation table (`/opt/Autodesk/cfg/pathTranslation.cfg`), plus an optional `~/.aifx/path_map.json` (`tools/PATH_MAP.md`).
+
 **0.1.9:** Qwen / Flux fill that invented a person is caught and regenerated (prompt reworded too); **Free Engine Memory** + release after a render; linear plates.
 
 **0.1.8:** engine only - pressing Remove again while a run is going restarts it with the new settings; Delete Result stops a run.
@@ -493,8 +520,8 @@ feather, optional notes about what is behind the object, Input Colour from the c
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `ObjectRemovalNative-Tester-0.1.9.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `ObjectRemovalNative-Linux-0.1.9.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `ObjectRemovalNative-Tester-0.2.0.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `ObjectRemovalNative-Linux-0.2.0.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus the In/Outpainting and Clean Plate IC-LoRAs
 and the Gemma-4 12B text encoder for the prompt (26 GB; Matte LTX Native does not install it) — all gated on Hugging Face;
@@ -514,6 +541,8 @@ expression and pose per frame). Outputs a **UV pass** (R = U, G = V, alpha = fac
 Optional **BootsTAPIR** dense-track refine nudges the mesh onto tracked skin points between the landmarks. Track once —
 the mesh per frame is stored with the node and the passes are drawn at plate resolution, instantly.
 
+**0.2.3:** controls back on their own tabs (Adjust & Texture / Duplicates); **Path translation:** Render Folder and Analysis Job honour Flame's path translation table (`/opt/Autodesk/cfg/pathTranslation.cfg`), plus an optional `~/.aifx/path_map.json` (`tools/PATH_MAP.md`).
+
 **0.2.2:** refine no longer fails on a missing `dm-tree` (installer adds it; the track carries on without refine and says so); **Free Engine Memory** + release after a render; linear plates. *(Mac installer re-uploaded 21 Oct evening: it now finds / installs `uv` itself - the first upload failed with "No module named pip" on a Mac where `uv` was not on the PATH.)*
 
 **0.2.1:** Unwrap Margin direction fixed in the Texture wrap (the paint landed smaller than its unwrap); engine re-submit / Delete Result handling.
@@ -524,8 +553,8 @@ the mesh per frame is stored with the node and the passes are drawn at plate res
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `FaceUVNative-Tester-0.2.2.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
-| Linux | `FaceUVNative-Linux-0.2.2.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, Flame 2027, **a Higgins Post engine kit installed** |
+| macOS | `FaceUVNative-Tester-0.2.3.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
+| Linux | `FaceUVNative-Linux-0.2.3.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, Flame 2027, **a Higgins Post engine kit installed** |
 
 The face models (RetinaFace, BlazeFace, MediaPipe mesh) and FLAME 2023 Open ship in the kit; the installer adds uniface and
 ONNX Runtime to the engine's Python and downloads the BootsTAPIR checkpoint (200 MB) from Google DeepMind.
