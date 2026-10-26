@@ -26,7 +26,9 @@ No ComfyUI, no shared folders, no cloud.
 
 > **26 Oct - Render Monitor + optional cloud rendering (every engine kit + Camera Track):** a Flame-style progress window now opens
 > by itself with every render (collect, upload, render, result) with a Stop Render button; collect is ~10x faster; every node's last
-> tab is Setup (Render Location + Duplicates + Diagnostics). **Cloud rendering is optional:** Python > Higgins Post > Setup... >
+> tab is Setup (Render Location + Duplicates + Diagnostics). The Setup dialog's **Render Root takes tokens** - `<project>` `<shot>`
+> `<batch>` `<clip>` `<user>` - so `/projects/<project>/shots/<shot>/ml/output/video` lands every render in its shot folder.
+> **Cloud rendering is optional:** Python > Higgins Post > Setup... >
 > Render Backend > Cloud sends the heavy nodes to a GPU on Runpod (serverless, billed per second, or a pod) or to an Azure VM;
 > `tools/RUNPOD_SETUP.md` next to the engine walks through the Runpod setup step by step. Local rendering stays the default and
 > needs nothing new. Linux installers gained an unattended worker mode (`AIFX_WORKER=1`) and the numpy/OpenCV pin. Older kits:
@@ -57,7 +59,7 @@ runs on small subjects, and a built-in Track Box tracker drives that box without
 **Motion Detail** (x2 / x4 / x8 / Auto) repeats frames inside LTX's 8-frame latents so fast motion keeps its matte
 and its motion blur; Auto picks the repeat per frame from a quick motion analysis and only spends the time on fast frames.
 
-**0.9.12:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
+**0.9.12:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, Render Root **tokens** (`<project>` `<shot>` ...), optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
 
 **0.9.11:** **Setup file:** Python > Higgins Post > Setup... sets this machine's Render Root; nodes with the default Render Folder render there, and a **Renders To** line shows where a run lands.
 
@@ -120,7 +122,7 @@ Flame cannot change a node's resolution, so: Resize the plate to the final size,
 Input Colour is read from the clip's colour-space tag automatically on Flame 2026.1+ (S-Log3, ARRI LogC3/LogC4,
 scene-linear) so log plates are converted for the model and back.
 
-**0.5.3:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
+**0.5.3:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, Render Root **tokens** (`<project>` `<shot>` ...), optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
 
 **0.5.2:** **Setup file:** Python > Higgins Post > Setup... sets this machine's Render Root; nodes with the default Render Folder render there, and a **Renders To** line shows where a run lands.
 
@@ -156,7 +158,7 @@ Lens Blur Native's Input3, but it is a plain grey depth pass (near = black) you 
 DA3 Metric depth comes out in real metres (scaled by the field of view DA3-Large estimates), and Output: Raw Depth feeds
 Lens Blur Native's Physical Camera.
 
-**0.3.2:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
+**0.3.2:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, Render Root **tokens** (`<project>` `<shot>` ...), optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
 
 **0.3.1:** **Setup file:** Python > Higgins Post > Setup... sets this machine's Render Root; nodes with the default Render Folder render there, and a **Renders To** line shows where a run lands.
 
@@ -191,7 +193,7 @@ leaves the workstation unless that engine is selected). Moving mode propagates t
 in/outpainting when Matte LTX Native is installed alongside. Variations, seed, reference strength, Matte Area
 (chroma screen / paint grey), Input Colour from the clip's colour-space tag on Flame 2026.1+.
 
-**0.3.2:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
+**0.3.2:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, Render Root **tokens** (`<project>` `<shot>` ...), optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
 
 **0.3.1:** **Setup file:** Python > Higgins Post > Setup... sets this machine's Render Root; nodes with the default Render Folder render there, and a **Renders To** line shows where a run lands.
 
@@ -226,7 +228,7 @@ the prompt, press Generate. The node stores the element with its own alpha and o
 own comp, or a quick Over / Screen / Add in place. Fit to matte (stretch / inside / cover), plate colour match, fade at
 the matte edge, luminance key with threshold / softness / grow, Input Colour from the clip's tag on Flame 2026.1+.
 
-**0.4.4:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
+**0.4.4:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, Render Root **tokens** (`<project>` `<shot>` ...), optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
 
 **0.4.3:** **Setup file:** Python > Higgins Post > Setup... sets this machine's Render Root; nodes with the default Render Folder render there, and a **Renders To** line shows where a run lands.
 
@@ -263,7 +265,7 @@ Start, HDR Strength and Range are live; Gain map and SDR-linearised outputs for 
 it applies. Optional **Depth**, **Normals** and **Hero Matte** passes (Depth Anything 3, LTX Alpha Gen) come out of the same
 Generate as extra Output choices — with Follow Duplicates, one compute feeds an HDR / depth / normals / matte set of nodes.
 
-**0.3.2:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
+**0.3.2:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, Render Root **tokens** (`<project>` `<shot>` ...), optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
 
 **0.3.1:** **Setup file:** Python > Higgins Post > Setup... sets this machine's Render Root; nodes with the default Render Folder render there, and a **Renders To** line shows where a run lands.
 
@@ -501,7 +503,7 @@ and backward motion and an ST map chained from a Reference Frame are stored with
   the rest of the shape. The `aifx_autorefresh` hook adds a GMask Tracer node loaded with it to the Batch, wired to the
   same clip. GMask (check) previews the shapes, and follows the GMask by itself while you edit it.
 
-**0.2.2:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
+**0.2.2:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, Render Root **tokens** (`<project>` `<shot>` ...), optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
 
 **0.2.1:** **Setup file:** Python > Higgins Post > Setup... sets this machine's Render Root; nodes with the default Render Folder render there, and a **Renders To** line shows where a run lands.
 
@@ -535,7 +537,7 @@ daylight to night, with an optional description. The Front's matte limits where 
 Colour follows the clip's tag on Flame 2026.1+, and a Z depth on Input3 gives a Normals output. Press Generate once — the
 result is stored with the node and renders instantly.
 
-**0.1.11:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
+**0.1.11:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, Render Root **tokens** (`<project>` `<shot>` ...), optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
 
 **0.1.10:** **Setup file:** Python > Higgins Post > Setup... sets this machine's Render Root; nodes with the default Render Folder render there, and a **Renders To** line shows where a run lands.
 
@@ -566,7 +568,7 @@ untouched. For static backgrounds it can first paint the object out of the first
 IC-LoRA to remove every person and vehicle (and their shadows) by prompt, the matte limiting where it is used. Matte grow /
 feather, optional notes about what is behind the object, Input Colour from the clip's tag on Flame 2026.1+.
 
-**0.2.2:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
+**0.2.2:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, Render Root **tokens** (`<project>` `<shot>` ...), optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
 
 **0.2.1:** **Setup file:** Python > Higgins Post > Setup... sets this machine's Render Root; nodes with the default Render Folder render there, and a **Renders To** line shows where a run lands.
 
@@ -601,7 +603,7 @@ expression and pose per frame). Outputs a **UV pass** (R = U, G = V, alpha = fac
 Optional **BootsTAPIR** dense-track refine nudges the mesh onto tracked skin points between the landmarks. Track once —
 the mesh per frame is stored with the node and the passes are drawn at plate resolution, instantly.
 
-**0.2.5:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
+**0.2.5:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, Render Root **tokens** (`<project>` `<shot>` ...), optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
 
 **0.2.4:** **Setup file:** Python > Higgins Post > Setup... sets this machine's Render Root; nodes with the default Render Folder render there, and a **Renders To** line shows where a run lands. (Renders To sits in Diagnostics here)
 
