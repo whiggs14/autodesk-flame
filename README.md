@@ -34,6 +34,10 @@ No ComfyUI, no shared folders, no cloud.
 > needs nothing new. Linux installers gained an unattended worker mode (`AIFX_WORKER=1`) and the numpy/OpenCV pin. Older kits:
 > `FlameHooks-Hotfix-1.3.zip` installs the hooks (Setup dialog, Render Monitor) on their own.
 
+## Colour Space Favourites (Python hook)
+
+Tag MediaHub imports with your most-used colour spaces from a right-click menu (MediaHub > Files > Colour Space...), with an editor under Python > Higgins Post > Colour Space Favourites... to change them. Not an OFX kit: copy [`python/colour_space_favourites`](python/colour_space_favourites) into `/opt/Autodesk/shared/python/` - see its README.
+
 ## Install or update everything in one go
 
 **macOS:** download [`Higgins Post Updater.command`](../../raw/main/Higgins%20Post%20Updater.command), double-click it (right-click > Open the first time). It asks GitHub for the latest release of every plugin, shows what you have against what is published, and installs or updates what you pick - each plugin's own installer runs, so the shared engine and models are handled the same way as a manual install.
