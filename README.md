@@ -36,7 +36,7 @@ No ComfyUI, no shared folders, no cloud.
 
 ## Colour Space Favourites (Python hook)
 
-Tag MediaHub imports with your most-used colour spaces from a right-click menu (MediaHub > Files > Colour Space...), with an editor under Python > Higgins Post > Colour Space Favourites... to change them. Not an OFX kit: copy [`python/colour_space_favourites`](python/colour_space_favourites) into `/opt/Autodesk/shared/python/` - see its README.
+Tag MediaHub imports, clips on the Desktop / in the Media Panel, timeline segments and Batch nodes with your most-used colour spaces from a right-click menu, with an editor under Python > Higgins Post > Colour Space Favourites... to change them. Not an OFX kit: copy [`python/colour_space_favourites`](python/colour_space_favourites) into `/opt/Autodesk/shared/python/` - see its README.
 
 ## Install or update everything in one go
 

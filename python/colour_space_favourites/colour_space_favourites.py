@@ -2,13 +2,22 @@
 Colour Space Favourites
 =======================
 
-Script Version: 2.1.0
+Script Version: 2.2.0
 Flame Version:  2023.2+ (tested target: 2027)
 
 Adds a "Colour Space..." right-click menu in the MediaHub (Files tab) with your
 most-used tagged colour spaces. Picking one sets the MediaHub General Colour
 Management options to Tag Only + that colour space, so every clip you import
 from then on is tagged with it.
+
+The same favourites tag media already in Flame:
+    Media Panel / Desktop > right-click clips > Tag Colour Space...
+        adds a Source Colour Mgmt Timeline FX (Tag Only) to every segment
+        (reuses one already there; leaves converting ones alone)
+    Timeline > right-click segments > Tag Colour Space...   (same, per segment)
+    Batch > right-click nodes > Tag Colour Space...
+        inserts a Colour Mgmt node (Tag Only) after each selected node and
+        re-wires what its main output fed
 
 Favourites are edited from inside Flame:
     Flame main menu > Higgins Post > Colour Space Favourites...
@@ -32,7 +41,7 @@ import os
 import flame
 
 SCRIPT_NAME = 'Colour Space Favourites'
-SCRIPT_VERSION = 'v2.1.0'
+SCRIPT_VERSION = 'v2.2.0'
 SCRIPT_PATH = os.path.abspath(os.path.dirname(__file__))
 CONFIG_DIR = os.path.join(SCRIPT_PATH, 'config')
 CONFIG_FILE = os.path.join(CONFIG_DIR, 'colour_space_favourites.json')
@@ -163,6 +172,164 @@ def _make_action(colour_space):
     def execute(selection):  # selection unused; the option is global to MediaHub
         set_tagged_colour_space(colour_space)
     return execute
+
+
+# ---- Tagging clips that are already in Flame -------------------------------
+SOURCE_FX = 'Source Colour Mgmt'
+TAG_ONLY = 'Tag Only'
+
+
+def _check_colour_space(colour_space):
+    """True if the name (or an alias) exists in the project's config. If the
+    config can't be read, let Flame be the judge when the tag is set."""
+    _, lookup = project_colour_spaces()
+    if lookup and colour_space.lower() not in lookup:
+        _dialog(
+            f'"{colour_space}" is not available in this project\'s colour config.\n\n'
+            'Use Higgins Post > Colour Space Favourites... to pick a valid one.')
+        return False
+    return True
+
+
+def _tag_segment(segment, colour_space):
+    """Tag one timeline segment with a Source Colour Mgmt in Tag Only mode.
+    Reuses a Tag Only source effect already on the segment; leaves a segment
+    alone if its Source Colour Mgmt is converting (Input Transform etc.).
+    Returns 'tagged', 'skipped' or 'converting'."""
+    try:
+        for fx in segment.effects:
+            if fx.type == SOURCE_FX:
+                if str(fx.mode) != TAG_ONLY:
+                    return 'converting'
+                fx.tagged_colour_space = colour_space
+                return 'tagged'
+        fx = segment.create_effect(SOURCE_FX)
+        if fx is None:
+            return 'skipped'  # gaps and other segments without a source
+        fx.mode = TAG_ONLY
+        fx.tagged_colour_space = colour_space
+        return 'tagged'
+    except Exception as e:  # noqa: BLE001
+        _log(f'Could not tag segment {getattr(segment, "name", "?")}: {e}')
+        return 'skipped'
+
+
+def _clip_segments(clip):
+    for version in clip.versions:
+        for track in version.tracks:
+            for segment in track.segments:
+                yield segment
+
+
+def _report(colour_space, counts, what):
+    msg = f'Tagged {counts["tagged"]} {what} as {colour_space}.'
+    if counts['converting']:
+        msg += (f' Left {counts["converting"]} alone: they already have a '
+                f'{SOURCE_FX} that converts (not Tag Only).')
+    if counts['skipped']:
+        msg += f' Skipped {counts["skipped"]} (gaps or no source).'
+    _console(msg)
+    if counts['converting'] or (counts['skipped'] and not counts['tagged']):
+        _dialog(msg, 'warning')
+
+
+def tag_clips(selection, colour_space):
+    """Media Panel / Desktop clips and sequences, or timeline segments."""
+    if not _check_colour_space(colour_space):
+        return
+    counts = {'tagged': 0, 'skipped': 0, 'converting': 0}
+    for item in selection:
+        if isinstance(item, flame.PySegment):
+            segments = [item]
+        elif isinstance(item, (flame.PyClip, flame.PySequence)):
+            segments = _clip_segments(item)
+        else:
+            continue
+        for segment in segments:
+            counts[_tag_segment(segment, colour_space)] += 1
+    _report(colour_space, counts, 'segment(s)')
+
+
+def _downstream(node, output_socket):
+    """[(child node, child input socket)] fed by node's output_socket."""
+    name = str(_value(node.name))
+    out = []
+    try:
+        outputs = node.sockets.get('output') or {}
+    except Exception:  # noqa: BLE001
+        outputs = {}
+    children = outputs.get(output_socket) or []
+    # Children also fed by another output (e.g. the clip's matte): their
+    # matte inputs come from that other output, so leave those alone.
+    also_other = {c for sock, kids in outputs.items() if sock != output_socket
+                  for c in (kids or [])}
+    for child_name in dict.fromkeys(children):
+        child = flame.batch.get_node(child_name)
+        if child is None:
+            continue
+        for socket, parents in (child.sockets.get('input') or {}).items():
+            if name not in (parents or []):
+                continue
+            if child_name in also_other and 'matte' in socket.lower():
+                continue
+            out.append((child, socket))
+    return out
+
+
+def _value(attr):
+    try:
+        return attr.get_value()
+    except AttributeError:
+        return attr
+
+
+def tag_batch_nodes(selection, colour_space):
+    """Insert a Colour Mgmt node (Tag Only) after each selected Batch node,
+    re-wiring whatever its main output fed so downstream sees the tag."""
+    if not _check_colour_space(colour_space):
+        return
+    tagged = 0
+    for node in selection:
+        try:
+            outputs = list(node.output_sockets)
+        except Exception:  # noqa: BLE001
+            continue
+        if not outputs:
+            continue
+        main_out = outputs[0]
+        children = _downstream(node, main_out)
+
+        tag = flame.batch.create_node('Colour Mgmt')
+        tag.mode = TAG_ONLY
+        tag.tagged_colour_space = colour_space
+        try:
+            tag.pos_x = _value(node.pos_x) + 250
+            tag.pos_y = _value(node.pos_y)
+        except Exception:  # noqa: BLE001
+            pass
+
+        flame.batch.connect_nodes(node, main_out, tag, 'Default')
+        for child, socket in children:
+            flame.batch.connect_nodes(tag, 'Default', child, socket)
+        tagged += 1
+    _console(f'Added {tagged} Colour Mgmt tag node(s): {colour_space}.')
+
+
+def _make_clip_action(colour_space):
+    return lambda selection: tag_clips(selection, colour_space)
+
+
+def _make_batch_action(colour_space):
+    return lambda selection: tag_batch_nodes(selection, colour_space)
+
+
+def _scope_clips(selection):
+    return any(isinstance(i, (flame.PyClip, flame.PySequence, flame.PySegment))
+               for i in selection)
+
+
+def _scope_batch(selection):
+    return any(isinstance(i, flame.PyNode) for i in selection)
 
 
 # ---------------------------------------------------------------------------
@@ -349,3 +516,33 @@ def get_main_menu_custom_ui_actions():
             'minimumVersion': '2023.2',
         }],
     }]
+
+
+def _tag_menu(make_action, scope):
+    return [{
+        'name': 'Tag Colour Space...',
+        'actions': [
+            {
+                'name': f['label'],
+                'isVisible': scope,
+                'execute': make_action(f['colour_space']),
+                'minimumVersion': '2023.2',
+            }
+            for f in load_favourites()
+        ],
+    }]
+
+
+def get_media_panel_custom_ui_actions():
+    # Media Panel / Desktop > right-click clips or sequences > Tag Colour Space...
+    return _tag_menu(_make_clip_action, _scope_clips)
+
+
+def get_timeline_custom_ui_actions():
+    # Timeline > right-click segments > Tag Colour Space...
+    return _tag_menu(_make_clip_action, _scope_clips)
+
+
+def get_batch_custom_ui_actions():
+    # Batch > right-click nodes > Tag Colour Space... (inserts a Colour Mgmt tag)
+    return _tag_menu(_make_batch_action, _scope_batch)

@@ -5,6 +5,10 @@ A Flame Python hook for tagging imports with the colour spaces you use most, wit
 - **MediaHub > Files > right-click > Colour Space...** lists your favourites (S-Log3, Rec.709, ACEScg to start) plus **From File or Rules**. Picking one sets the MediaHub colour management to **Tag Only** with that colour space for every import after it.
 - **Flame main menu > Higgins Post > Colour Space Favourites...** opens the editor: filter and double-click any colour space in the project's OCIO config to add it, double-click a label to rename, Move Up / Move Down / Remove, Save. The menu updates straight away.
 
+- **Media Panel / Desktop > right-click clips or sequences > Tag Colour Space...** tags clips already in Flame: a **Source Colour Mgmt** Timeline FX in Tag Only mode on every segment. One already there in Tag Only is reused; one that converts (Input Transform etc.) is left alone and reported.
+- **Timeline > right-click segments > Tag Colour Space...** does the same for the selected segments.
+- **Batch > right-click nodes > Tag Colour Space...** inserts a **Colour Mgmt** node (Tag Only) after each selected node and re-wires what its main output fed (matte connections from a clip's matte output stay where they are).
+
 Favourites are saved to `config/colour_space_favourites.json` next to the script, so updating the script keeps them.
 
 ## Install
