@@ -2,7 +2,7 @@
 Colour Space Favourites
 =======================
 
-Script Version: 2.2.0
+Script Version: 2.2.1
 Flame Version:  2023.2+ (tested target: 2027)
 
 Adds a "Colour Space..." right-click menu in the MediaHub (Files tab) with your
@@ -41,7 +41,7 @@ import os
 import flame
 
 SCRIPT_NAME = 'Colour Space Favourites'
-SCRIPT_VERSION = 'v2.2.0'
+SCRIPT_VERSION = 'v2.2.1'
 SCRIPT_PATH = os.path.abspath(os.path.dirname(__file__))
 CONFIG_DIR = os.path.join(SCRIPT_PATH, 'config')
 CONFIG_FILE = os.path.join(CONFIG_DIR, 'colour_space_favourites.json')
@@ -191,6 +191,20 @@ def _check_colour_space(colour_space):
     return True
 
 
+def _value(attr):
+    """Plain Python value of a Flame attribute (they come back wrapped, and
+    str() of a wrapped string adds quotes: "'Tag Only'")."""
+    try:
+        return attr.get_value()
+    except AttributeError:
+        return attr
+
+
+def _is_tag_only(fx):
+    mode = str(_value(fx.mode)).strip('\'"').strip().lower()
+    return mode == TAG_ONLY.lower()
+
+
 def _tag_segment(segment, colour_space):
     """Tag one timeline segment with a Source Colour Mgmt in Tag Only mode.
     Reuses a Tag Only source effect already on the segment; leaves a segment
@@ -198,8 +212,8 @@ def _tag_segment(segment, colour_space):
     Returns 'tagged', 'skipped' or 'converting'."""
     try:
         for fx in segment.effects:
-            if fx.type == SOURCE_FX:
-                if str(fx.mode) != TAG_ONLY:
+            if str(_value(fx.type)).strip('\'"') == SOURCE_FX:
+                if not _is_tag_only(fx):
                     return 'converting'
                 fx.tagged_colour_space = colour_space
                 return 'tagged'
@@ -274,13 +288,6 @@ def _downstream(node, output_socket):
                 continue
             out.append((child, socket))
     return out
-
-
-def _value(attr):
-    try:
-        return attr.get_value()
-    except AttributeError:
-        return attr
 
 
 def tag_batch_nodes(selection, colour_space):
