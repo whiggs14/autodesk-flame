@@ -436,8 +436,7 @@ with a core / mid / halo profile and per-channel spread (drag the profile graph 
 **light wrap** (the plate onto the element's edge), **spill** (the element onto the plate), coherent **flicker / shimmer**,
 **glints and streaks** from the lens's iris (the same named-lens presets as Lens Blur Native, with Rounded), Z depth and
 lens dirt. Front (+ matte) = the element, Back = the plate; **Apply To** Front / Back / Both makes the comp. Pick Threshold
-then click a light to set where the glow starts; Match Light / Match Position fit it to a reference. First tester build;
-the icon is a placeholder for now.
+then click a light to set where the glow starts; Match Light / Match Position fit it to a reference. First tester build.
 
 **Download:** see the [Releases](../../releases) page.
 
