@@ -34,6 +34,15 @@ No ComfyUI, no shared folders, no cloud.
 > needs nothing new. Linux installers gained an unattended worker mode (`AIFX_WORKER=1`) and the numpy/OpenCV pin. Older kits:
 > `FlameHooks-Hotfix-1.3.zip` installs the hooks (Setup dialog, Render Monitor) on their own.
 
+> **30 Oct - per-node rendering routes, LAN rendering, offline engine (every engine kit + Camera Track); Denoise 0.4, Camera Track 0.3
+> (first Linux kit), Lens Blur 0.9.11, UV Wrap 0.3.2; two new nodes - Optics Native and Screen Comp Native:** Python > Higgins Post >
+> Setup... has one **Local / LAN / Cloud** choice per node. **LAN rendering** sends a node's jobs to another Mac or Linux machine that
+> has the engine installed - nothing is uploaded, the job folder lives on a shared disk, workers are found by themselves (Bonjour) and
+> several make a pool (`tools/CLOUD.md`, section "LAN rendering"). The engine runs **offline** (no library may download at run time;
+> first-use model downloads are pinned to a SHA-256). The auto-refresh hook no longer reloads a node's setup while Flame renders it
+> (a Flame 2027.2 crash). A kit installed on its own, without Matte LTX Native, could stall every render since the 26 Oct kits
+> ("No module named cloud") - fixed. Older kits: `FlameHooks-Hotfix-1.4.zip` installs the current hooks on their own.
+
 ## Install or update everything in one go
 
 **macOS:** download [`Higgins Post Updater.command`](../../raw/main/Higgins%20Post%20Updater.command), double-click it (right-click > Open the first time). It asks GitHub for the latest release of every plugin, shows what you have against what is published, and installs or updates what you pick - each plugin's own installer runs, so the shared engine and models are handled the same way as a manual install.
@@ -59,6 +68,8 @@ runs on small subjects, and a built-in Track Box tracker drives that box without
 **Motion Detail** (x2 / x4 / x8 / Auto) repeats frames inside LTX's 8-frame latents so fast motion keeps its matte
 and its motion blur; Auto picks the repeat per frame from a quick motion analysis and only spends the time on fast frames.
 
+**0.9.13:** **Where each node renders** (Local / LAN / Cloud per node), **LAN rendering** (worker pool on your own network, `tools/CLOUD.md`), offline engine with pinned model downloads, hooks crash fix; a kit installed without Matte LTX Native no longer stalls its renders.
+
 **0.9.12:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, Render Root **tokens** (`<project>` `<shot>` ...), optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
 
 **0.9.11:** **Setup file:** Python > Higgins Post > Setup... sets this machine's Render Root; nodes with the default Render Folder render there, and a **Renders To** line shows where a run lands.
@@ -71,8 +82,8 @@ and its motion blur; Auto picks the repeat per frame from a quick motion analysi
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `MatteLTXNative-Tester-0.9.12.zip` | Apple Silicon Mac, 128 GB recommended (64 GB minimum), Flame 2026/2027 |
-| Linux | `MatteLTXNative-Linux-0.9.12.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB+ VRAM (60 GB+ runs fully on the GPU), Flame 2027 |
+| macOS | `MatteLTXNative-Tester-0.9.13.zip` | Apple Silicon Mac, 128 GB recommended (64 GB minimum), Flame 2026/2027 |
+| Linux | `MatteLTXNative-Linux-0.9.13.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB+ VRAM (60 GB+ runs fully on the GPU), Flame 2027 |
 
 Each zip contains the plugin, the Python engine and an installer; the installer downloads the models
 (~56 GB) under your own Hugging Face account. Read `Read Me First.txt` / `README.txt` inside the zip.
@@ -122,6 +133,8 @@ Flame cannot change a node's resolution, so: Resize the plate to the final size,
 Input Colour is read from the clip's colour-space tag automatically on Flame 2026.1+ (S-Log3, ARRI LogC3/LogC4,
 scene-linear) so log plates are converted for the model and back.
 
+**0.5.4:** **Where each node renders** (Local / LAN / Cloud per node), **LAN rendering** (worker pool on your own network, `tools/CLOUD.md`), offline engine with pinned model downloads, hooks crash fix; a kit installed without Matte LTX Native no longer stalls its renders.
+
 **0.5.3:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, Render Root **tokens** (`<project>` `<shot>` ...), optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
 
 **0.5.2:** **Setup file:** Python > Higgins Post > Setup... sets this machine's Render Root; nodes with the default Render Folder render there, and a **Renders To** line shows where a run lands.
@@ -136,8 +149,8 @@ scene-linear) so log plates are converted for the model and back.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `UpscaleNative-Tester-0.5.3.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for the 7B models), Flame 2026/2027 |
-| Linux | `UpscaleNative-Linux-0.5.3.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB+ for 7B), Flame 2027 |
+| macOS | `UpscaleNative-Tester-0.5.4.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for the 7B models), Flame 2026/2027 |
+| Linux | `UpscaleNative-Linux-0.5.4.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB+ for 7B), Flame 2027 |
 
 The installer downloads SeedVR2 3B + VAE (7 GB; the 7B models are optional, 16.5 GB each) — Apache-2.0, no
 Hugging Face account needed. If Matte LTX Native is installed, Upscale Native shares its engine folder and
@@ -158,6 +171,8 @@ Lens Blur Native's Input3, but it is a plain grey depth pass (near = black) you 
 DA3 Metric depth comes out in real metres (scaled by the field of view DA3-Large estimates), and Output: Raw Depth feeds
 Lens Blur Native's Physical Camera.
 
+**0.3.3:** **Where each node renders** (Local / LAN / Cloud per node), **LAN rendering** (worker pool on your own network, `tools/CLOUD.md`), offline engine with pinned model downloads, hooks crash fix; a kit installed without Matte LTX Native no longer stalls its renders.
+
 **0.3.2:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, Render Root **tokens** (`<project>` `<shot>` ...), optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
 
 **0.3.1:** **Setup file:** Python > Higgins Post > Setup... sets this machine's Render Root; nodes with the default Render Folder render there, and a **Renders To** line shows where a run lands.
@@ -170,8 +185,8 @@ Lens Blur Native's Physical Camera.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `DepthNative-Tester-0.3.2.zip` | Apple Silicon Mac, 16 GB minimum (32 GB recommended), Flame 2026/2027 |
-| Linux | `DepthNative-Linux-0.3.2.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM (16 GB for DA3 at 1008 px), Flame 2027 |
+| macOS | `DepthNative-Tester-0.3.3.zip` | Apple Silicon Mac, 16 GB minimum (32 GB recommended), Flame 2026/2027 |
+| Linux | `DepthNative-Linux-0.3.3.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM (16 GB for DA3 at 1008 px), Flame 2027 |
 
 The installer downloads DA3 Large (1.6 GB) and Video Depth Anything Small (0.1 GB); DA3 Metric (1.3 GB) is optional —
 all Apache-2.0, no Hugging Face account needed. Shares the engine folder with Matte LTX Native / Upscale Native if present.
@@ -193,6 +208,8 @@ leaves the workstation unless that engine is selected). Moving mode propagates t
 in/outpainting when Matte LTX Native is installed alongside. Variations, seed, reference strength, Matte Area
 (chroma screen / paint grey), Input Colour from the clip's colour-space tag on Flame 2026.1+.
 
+**0.3.3:** **Where each node renders** (Local / LAN / Cloud per node), **LAN rendering** (worker pool on your own network, `tools/CLOUD.md`), offline engine with pinned model downloads, hooks crash fix; a kit installed without Matte LTX Native no longer stalls its renders.
+
 **0.3.2:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, Render Root **tokens** (`<project>` `<shot>` ...), optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
 
 **0.3.1:** **Setup file:** Python > Higgins Post > Setup... sets this machine's Render Root; nodes with the default Render Folder render there, and a **Renders To** line shows where a run lands.
@@ -205,8 +222,8 @@ in/outpainting when Matte LTX Native is installed alongside. Variations, seed, r
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `BackgroundNative-Tester-0.3.2.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for Qwen-Image-Edit), Flame 2026/2027 |
-| Linux | `BackgroundNative-Linux-0.3.2.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB for Qwen-Image-Edit), Flame 2027 |
+| macOS | `BackgroundNative-Tester-0.3.3.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for Qwen-Image-Edit), Flame 2026/2027 |
+| Linux | `BackgroundNative-Linux-0.3.3.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB for Qwen-Image-Edit), Flame 2027 |
 
 The installer downloads the local model(s) you choose — Qwen-Image-Edit-2511 + Lightning (55 GB) and/or FLUX.2 Klein 4B
 (15 GB), both Apache-2.0, no Hugging Face account needed — and offers the gated LTX In/Outpainting IC-LoRA for Moving
@@ -228,6 +245,8 @@ the prompt, press Generate. The node stores the element with its own alpha and o
 own comp, or a quick Over / Screen / Add in place. Fit to matte (stretch / inside / cover), plate colour match, fade at
 the matte edge, luminance key with threshold / softness / grow, Input Colour from the clip's tag on Flame 2026.1+.
 
+**0.4.5:** **Where each node renders** (Local / LAN / Cloud per node), **LAN rendering** (worker pool on your own network, `tools/CLOUD.md`), offline engine with pinned model downloads, hooks crash fix; a kit installed without Matte LTX Native no longer stalls its renders.
+
 **0.4.4:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, Render Root **tokens** (`<project>` `<shot>` ...), optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
 
 **0.4.3:** **Setup file:** Python > Higgins Post > Setup... sets this machine's Render Root; nodes with the default Render Folder render there, and a **Renders To** line shows where a run lands.
@@ -242,8 +261,8 @@ the matte edge, luminance key with threshold / softness / grow, Input Colour fro
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `ElementNative-Tester-0.4.4.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `ElementNative-Linux-0.4.4.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `ElementNative-Tester-0.4.5.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `ElementNative-Linux-0.4.5.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 It uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus the **Gemma-4 12B text encoder** (26 GB,
 from the same gated Lightricks/LTX-2.5 repository) that LTX needs for the prompt — Matte LTX Native does not install it, so
@@ -265,6 +284,8 @@ Start, HDR Strength and Range are live; Gain map and SDR-linearised outputs for 
 it applies. Optional **Depth**, **Normals** and **Hero Matte** passes (Depth Anything 3, LTX Alpha Gen) come out of the same
 Generate as extra Output choices — with Follow Duplicates, one compute feeds an HDR / depth / normals / matte set of nodes.
 
+**0.3.3:** **Where each node renders** (Local / LAN / Cloud per node), **LAN rendering** (worker pool on your own network, `tools/CLOUD.md`), offline engine with pinned model downloads, hooks crash fix; a kit installed without Matte LTX Native no longer stalls its renders.
+
 **0.3.2:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, Render Root **tokens** (`<project>` `<shot>` ...), optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
 
 **0.3.1:** **Setup file:** Python > Higgins Post > Setup... sets this machine's Render Root; nodes with the default Render Folder render there, and a **Renders To** line shows where a run lands.
@@ -277,8 +298,8 @@ Generate as extra Output choices — with Follow Duplicates, one compute feeds a
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `HDRNative-Tester-0.3.2.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `HDRNative-Linux-0.3.2.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `HDRNative-Tester-0.3.3.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `HDRNative-Linux-0.3.3.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus a 1.3 GB LoRA that is gated on Hugging Face:
 accept the licence on the model page, and the installer downloads it under your login.
@@ -366,6 +387,8 @@ length, f-stop and focus distance in metres on a Camera tab, with Analyze Camera
 focus breathing. A Focus Pull tab keys a rack focus between two picked points, Refine Z to Plate snaps a low-res Z onto the
 picture's edges, and out-of-focus foreground edges stay soft over a sharp background.
 
+**0.9.11:** iris presets of the named lenses from published specs (Cooke S4/i 8 leaves, Master Prime 9 and round at every stop, Ultra Prime 9, Super Speed 7, K-35 15, Summilux-C 10, Petzval round plates, Hawk 1.3x squeeze 0.77...) - the same values as Optics Native; **Linux kit** of the Inpaint Behind Matte build.
+
 **0.9.10:** **Inpaint Behind Matte** - the plate behind a matted element is filled (Push-Pull / Diffusion / Texture, Inpaint Grow) before the defocus, so no sharp halo along the foreground edge; Focus & Inpaint on one tab.
 
 **0.9.9:** 17 **named lens presets** in the Iris menu - Cooke S4 / Speed Panchro, Zeiss Super Speed / Master Prime / Ultra Prime, Canon K-35, Leica Summilux-C, Panavision Primo / C-series / E-series, Lomo-Kowa, Hawk V-Lite, Helios 44-2, Petzval, Meyer Trioplan, a catadioptric and a modern zoom - each setting the iris, cat's eye and chromatic aberration together.
@@ -376,8 +399,8 @@ picture's edges, and out-of-focus foreground edges stay soft over a sharp backgr
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `LensBlurNative-Tester-0.9.10.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `LensBlurNative-Linux-0.9.10.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `LensBlurNative-Tester-0.9.11.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `LensBlurNative-Linux-0.9.11.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 ## Denoise Native
 
@@ -393,6 +416,8 @@ softened texture. **Noise Level (%)** shifts the whole profile in one move. Also
 global or zoned **Deflicker**, inside / outside the Front matte, and QC views (Compare wipe, Removed Noise, Detail Loss,
 Temporal Coverage, Measure Sharpness). Input: **Front** (the plate).
 
+**0.4:** **hair, fabric and fine texture kept** - Normal quality is two stages of grouped 8x8 block filtering on the luma (hard-threshold pilot, then an empirical Wiener on the same groups) instead of a wavelet shrink that flattened faint strands; the temporal pass no longer fits the noise (15x15 patch match, Per-Pixel Motion off by default); the temporal result is profiled too so Recover / Strand Detail stop putting mottle back; Fine Keep, a structure map, a line test in the strand gate; the Fine / Medium / Coarse / Luma strengths work in Normal quality (they were dead). Measured against Neat Video on a 4K S-Log3 plate: less noise left at every scale with the hair's curls kept. Fixes: half-float input, hosts that prefetch frames, a cache that could keep an old picture, NaN pixels, a profile seen half-updated by a render, the GPU cache never released, Analyze of a long shot without feedback (now a progress bar), GPU out-of-memory faulting instead of falling back; Linux kernels fixed. Speed: GPU busy ~205 -> ~135 ms per UHD frame. Analyze no longer sets sharpening (older setups: set Sharpen Fine / Medium to 0 if highlights show pixel hits).
+
 **0.3.1:** the noise profile's sensor curve is a real sensor model now (no term can go negative): whole-frame profiles on log plates no longer under-read the mid-tones by 2-3x, which left grain on walls and shadows. Press Analyze Noise again on saved profiles.
 
 **0.3:** Analyze Noise with a resizable, auto-rated Sample Box and keyframed profiles along the shot, a Profile Library, Spatial settings auto-populated from the analysis (Noise Map), Sharpen, Dead Pixels, cut / duplicate skip, Input Colour (log plates denoised in linear light), and **Matte Output = Grain profile for Regrain** - wire the blue matte out to Regrain Native's blue Grain Profile input and the grain that goes back on is the noise that came off.
@@ -401,8 +426,45 @@ Temporal Coverage, Measure Sharpness). Input: **Front** (the plate).
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `DenoiseNative-Tester-0.3.1.zip` | Apple Silicon Mac, Flame 2026/2027 (GPU: Metal) |
-| Linux | `DenoiseNative-Linux-0.3.1.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 (GPU: NVIDIA driver with Vulkan; CPU otherwise) |
+| macOS | `DenoiseNative-Tester-0.4.zip` | Apple Silicon Mac, Flame 2026/2027 (GPU: Metal) |
+| Linux | `DenoiseNative-Linux-0.4.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 (GPU: NVIDIA driver with Vulkan; CPU otherwise) |
+
+## Optics Native
+
+Lens light in scene-linear, native inside Flame (Metal on the Mac with Use GPU, all CPU cores otherwise - no engine). **Glow**
+with a core / mid / halo profile and per-channel spread (drag the profile graph in the viewer), **glare**, **film halation**,
+**light wrap** (the plate onto the element's edge), **spill** (the element onto the plate), coherent **flicker / shimmer**,
+**glints and streaks** from the lens's iris (the same named-lens presets as Lens Blur Native, with Rounded), Z depth and
+lens dirt. Front (+ matte) = the element, Back = the plate; **Apply To** Front / Back / Both makes the comp. Pick Threshold
+then click a light to set where the glow starts; Match Light / Match Position fit it to a reference. First tester build;
+the icon is a placeholder for now.
+
+**Download:** see the [Releases](../../releases) page.
+
+| Build | File | Requirements |
+|---|---|---|
+| macOS | `OpticsNative-Tester-0.1.zip` | Apple Silicon Mac, Flame 2026/2027 (GPU: Metal) |
+| Linux | `OpticsNative-Linux-0.1.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 (CPU) |
+
+## Screen Comp Native
+
+Screen replacement inside Flame (Metal on the Mac with Use GPU, all CPU cores otherwise - no engine). Front = the plate (its
+matte = hands, a mug - whatever is in front of the screen), Back = the content, Input3 = an optional reflection plate.
+**Corner Pin** in the node (drag the four corners and the bezel in the viewer, or load the corners a Camera Track Native
+card / points export wrote) or **Tracked in Action** (the Back already placed by Action, its matte = the screen). Display
+models **LCD / OLED / CRT / LED Wall / Phone**: the pixel structure and the moire come out of the sampling (RGB stripe,
+PenTile, aperture grille, shadow mask), backlight falloff and viewing angle, scanlines, curvature, bloom, rolling bar,
+flicker, chroma bleed, noise, shutter motion blur. Glass: reflection with Fresnel and smudges, Keep Plate Glass / Grain,
+light spill on the bezel and desk, **defocus with a tilt** (Measure Plate Focus reads it off the plate's edges), bezel,
+corner radius, Power On / Off looks by era, Trim Content Bars. Outputs: Result / Screen Layer / Screen Matte / ST Map /
+Emission Only. First tester build.
+
+**Download:** see the [Releases](../../releases) page.
+
+| Build | File | Requirements |
+|---|---|---|
+| macOS | `ScreenCompNative-Tester-0.1.zip` | Apple Silicon Mac, Flame 2026/2027 (GPU: Metal) |
+| Linux | `ScreenCompNative-Linux-0.1.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 (CPU) |
 
 ## Regrain Native
 
@@ -444,6 +506,8 @@ Physical Camera), world position, normals, the 3D Scene viewer with a dense clou
 cards straight into an Action in the Batch, **GMask Tracer** from points (axis / shape / both), a **corner pin** from a
 card. Engine jobs can be queued from EXR sequences on disk (`tools/aifx_queue.py`).
 
+**0.3:** **first Linux kit.** **Lens library** (Lens Name, Save / Load Lens Preset, **Lock Lens on Solve** - focal and distortion fixed through every adjustment: solve the lens on a shot with a move, lock it on the pans), **Read Clip Metadata** (focal, sensor, focus from the plate clip, done by itself on a new node), **Markers 3D (check)** (a 3D arrow on every point - a sliding point shows), Points / Markers drawn only on the frames that saw a point (the "floating points" were extrapolations; Show Unobserved Points restores them), solve accuracy round (depth at the solve's scale, near-nodal choice on held-out tracks, full-res refinement, readout search, movers excluded, Re-solve keeps the focal), **Consistent Depth** default 8 and the actors' depth following the optical flow, FBX keys from Range Start with no tilt flips, Normals facing the camera, corners written for Screen Comp Native, the Points view refreshing by itself after a re-solve, projection paint resident on the GPU, no upstream render for outputs that never read the plate. Plus the 30 Oct engine / hooks changes (per-node routes, LAN, offline).
+
 **0.2.3:** engine sync for the 26 Oct batch
 
 **0.2.2:** **Setup file:** Python > Higgins Post > Setup... sets this machine's Render Root; nodes with the default Render Folder render there, and a **Renders To** line shows where a run lands.
@@ -454,15 +518,17 @@ card. Engine jobs can be queued from EXR sequences on disk (`tools/aifx_queue.py
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `CameraTrackNative-Tester-0.2.3.zip` | Apple Silicon Mac, 32 GB minimum, Flame 2026/2027 |
+| macOS | `CameraTrackNative-Tester-0.3.zip` | Apple Silicon Mac, 32 GB minimum, Flame 2026/2027 |
+| Linux | `CameraTrackNative-Linux-0.3.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 16 GB+ VRAM, Flame 2027 (projection outputs on the CPU) |
 
 The installer shares the engine folder of any other Higgins Post engine node already installed, adds SciPy and
 Depth Anything 3 (Large, 1.6 GB, Apache-2.0 — no Hugging Face account needed) and the Flame hooks. Isolate (SAM3) uses
-Matte LTX Native's model when that kit is installed. Linux build to follow.
+Matte LTX Native's model when that kit is installed; flow-guided tracking uses Motion Vectors Native's SEA-RAFT when that kit is installed. Depth Anything 3 Metric (optional download) gives the solve real-world scale.
 
 ### Models and licences
-- Depth Anything 3 (code and Large weights) — ByteDance Seed, Apache-2.0.
+- Depth Anything 3 (code, Large and Metric weights) — ByteDance Seed, Apache-2.0.
 - SAM3 (optional, via Matte LTX Native) — Meta's SAM licence.
+- SEA-RAFT (optional, via Motion Vectors Native) — Princeton, BSD-3-Clause.
 
 ## Pixel Spread Native
 
@@ -503,6 +569,8 @@ and backward motion and an ST map chained from a Reference Frame are stored with
   the rest of the shape. The `aifx_autorefresh` hook adds a GMask Tracer node loaded with it to the Batch, wired to the
   same clip. GMask (check) previews the shapes, and follows the GMask by itself while you edit it.
 
+**0.2.3:** **Where each node renders** (Local / LAN / Cloud per node), **LAN rendering** (worker pool on your own network, `tools/CLOUD.md`), offline engine with pinned model downloads, hooks crash fix; a kit installed without Matte LTX Native no longer stalls its renders. Paint Carry **Motion Blur** (shutter in degrees: 0 = off, 180 = a normal shutter) blurs the carried paint along the frame's motion.
+
 **0.2.2:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, Render Root **tokens** (`<project>` `<shot>` ...), optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
 
 **0.2.1:** **Setup file:** Python > Higgins Post > Setup... sets this machine's Render Root; nodes with the default Render Folder render there, and a **Renders To** line shows where a run lands.
@@ -519,8 +587,8 @@ and backward motion and an ST map chained from a Reference Frame are stored with
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `MotionVectorsNative-Tester-0.2.2.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
-| Linux | `MotionVectorsNative-Linux-0.2.2.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM, Flame 2027, **a Higgins Post engine kit installed** |
+| macOS | `MotionVectorsNative-Tester-0.2.3.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
+| Linux | `MotionVectorsNative-Linux-0.2.3.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM, Flame 2027, **a Higgins Post engine kit installed** |
 
 No downloads: the SEA-RAFT weights (Small 34 MB, Medium 75 MB) ship in the kit. The installer finds the engine folder of
 an installed Higgins Post kit, adds the flow engine files and the weights, installs the plugin and updates the Flame hooks.
@@ -537,6 +605,8 @@ daylight to night, with an optional description. The Front's matte limits where 
 Colour follows the clip's tag on Flame 2026.1+, and a Z depth on Input3 gives a Normals output. Press Generate once — the
 result is stored with the node and renders instantly.
 
+**0.1.12:** **Where each node renders** (Local / LAN / Cloud per node), **LAN rendering** (worker pool on your own network, `tools/CLOUD.md`), offline engine with pinned model downloads, hooks crash fix; a kit installed without Matte LTX Native no longer stalls its renders.
+
 **0.1.11:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, Render Root **tokens** (`<project>` `<shot>` ...), optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
 
 **0.1.10:** **Setup file:** Python > Higgins Post > Setup... sets this machine's Render Root; nodes with the default Render Folder render there, and a **Renders To** line shows where a run lands.
@@ -549,8 +619,8 @@ result is stored with the node and renders instantly.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `RelightNative-Tester-0.1.11.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `RelightNative-Linux-0.1.11.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `RelightNative-Tester-0.1.12.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `RelightNative-Linux-0.1.12.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus two LoRAs (Relight, Day-To-Night) and the
 Gemma-4 12B text encoder for the prompt (26 GB; Matte LTX Native does not install it), all gated on Hugging Face: accept
@@ -568,6 +638,8 @@ untouched. For static backgrounds it can first paint the object out of the first
 IC-LoRA to remove every person and vehicle (and their shadows) by prompt, the matte limiting where it is used. Matte grow /
 feather, optional notes about what is behind the object, Input Colour from the clip's tag on Flame 2026.1+.
 
+**0.2.3:** **Where each node renders** (Local / LAN / Cloud per node), **LAN rendering** (worker pool on your own network, `tools/CLOUD.md`), offline engine with pinned model downloads, hooks crash fix; a kit installed without Matte LTX Native no longer stalls its renders.
+
 **0.2.2:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, Render Root **tokens** (`<project>` `<shot>` ...), optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
 
 **0.2.1:** **Setup file:** Python > Higgins Post > Setup... sets this machine's Render Root; nodes with the default Render Folder render there, and a **Renders To** line shows where a run lands.
@@ -582,8 +654,8 @@ feather, optional notes about what is behind the object, Input Colour from the c
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `ObjectRemovalNative-Tester-0.2.2.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `ObjectRemovalNative-Linux-0.2.2.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `ObjectRemovalNative-Tester-0.2.3.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `ObjectRemovalNative-Linux-0.2.3.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus the In/Outpainting and Clean Plate IC-LoRAs
 and the Gemma-4 12B text encoder for the prompt (26 GB; Matte LTX Native does not install it) — all gated on Hugging Face;
@@ -603,6 +675,8 @@ expression and pose per frame). Outputs a **UV pass** (R = U, G = V, alpha = fac
 Optional **BootsTAPIR** dense-track refine nudges the mesh onto tracked skin points between the landmarks. Track once —
 the mesh per frame is stored with the node and the passes are drawn at plate resolution, instantly.
 
+**0.2.6:** **Where each node renders** (Local / LAN / Cloud per node), **LAN rendering** (worker pool on your own network, `tools/CLOUD.md`), offline engine with pinned model downloads, hooks crash fix; a kit installed without Matte LTX Native no longer stalls its renders. Erode / dilate passes parallel (shared with UV Wrap Native).
+
 **0.2.5:** **Render Monitor** (Flame-style progress window, opens with every render), collect 10x faster, standard Setup tab, Render Root **tokens** (`<project>` `<shot>` ...), optional **cloud rendering** (Runpod serverless / pod, Azure VM - `tools/RUNPOD_SETUP.md`).
 
 **0.2.4:** **Setup file:** Python > Higgins Post > Setup... sets this machine's Render Root; nodes with the default Render Folder render there, and a **Renders To** line shows where a run lands. (Renders To sits in Diagnostics here)
@@ -619,8 +693,8 @@ the mesh per frame is stored with the node and the passes are drawn at plate res
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `FaceUVNative-Tester-0.2.5.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
-| Linux | `FaceUVNative-Linux-0.2.5.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, Flame 2027, **a Higgins Post engine kit installed** |
+| macOS | `FaceUVNative-Tester-0.2.6.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
+| Linux | `FaceUVNative-Linux-0.2.6.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, Flame 2027, **a Higgins Post engine kit installed** |
 
 The face models (RetinaFace, BlazeFace, MediaPipe mesh) and FLAME 2023 Open ship in the kit; the installer adds uniface and
 ONNX Runtime to the engine's Python and downloads the BootsTAPIR checkpoint (200 MB) from Google DeepMind.
@@ -636,6 +710,8 @@ ONNX Runtime to the engine's Python and downloads the BootsTAPIR checkpoint (200
 
 Wraps a texture painted in UV space (Face UV Native's Unwrap, or any UV / ST map's texture) back onto the picture through a UV pass and comps it over the plate: the other half of Face UV Native - Unwrap, paint, UV Wrap. Front = the painted texture (+ its matte), Back = the plate (+ holdout), Input3 = the UV pass (+ face matte). Nearest / bilinear / bicubic with supersampling, a texture transform to slide the patch, matte erode / feather, Over / Add / Screen in linear light, Hold Frame for a painted still. Pure C++ on the GPU (Metal / Vulkan), no engine.
 
+**0.3.2:** the erode / dilate passes go parallel (vertical passes over bands of columns).
+
 **0.3.1:** Unwrap no longer mirrors / stretches across the nose and jaw silhouettes (matches Face UV's unwrap).
 
 **0.3:** **Unwrap** output (any UV pass: the picture flattened into UV space - paint, then wrap back), **Edge Extend** (no halo round a patch), **Light Follow** (the patch takes on the face's shading as it turns), **Motion Blur** along the UV motion, a **UV Check** grid, **Anisotropic** sampling by default, and an **ST map** mode (distort / undistort through a lens map).
@@ -644,7 +720,7 @@ Wraps a texture painted in UV space (Face UV Native's Unwrap, or any UV / ST map
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `UVWrapNative-Tester-0.3.1.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `UVWrapNative-Linux-0.3.1.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `UVWrapNative-Tester-0.3.2.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `UVWrapNative-Linux-0.3.2.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 These are test builds from Higgins Post, provided as-is, no warranty.
