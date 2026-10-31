@@ -443,6 +443,8 @@ softened texture. **Noise Level (%)** shifts the whole profile in one move. Also
 global or zoned **Deflicker**, inside / outside the Front matte, and QC views (Compare wipe, Removed Noise, Detail Loss,
 Temporal Coverage, Measure Sharpness). Input: **Front** (the plate).
 
+**0.4.2:** **colour kept** - the colour-noise filter took a little real colour along bright / dark edges (warm highlights lost 1-2% of their saturation, blonde hair came out less yellow); now only noise leaves. **Less mid-size grain** - the block filter no longer groups a block with its own 1-2 px shifted copies, so flat areas keep Neat's level of 2-8 px noise or less, as finer grain; Fine Keep rebalanced so hair and skin texture hold (existing setups get it as is).
+
 **0.4.1:** **Ghost Guard fix** - on shots where a large part of the frame moves (a foreground head or body) it switched itself off and a faint copy of the moving edge was averaged in; it is now judged against the median (static shots unchanged). Renders from several threads run at once.
 
 **0.4:** **hair, fabric and fine texture kept** - Normal quality is two stages of grouped 8x8 block filtering on the luma (hard-threshold pilot, then an empirical Wiener on the same groups) instead of a wavelet shrink that flattened faint strands; the temporal pass no longer fits the noise (15x15 patch match, Per-Pixel Motion off by default); the temporal result is profiled too so Recover / Strand Detail stop putting mottle back; Fine Keep, a structure map, a line test in the strand gate; the Fine / Medium / Coarse / Luma strengths work in Normal quality (they were dead). Measured against Neat Video on a 4K S-Log3 plate: less noise left at every scale with the hair's curls kept. Fixes: half-float input, hosts that prefetch frames, a cache that could keep an old picture, NaN pixels, a profile seen half-updated by a render, the GPU cache never released, Analyze of a long shot without feedback (now a progress bar), GPU out-of-memory faulting instead of falling back; Linux kernels fixed. Speed: GPU busy ~205 -> ~135 ms per UHD frame. Analyze no longer sets sharpening (older setups: set Sharpen Fine / Medium to 0 if highlights show pixel hits). *(Mac zip re-uploaded 30 Oct evening: the first upload fell back to the CPU inside Flame - a GPU kernel Flame's Metal compiler refuses - so scrubbing was slow. Re-download if you installed it earlier.)*
@@ -455,8 +457,8 @@ Temporal Coverage, Measure Sharpness). Input: **Front** (the plate).
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `DenoiseNative-Tester-0.4.1.zip` | Apple Silicon Mac, Flame 2026/2027 (GPU: Metal) |
-| Linux | `DenoiseNative-Linux-0.4.1.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 (GPU: NVIDIA driver with Vulkan; CPU otherwise) |
+| macOS | `DenoiseNative-Tester-0.4.2.zip` | Apple Silicon Mac, Flame 2026/2027 (GPU: Metal) |
+| Linux | `DenoiseNative-Linux-0.4.2.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 (GPU: NVIDIA driver with Vulkan; CPU otherwise) |
 
 ## Optics Native
 
