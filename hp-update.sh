@@ -3,7 +3,8 @@
 #   bash hp-update.sh                 interactive: shows what is installed vs the latest release, asks what to do
 #   bash hp-update.sh --check         only show the table
 #   bash hp-update.sh --all [--yes]   install / update every plugin (--yes answers the installers' prompts with their defaults)
-#   bash hp-update.sh --only lensblur,faceuv,pixelspread
+#   bash hp-update.sh --only lensblur,faceuv,pixelspread,hooks   (hooks = the Flame hooks kit: Setup, Render Monitor, auto-refresh)
+#   --force   install even while the engine renders (the engine kits and the hooks kit restart it; normally they wait)
 #   bash hp-update.sh --uninstall lensblur,faceuv | --uninstall all [--purge]   (--purge also removes the shared engine + models)
 # macOS (Apple Silicon) and Rocky Linux. Needs curl, unzip, python3, sudo. Releases: https://github.com/whiggs14/autodesk-flame/releases
 set -u
@@ -20,12 +21,13 @@ bold() { printf "\033[1m%s\033[0m\n" "$*"; }
 fail() { printf "\033[31mERROR: %s\033[0m\n" "$*"; exit 1; }
 for t in curl unzip python3; do command -v "$t" >/dev/null || fail "$t is needed"; done
 
-MODE=menu; ONLY=""; YES=0; PURGE=0; UNINSTALL=""
+MODE=menu; ONLY=""; YES=0; PURGE=0; UNINSTALL=""; FORCE=0
+HOOKS_DIR=/opt/Autodesk/shared/python/aifx_context
 while [ $# -gt 0 ]; do
   case "$1" in
     --check) MODE=check;; --all) MODE=all;; --only) MODE=only; ONLY="$2"; shift;; --yes|-y) YES=1;;
     --uninstall) MODE=uninstall; UNINSTALL="$2"; shift;; --purge) PURGE=1;;
-    -h|--help) sed -n 2,8p "$0"; exit 0;; *) fail "unknown option $1";;
+    --force) FORCE=1;; -h|--help) sed -n 2,10p "$0"; exit 0;; *) fail "unknown option $1";;
   esac; shift
 done
 
@@ -35,14 +37,14 @@ curl -fsSL -H "Accept: application/vnd.github+json" "$API" -o "$WORK/releases.js
 python3 - "$WORK/releases.json" "$SUFFIX" > "$WORK/latest.txt" <<'EOF'
 import json, re, sys
 rels = json.load(open(sys.argv[1])); suffix = sys.argv[2]
-pat = re.compile(r"^([A-Za-z0-9]+)-(Tester|Linux)-([0-9][0-9.]*)\.zip$")
+pat = re.compile(r"^([A-Za-z0-9]+)-(Tester|Linux|Hotfix)-([0-9][0-9.]*)\.zip$")     # Hotfix = the Flame hooks kit, Mac + Linux
 best = {}
 def vt(v): return tuple(int(x) for x in v.split("."))
 for r in rels:
     if r.get("draft") or r.get("prerelease"): continue
     for a in r.get("assets", []):
         m = pat.match(a["name"])
-        if not m or m.group(2) != suffix: continue
+        if not m or (m.group(2) != suffix and not (m.group(1) == "FlameHooks" and m.group(2) == "Hotfix")): continue
         kit, ver = m.group(1), m.group(3)
         if kit not in best or vt(ver) > vt(best[kit][0]):
             best[kit] = (ver, a["browser_download_url"], r.get("name", ""))
@@ -52,11 +54,45 @@ for kit in sorted(best):
 EOF
 [ -s "$WORK/latest.txt" ] || fail "no releases found for $SUFFIX"
 
-installed_version() {   # recorded by this script, else the version stamped in the bundle (kits from Oct 2026 on); "present" = an older install; "-" = absent
-  local kit="$1" v
-  v=$(python3 -c "import json,sys; d=json.load(open('$STATE')) if __import__('os').path.exists('$STATE') else {}; print(d.get('$kit',''))" 2>/dev/null)
-  [ -n "$v" ] || v=$(cat "$PLUGIN_DIR/$kit.ofx.bundle/Contents/Resources/kit_version.txt" 2>/dev/null | tr -dc '0-9.')
-  if [ -n "$v" ]; then echo "$v"; elif [ -d "$PLUGIN_DIR/$kit.ofx.bundle" ]; then echo "present"; else echo "-"; fi
+installed_version() {   # the version stamped by the kit (bundle / hooks folder), else recorded by this script; "present" = installed without a version; "-" = absent
+  local kit="$1" v rec
+  rec=$(python3 -c "import json,sys; d=json.load(open('$STATE')) if __import__('os').path.exists('$STATE') else {}; print(d.get('$kit',''))" 2>/dev/null)
+  if [ "$kit" = FlameHooks ]; then
+    [ -f "$HOOKS_DIR/aifx_setup.py" ] || [ -f "$HOOKS_DIR/aifx_autorefresh.py" ] || { echo "-"; return; }
+    v=$(cat "$HOOKS_DIR/hooks_version.txt" 2>/dev/null | tr -dc '0-9.')
+  else
+    [ -d "$PLUGIN_DIR/$kit.ofx.bundle" ] || { echo "-"; return; }
+    v=$(cat "$PLUGIN_DIR/$kit.ofx.bundle/Contents/Resources/kit_version.txt" 2>/dev/null | tr -dc '0-9.')
+  fi
+  [ -n "$v" ] || v="$rec"
+  if [ -n "$v" ]; then echo "$v"; else echo "present"; fi
+}
+# exit 0 when no engine on this machine is rendering; else 1, printing "<engine folder> <jobs>" for each busy one
+engine_idle() { python3 - "$PLUGIN_DIR" "$ENGINE_DEFAULT" <<'EOF'
+import glob, json, os, socket, sys
+roots = []
+for p in glob.glob(os.path.join(sys.argv[1], "*.ofx.bundle", "Contents", "Resources", "engine_root.txt")):
+    try: r = open(p).read().strip()
+    except OSError: continue
+    if r and r not in roots: roots.append(r)
+if sys.argv[2] not in roots: roots.append(sys.argv[2])
+busy = 0
+for r in roots:
+    sock = os.path.join(r, "run", "engine.sock")
+    if not os.path.exists(sock): continue
+    try:
+        c = socket.socket(socket.AF_UNIX); c.settimeout(3); c.connect(sock); c.sendall(b'{"cmd": "jobs"}\n'); buf = b""
+        while b"\n" not in buf:
+            d = c.recv(1 << 20)
+            if not d: break
+            buf += d
+        c.close()
+        n = sum(1 for j in json.loads(buf.decode().split("\n")[0]).get("jobs", []) if j.get("state") in ("running", "queued"))
+    except Exception:
+        n = 0                                     # no answer: no engine running there
+    if n: print(r, n); busy += n
+sys.exit(1 if busy else 0)
+EOF
 }
 record_version() { python3 - "$STATE" "$1" "$2" <<'EOF'
 import json, os, sys
@@ -90,7 +126,12 @@ install_kit() {   # kit version url
   rm -rf "$WORK/$kit"; mkdir -p "$WORK/$kit"; unzip -q "$zip" -d "$WORK/$kit" || { echo "unzip failed"; return 1; }
   dir=$(find "$WORK/$kit" -maxdepth 1 -mindepth 1 -type d | head -1)
   local inst
-  if [ "$OS" = mac ]; then inst=$(find "$dir" -maxdepth 1 -name "Install *.command" | head -1); else inst="$dir/install.sh"; fi
+  if [ "$kit" = FlameHooks ] || [ "$OS" = linux ]; then inst="$dir/install.sh"; else inst=$(find "$dir" -maxdepth 1 -name "Install *.command" | head -1); fi
+  if [ "$FORCE" = 0 ] && { [ "$kit" = FlameHooks ] || [ -d "$dir/payload/engine" ]; }; then   # these restart the engine
+    local b; if ! b=$(engine_idle); then
+      echo "    skipped: the engine is rendering ($(echo "$b" | awk '{s+=$2} END {print s}') job(s)) and this install restarts it."
+      echo "    Run the update again when the render has finished (or with --force)."; return 1; fi
+  fi
   [ -f "$inst" ] || { echo "no installer in the kit"; return 1; }
   chmod +x "$inst"
   if [ "$YES" = 1 ]; then
@@ -99,6 +140,10 @@ install_kit() {   # kit version url
     (cd "$dir" && yes "" | bash "$inst") || { echo "installer reported a problem"; return 1; }
   else
     (cd "$dir" && bash "$inst" < /dev/tty) || { echo "installer reported a problem"; return 1; }
+  fi
+  if [ "$kit" = FlameHooks ]; then
+    if [ -f "$HOOKS_DIR/aifx_autorefresh.py" ]; then record_version "$kit" "$ver"; echo "    Flame hooks $ver installed (in Flame: Python > Rescan Python Hooks)."; return 0; fi
+    echo "    the hooks are not in $HOOKS_DIR after the install - check the installer's output"; return 1
   fi
   if [ -d "$PLUGIN_DIR/$kit.ofx.bundle" ]; then record_version "$kit" "$ver"; echo "    $kit $ver installed."; else echo "    $kit: the bundle is not in $PLUGIN_DIR after the install - check the installer's output"; return 1; fi
 }
@@ -121,7 +166,7 @@ case "$MODE" in
       [ -d "$H" ] && sudo rm -rf "$H" && echo "    removed the Flame hook $H"
     else
       for kit in $(echo "$UNINSTALL" | tr ',' ' '); do
-        real=$(awk -v k="$kit" 'tolower($1)==tolower(k) || tolower($1)==tolower(k)"native" {print $1}' "$WORK/latest.txt" | head -1)
+        real=$(awk -v k="$kit" 'tolower($1)==tolower(k) || tolower($1)==tolower(k)"native" || (tolower(k)=="hooks" && $1=="FlameHooks") {print $1}' "$WORK/latest.txt" | head -1)
         [ -n "$real" ] || { echo "    unknown plugin: $kit"; continue; }
         uninstall_kit "$real"
       done
@@ -136,7 +181,7 @@ case "$MODE" in
     fi
     echo; bold "Done. Restart Flame."; exit 0;;
   all) SEL="$TODO";;
-  only) SEL=""; for kit in $(echo "$ONLY" | tr ',' ' '); do real=$(awk -v k="$kit" 'tolower($1)==tolower(k) || tolower($1)==tolower(k)"native" {print $1}' "$WORK/latest.txt" | head -1); [ -n "$real" ] && SEL="$SEL $real" || echo "unknown plugin: $kit"; done;;
+  only) SEL=""; for kit in $(echo "$ONLY" | tr ',' ' '); do real=$(awk -v k="$kit" 'tolower($1)==tolower(k) || tolower($1)==tolower(k)"native" || (tolower(k)=="hooks" && $1=="FlameHooks") {print $1}' "$WORK/latest.txt" | head -1); [ -n "$real" ] && SEL="$SEL $real" || echo "unknown plugin: $kit"; done;;
   menu)
     echo "  1) install / update everything that is new or missing"
     echo "  2) update only what is already installed"
@@ -147,13 +192,14 @@ case "$MODE" in
     case "$ans" in
       1) SEL="$TODO";;
       2) SEL=""; for kit in $TODO; do [ "$(installed_version "$kit")" != "-" ] && SEL="$SEL $kit"; done;;
-      3) read -r -p "plugins (names, comma separated, e.g. lensblur,faceuv): " ONLY < /dev/tty; SEL=""; for kit in $(echo "$ONLY" | tr ',' ' '); do real=$(awk -v k="$kit" 'tolower($1)==tolower(k) || tolower($1)==tolower(k)"native" {print $1}' "$WORK/latest.txt" | head -1); [ -n "$real" ] && SEL="$SEL $real" || echo "unknown plugin: $kit"; done;;
+      3) read -r -p "plugins (names, comma separated, e.g. lensblur,faceuv): " ONLY < /dev/tty; SEL=""; for kit in $(echo "$ONLY" | tr ',' ' '); do real=$(awk -v k="$kit" 'tolower($1)==tolower(k) || tolower($1)==tolower(k)"native" || (tolower(k)=="hooks" && $1=="FlameHooks") {print $1}' "$WORK/latest.txt" | head -1); [ -n "$real" ] && SEL="$SEL $real" || echo "unknown plugin: $kit"; done;;
       4) read -r -p "plugins to remove (comma separated, or all): " U < /dev/tty; exec bash "$0" --uninstall "$U";;
       *) exit 0;;
     esac
     [ "$YES" = 1 ] || { read -r -p "Answer the installers' questions with their defaults automatically? [Y/n] " a < /dev/tty; [ "$a" = n ] || [ "$a" = N ] || YES=1; };;
 esac
 [ -n "${SEL// /}" ] || { bold "Nothing to do - everything is up to date."; exit 0; }
+case " $SEL " in *" FlameHooks "*) SEL="$(echo "$SEL" | tr ' ' '\n' | grep -v '^FlameHooks$' | tr '\n' ' ') FlameHooks";; esac   # last: the engine kits carry hooks of their own
 echo; bold "Installing:$SEL"; echo
 sudo_keepalive
 OK=""; BAD=""
@@ -164,3 +210,4 @@ for kit in $SEL; do
 done
 bold "Installed / updated:${OK:- none}"; [ -n "$BAD" ] && printf "\033[31mFailed:%s\033[0m\n" "$BAD"
 bold "Restart Flame to load the new versions."
+[ -z "$BAD" ]                                   # the exit status says whether everything went in (Higgins Post Updates reads it)
