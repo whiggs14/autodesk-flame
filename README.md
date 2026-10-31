@@ -52,6 +52,9 @@ No ComfyUI, no shared folders, no cloud.
 > Denoise's Ghost Guard fix for big moving foregrounds. Installers restart the engine only when it is idle. Older kits:
 > `FlameHooks-Hotfix-1.5.zip` installs the current hooks on their own (the 1.3 / 1.4 Mac installer only replaced two of them).
 
+> **31 Oct, hotfix - Camera Track Native 0.3.3:** fixes Flame quitting ("Assertion failed ... doPreventiveLock") when a
+> camera solve finished and the auto-refresh reloaded the node. Renders are unchanged. Update if you use Camera Track.
+
 > **31 Oct, late - Denoise Native 0.4.3 + Regrain 0.4.1 (engine kits: engine sync):** Denoise's **Analyze Motion** lines the
 > neighbour frames up with per-pixel motion (SEA-RAFT, through the engine) - moving hair and fine texture keep more detail - or
 > take a Motion Vectors Native node's Forward Vectors on the new **Vectors** input; **Keep Moving Detail** (on by default) leans
@@ -570,6 +573,8 @@ Physical Camera), world position, normals, the 3D Scene viewer with a dense clou
 cards straight into an Action in the Batch, **GMask Tracer** from points (axis / shape / both), a **corner pin** from a
 card. Engine jobs can be queued from EXR sequences on disk (`tools/aifx_queue.py`).
 
+**0.3.3:** fix - Flame could quit ("Assertion failed ... doPreventiveLock") when a solve finished and the auto-refresh reloaded the node: the node was greying parameters out during a host call where Flame allows no parameter change. Nothing else changes - every Output renders as in 0.3.2.
+
 **0.3.2:** engine sync with Denoise Native 0.4.3 (a motion-only job for its Analyze Motion; jobs no node refreshes from are not announced to the auto-refresh hook) - nothing else changes.
 
 **0.3.1:** **anamorphic plates** (frames go to the engine desqueezed, results map back over the plate's width), **models stay loaded** in the engine between jobs (as many as fit), LAN worker **Allowed folders**, a code-audit round of engine fixes (shutdown refused while rendering, Cancel stops every task, a crafted FLAME .pkl can no longer run code, LAN request limits), Flame hooks 1.5 (**Check for Updates** in Setup); the installer restarts the engine only when it is idle.
@@ -586,8 +591,8 @@ card. Engine jobs can be queued from EXR sequences on disk (`tools/aifx_queue.py
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `CameraTrackNative-Tester-0.3.2.zip` | Apple Silicon Mac, 32 GB minimum, Flame 2026/2027 |
-| Linux | `CameraTrackNative-Linux-0.3.2.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 16 GB+ VRAM, Flame 2027 (projection outputs on the CPU) |
+| macOS | `CameraTrackNative-Tester-0.3.3.zip` | Apple Silicon Mac, 32 GB minimum, Flame 2026/2027 |
+| Linux | `CameraTrackNative-Linux-0.3.3.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 16 GB+ VRAM, Flame 2027 (projection outputs on the CPU) |
 
 The installer shares the engine folder of any other Higgins Post engine node already installed, adds SciPy and
 Depth Anything 3 (Large, 1.6 GB, Apache-2.0 — no Hugging Face account needed) and the Flame hooks. Isolate (SAM3) uses
