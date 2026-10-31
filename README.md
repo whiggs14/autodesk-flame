@@ -52,6 +52,14 @@ No ComfyUI, no shared folders, no cloud.
 > Denoise's Ghost Guard fix for big moving foregrounds. Installers restart the engine only when it is idle. Older kits:
 > `FlameHooks-Hotfix-1.5.zip` installs the current hooks on their own (the 1.3 / 1.4 Mac installer only replaced two of them).
 
+> **31 Oct, late - Denoise Native 0.4.3 + Regrain 0.4.1 (engine kits: engine sync):** Denoise's **Analyze Motion** lines the
+> neighbour frames up with per-pixel motion (SEA-RAFT, through the engine) - moving hair and fine texture keep more detail - or
+> take a Motion Vectors Native node's Forward Vectors on the new **Vectors** input; **Keep Moving Detail** (on by default) leans
+> on the frame itself where the block match can't line fine moving texture up; a cut between two similar-looking shots no
+> longer bleeds into the frame before it. **Matte Output** now defaults to the grain profile, and the grain matte reaches Regrain
+> at **any bit depth** (8 / 10 / 12-bit as well as float) with the plate's colour space. Every engine kit carries the engine
+> change Analyze Motion uses (nothing else changes in them).
+
 ## Install or update everything in one go
 
 **macOS:** download [`Higgins Post Updater.command`](../../raw/main/Higgins%20Post%20Updater.command), double-click it (right-click > Open the first time). It asks GitHub for the latest release of every plugin, shows what you have against what is published, and installs or updates what you pick - each plugin's own installer runs, so the shared engine and models are handled the same way as a manual install.
@@ -77,6 +85,8 @@ runs on small subjects, and a built-in Track Box tracker drives that box without
 **Motion Detail** (x2 / x4 / x8 / Auto) repeats frames inside LTX's 8-frame latents so fast motion keeps its matte
 and its motion blur; Auto picks the repeat per frame from a quick motion analysis and only spends the time on fast frames.
 
+**0.9.15:** engine sync with Denoise Native 0.4.3 (a motion-only job for its Analyze Motion; jobs no node refreshes from are not announced to the auto-refresh hook) - nothing else changes.
+
 **0.9.14:** **anamorphic plates** (frames go to the engine desqueezed, results map back over the plate's width), **models stay loaded** in the engine between jobs (as many as fit), LAN worker **Allowed folders**, a code-audit round of engine fixes (shutdown refused while rendering, Cancel stops every task, a crafted FLAME .pkl can no longer run code, LAN request limits), Flame hooks 1.5 (**Check for Updates** in Setup); the installer restarts the engine only when it is idle.
 
 **0.9.13:** **Where each node renders** (Local / LAN / Cloud per node), **LAN rendering** (worker pool on your own network, `tools/CLOUD.md`), offline engine with pinned model downloads, hooks crash fix; a kit installed without Matte LTX Native no longer stalls its renders.
@@ -93,8 +103,8 @@ and its motion blur; Auto picks the repeat per frame from a quick motion analysi
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `MatteLTXNative-Tester-0.9.14.zip` | Apple Silicon Mac, 128 GB recommended (64 GB minimum), Flame 2026/2027 |
-| Linux | `MatteLTXNative-Linux-0.9.14.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB+ VRAM (60 GB+ runs fully on the GPU), Flame 2027 |
+| macOS | `MatteLTXNative-Tester-0.9.15.zip` | Apple Silicon Mac, 128 GB recommended (64 GB minimum), Flame 2026/2027 |
+| Linux | `MatteLTXNative-Linux-0.9.15.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB+ VRAM (60 GB+ runs fully on the GPU), Flame 2027 |
 
 Each zip contains the plugin, the Python engine and an installer; the installer downloads the models
 (~56 GB) under your own Hugging Face account. Read `Read Me First.txt` / `README.txt` inside the zip.
@@ -144,6 +154,8 @@ Flame cannot change a node's resolution, so: Resize the plate to the final size,
 Input Colour is read from the clip's colour-space tag automatically on Flame 2026.1+ (S-Log3, ARRI LogC3/LogC4,
 scene-linear) so log plates are converted for the model and back.
 
+**0.5.6:** engine sync with Denoise Native 0.4.3 (a motion-only job for its Analyze Motion; jobs no node refreshes from are not announced to the auto-refresh hook) - nothing else changes.
+
 **0.5.5:** **anamorphic plates** (frames go to the engine desqueezed, results map back over the plate's width), **models stay loaded** in the engine between jobs (as many as fit), LAN worker **Allowed folders**, a code-audit round of engine fixes (shutdown refused while rendering, Cancel stops every task, a crafted FLAME .pkl can no longer run code, LAN request limits), Flame hooks 1.5 (**Check for Updates** in Setup); the installer restarts the engine only when it is idle. Scene-linear plates are no longer clipped at 1.0.
 
 **0.5.4:** **Where each node renders** (Local / LAN / Cloud per node), **LAN rendering** (worker pool on your own network, `tools/CLOUD.md`), offline engine with pinned model downloads, hooks crash fix; a kit installed without Matte LTX Native no longer stalls its renders.
@@ -162,8 +174,8 @@ scene-linear) so log plates are converted for the model and back.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `UpscaleNative-Tester-0.5.5.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for the 7B models), Flame 2026/2027 |
-| Linux | `UpscaleNative-Linux-0.5.5.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB+ for 7B), Flame 2027 |
+| macOS | `UpscaleNative-Tester-0.5.6.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for the 7B models), Flame 2026/2027 |
+| Linux | `UpscaleNative-Linux-0.5.6.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB+ for 7B), Flame 2027 |
 
 The installer downloads SeedVR2 3B + VAE (7 GB; the 7B models are optional, 16.5 GB each) — Apache-2.0, no
 Hugging Face account needed. If Matte LTX Native is installed, Upscale Native shares its engine folder and
@@ -184,6 +196,8 @@ Lens Blur Native's Input3, but it is a plain grey depth pass (near = black) you 
 DA3 Metric depth comes out in real metres (scaled by the field of view DA3-Large estimates), and Output: Raw Depth feeds
 Lens Blur Native's Physical Camera.
 
+**0.3.5:** engine sync with Denoise Native 0.4.3 (a motion-only job for its Analyze Motion; jobs no node refreshes from are not announced to the auto-refresh hook) - nothing else changes.
+
 **0.3.4:** **anamorphic plates** (frames go to the engine desqueezed, results map back over the plate's width), **models stay loaded** in the engine between jobs (as many as fit), LAN worker **Allowed folders**, a code-audit round of engine fixes (shutdown refused while rendering, Cancel stops every task, a crafted FLAME .pkl can no longer run code, LAN request limits), Flame hooks 1.5 (**Check for Updates** in Setup); the installer restarts the engine only when it is idle.
 
 **0.3.3:** **Where each node renders** (Local / LAN / Cloud per node), **LAN rendering** (worker pool on your own network, `tools/CLOUD.md`), offline engine with pinned model downloads, hooks crash fix; a kit installed without Matte LTX Native no longer stalls its renders.
@@ -200,8 +214,8 @@ Lens Blur Native's Physical Camera.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `DepthNative-Tester-0.3.4.zip` | Apple Silicon Mac, 16 GB minimum (32 GB recommended), Flame 2026/2027 |
-| Linux | `DepthNative-Linux-0.3.4.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM (16 GB for DA3 at 1008 px), Flame 2027 |
+| macOS | `DepthNative-Tester-0.3.5.zip` | Apple Silicon Mac, 16 GB minimum (32 GB recommended), Flame 2026/2027 |
+| Linux | `DepthNative-Linux-0.3.5.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM (16 GB for DA3 at 1008 px), Flame 2027 |
 
 The installer downloads DA3 Large (1.6 GB) and Video Depth Anything Small (0.1 GB); DA3 Metric (1.3 GB) is optional —
 all Apache-2.0, no Hugging Face account needed. Shares the engine folder with Matte LTX Native / Upscale Native if present.
@@ -223,6 +237,8 @@ leaves the workstation unless that engine is selected). Moving mode propagates t
 in/outpainting when Matte LTX Native is installed alongside. Variations, seed, reference strength, Matte Area
 (chroma screen / paint grey), Input Colour from the clip's colour-space tag on Flame 2026.1+.
 
+**0.3.5:** engine sync with Denoise Native 0.4.3 (a motion-only job for its Analyze Motion; jobs no node refreshes from are not announced to the auto-refresh hook) - nothing else changes.
+
 **0.3.4:** **anamorphic plates** (frames go to the engine desqueezed, results map back over the plate's width), **models stay loaded** in the engine between jobs (as many as fit), LAN worker **Allowed folders**, a code-audit round of engine fixes (shutdown refused while rendering, Cancel stops every task, a crafted FLAME .pkl can no longer run code, LAN request limits), Flame hooks 1.5 (**Check for Updates** in Setup); the installer restarts the engine only when it is idle.
 
 **0.3.3:** **Where each node renders** (Local / LAN / Cloud per node), **LAN rendering** (worker pool on your own network, `tools/CLOUD.md`), offline engine with pinned model downloads, hooks crash fix; a kit installed without Matte LTX Native no longer stalls its renders.
@@ -239,8 +255,8 @@ in/outpainting when Matte LTX Native is installed alongside. Variations, seed, r
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `BackgroundNative-Tester-0.3.4.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for Qwen-Image-Edit), Flame 2026/2027 |
-| Linux | `BackgroundNative-Linux-0.3.4.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB for Qwen-Image-Edit), Flame 2027 |
+| macOS | `BackgroundNative-Tester-0.3.5.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for Qwen-Image-Edit), Flame 2026/2027 |
+| Linux | `BackgroundNative-Linux-0.3.5.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB for Qwen-Image-Edit), Flame 2027 |
 
 The installer downloads the local model(s) you choose — Qwen-Image-Edit-2511 + Lightning (55 GB) and/or FLUX.2 Klein 4B
 (15 GB), both Apache-2.0, no Hugging Face account needed — and offers the gated LTX In/Outpainting IC-LoRA for Moving
@@ -262,6 +278,8 @@ the prompt, press Generate. The node stores the element with its own alpha and o
 own comp, or a quick Over / Screen / Add in place. Fit to matte (stretch / inside / cover), plate colour match, fade at
 the matte edge, luminance key with threshold / softness / grow, Input Colour from the clip's tag on Flame 2026.1+.
 
+**0.4.7:** engine sync with Denoise Native 0.4.3 (a motion-only job for its Analyze Motion; jobs no node refreshes from are not announced to the auto-refresh hook) - nothing else changes.
+
 **0.4.6:** **anamorphic plates** (frames go to the engine desqueezed, results map back over the plate's width), **models stay loaded** in the engine between jobs (as many as fit), LAN worker **Allowed folders**, a code-audit round of engine fixes (shutdown refused while rendering, Cancel stops every task, a crafted FLAME .pkl can no longer run code, LAN request limits), Flame hooks 1.5 (**Check for Updates** in Setup); the installer restarts the engine only when it is idle.
 
 **0.4.5:** **Where each node renders** (Local / LAN / Cloud per node), **LAN rendering** (worker pool on your own network, `tools/CLOUD.md`), offline engine with pinned model downloads, hooks crash fix; a kit installed without Matte LTX Native no longer stalls its renders.
@@ -280,8 +298,8 @@ the matte edge, luminance key with threshold / softness / grow, Input Colour fro
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `ElementNative-Tester-0.4.6.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `ElementNative-Linux-0.4.6.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `ElementNative-Tester-0.4.7.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `ElementNative-Linux-0.4.7.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 It uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus the **Gemma-4 12B text encoder** (26 GB,
 from the same gated Lightricks/LTX-2.5 repository) that LTX needs for the prompt — Matte LTX Native does not install it, so
@@ -303,6 +321,8 @@ Start, HDR Strength and Range are live; Gain map and SDR-linearised outputs for 
 it applies. Optional **Depth**, **Normals** and **Hero Matte** passes (Depth Anything 3, LTX Alpha Gen) come out of the same
 Generate as extra Output choices — with Follow Duplicates, one compute feeds an HDR / depth / normals / matte set of nodes.
 
+**0.3.5:** engine sync with Denoise Native 0.4.3 (a motion-only job for its Analyze Motion; jobs no node refreshes from are not announced to the auto-refresh hook) - nothing else changes.
+
 **0.3.4:** **anamorphic plates** (frames go to the engine desqueezed, results map back over the plate's width), **models stay loaded** in the engine between jobs (as many as fit), LAN worker **Allowed folders**, a code-audit round of engine fixes (shutdown refused while rendering, Cancel stops every task, a crafted FLAME .pkl can no longer run code, LAN request limits), Flame hooks 1.5 (**Check for Updates** in Setup); the installer restarts the engine only when it is idle. The Depth / Normals / Hero Matte outputs work (they never loaded the job); log plates are linearised first.
 
 **0.3.3:** **Where each node renders** (Local / LAN / Cloud per node), **LAN rendering** (worker pool on your own network, `tools/CLOUD.md`), offline engine with pinned model downloads, hooks crash fix; a kit installed without Matte LTX Native no longer stalls its renders.
@@ -319,8 +339,8 @@ Generate as extra Output choices — with Follow Duplicates, one compute feeds a
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `HDRNative-Tester-0.3.4.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `HDRNative-Linux-0.3.4.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `HDRNative-Tester-0.3.5.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `HDRNative-Linux-0.3.5.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus a 1.3 GB LoRA that is gated on Hugging Face:
 accept the licence on the model page, and the installer downloads it under your login.
@@ -340,6 +360,8 @@ matches the plate at that frame follow the plate's lighting over the shot. The F
 and applied; Input Colour follows the clip's colour-space tag on Flame 2026.1+. The transform is deterministic,
 keyframeable and exports as a 33³ `.cube` LUT.
 
+**0.6.1:** engine sync with Denoise Native 0.4.3 (a motion-only job for its Analyze Motion; jobs no node refreshes from are not announced to the auto-refresh hook) - nothing else changes.
+
 **0.6:** **on the GPU** (Metal / Vulkan: UHD ~20 ms, with Selectives 21-31 ms), the Tone stage no longer blows up the chroma near black, code-audit fixes (a NaN crash on Linux, Selectives with keyframes / AI Look, the covariance gain capped, Export LUT at the current frame), anamorphic Selectives.
 
 **0.5:** **Distribution (3D)** match, **Selectives** (up to five Front / Reference box pairs in the viewer whose matches blend across the frame - match a part of the element to the part of the plate it will sit over, then move it downstream), shadows / mids / highlights amounts with Protect Skin, Output views (Reference, Compare wipes, Difference, Match Error), Match Keyframes along the shot, a 3-frame AI Look, and a fix for Tone double-correcting after Covariance / Levels.
@@ -353,8 +375,8 @@ engine the plugin works fully on Reference statistics.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `ColourMatchNative-Tester-0.6.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `ColourMatchNative-Linux-0.6.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `ColourMatchNative-Tester-0.6.1.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `ColourMatchNative-Linux-0.6.1.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 ### Models and licences (AI Look only)
 - Qwen-Image-Edit-2511 and Qwen-Image-Lightning — Apache-2.0 (installed by Background Native).
@@ -432,7 +454,7 @@ picture's edges, and out-of-focus foreground edges stay soft over a sharp backgr
 ## Denoise Native
 
 Motion-compensated video denoise inside Flame, on the GPU (**Metal** on the Mac, **Vulkan** on Linux; about 0.12 s per 4K
-frame on an M2 Ultra, ~10x the CPU path, so it scrubs in the viewer) or on all CPU cores - no engine. Neighbour frames stay
+frame on an M2 Ultra, ~10x the CPU path, so it scrubs in the viewer) or on all CPU cores - no engine needed (only the optional **Analyze Motion** uses it). Neighbour frames stay
 on the GPU between renders, so scrubbing or changing a slider re-uses them.
 It measures the plate's noise per channel, detail size and brightness (on every frame, or once with **Analyze Noise**),
 aligns the neighbour frames by motion - refined at every pixel so hair strands and edges line up - and averages them in
@@ -441,7 +463,9 @@ crisp with no soft double edges. What is left is removed per detail size, gently
 colour noise; **Strand Detail** smooths along hair, lashes and wires (never across them) and **Recover Detail** puts back
 softened texture. **Noise Level (%)** shifts the whole profile in one move. Also: noise-gated sharpen, Mix Original,
 global or zoned **Deflicker**, inside / outside the Front matte, and QC views (Compare wipe, Removed Noise, Detail Loss,
-Temporal Coverage, Measure Sharpness). Input: **Front** (the plate).
+Temporal Coverage, Measure Sharpness). Inputs: **Front** (the plate), optional **Vectors** (Motion Vectors Native's Forward Vectors).
+
+**0.4.3:** **Analyze Motion** (Temporal group) - one press measures per-pixel motion for the clip (SEA-RAFT, through the engine any engine kit installs) and the neighbour frames line up pixel by pixel: moving hair and fine texture keep more detail (on a hair close-up the 2-4 px detail went from 0.83 to 1.00 of Neat Video's). Or connect a Motion Vectors Native node's Forward Vectors to the new **Vectors** input (a check refuses vectors that don't fit). **Keep Moving Detail** (on by default): where the block match can't line fine moving texture up, the frame leans on itself there, as Neat does. **Cuts**: a second test (the aligned frames' textures must agree) - a cut between two similar-looking shots no longer bleeds into the frame before it. **Matte Output** now defaults to Grain profile for Regrain and works at **any bit depth** (8 / 10 / 12-bit and float), with the plate's colour space - setups saved at the old default switch to the grain matte (set Front matte (as is) where you need the Front's matte passed through).
 
 **0.4.2:** **colour kept** - the colour-noise filter took a little real colour along bright / dark edges (warm highlights lost 1-2% of their saturation, blonde hair came out less yellow); now only noise leaves. **Less mid-size grain** - the block filter no longer groups a block with its own 1-2 px shifted copies, so flat areas keep Neat's level of 2-8 px noise or less, as finer grain; Fine Keep rebalanced so hair and skin texture hold (existing setups get it as is).
 
@@ -457,8 +481,8 @@ Temporal Coverage, Measure Sharpness). Input: **Front** (the plate).
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `DenoiseNative-Tester-0.4.2.zip` | Apple Silicon Mac, Flame 2026/2027 (GPU: Metal) |
-| Linux | `DenoiseNative-Linux-0.4.2.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 (GPU: NVIDIA driver with Vulkan; CPU otherwise) |
+| macOS | `DenoiseNative-Tester-0.4.3.zip` | Apple Silicon Mac, Flame 2026/2027 (GPU: Metal) |
+| Linux | `DenoiseNative-Linux-0.4.3.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 (GPU: NVIDIA driver with Vulkan; CPU otherwise) |
 
 ## Optics Native
 
@@ -515,6 +539,8 @@ was removed shows through. Modes for plate grain only or new grain everywhere; g
 Previous / Next, delete with a week to undo), in a folder every machine can share (Python > Higgins Post > Setup... > Grain Profiles). QC views: the grain on grey, the changed-area key, and result vs original x10.
 Inputs: **Front** (comp), **Back** (Degrained), **Input3** Original, **Input4** Matte, **Input5** Grain from another Regrain.
 
+**0.4.1:** the **Grain Profile** input reads the Denoise node's matte at **any bit depth** - 8 / 10 / 12-bit batches as well as float, no conversion - with the plate's colour space (Input Colour = Auto follows the Denoise node). Integer batches need Denoise 0.4.3.
+
 **0.4:** **shared grain profiles** (Setup > Grain Profiles: a folder every Flame / Burn machine sees; setups find their profile by name), the Profile menu shows the profile in use after a restart, highlights follow the sensor's noise curve (they were up to +58% too strong), Scale / Blur / Soften fixes (a true Gaussian - setups with Blur or Soften change slightly), Fix Curve Spikes fixes colour points, half-float input, atomic saves, an Analyze progress bar.
 
 **0.3:** blue **Grain Profile** input for Denoise Native's matte output (Analyze takes the curves from it); newly saved profiles show in the Profile menu without a restart.
@@ -523,8 +549,8 @@ Inputs: **Front** (comp), **Back** (Degrained), **Input3** Original, **Input4** 
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `RegrainNative-Tester-0.4.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `RegrainNative-Linux-0.4.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `RegrainNative-Tester-0.4.1.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `RegrainNative-Linux-0.4.1.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 ## Camera Track Native
 
@@ -544,6 +570,8 @@ Physical Camera), world position, normals, the 3D Scene viewer with a dense clou
 cards straight into an Action in the Batch, **GMask Tracer** from points (axis / shape / both), a **corner pin** from a
 card. Engine jobs can be queued from EXR sequences on disk (`tools/aifx_queue.py`).
 
+**0.3.2:** engine sync with Denoise Native 0.4.3 (a motion-only job for its Analyze Motion; jobs no node refreshes from are not announced to the auto-refresh hook) - nothing else changes.
+
 **0.3.1:** **anamorphic plates** (frames go to the engine desqueezed, results map back over the plate's width), **models stay loaded** in the engine between jobs (as many as fit), LAN worker **Allowed folders**, a code-audit round of engine fixes (shutdown refused while rendering, Cancel stops every task, a crafted FLAME .pkl can no longer run code, LAN request limits), Flame hooks 1.5 (**Check for Updates** in Setup); the installer restarts the engine only when it is idle.
 
 **0.3:** **first Linux kit.** **Lens library** (Lens Name, Save / Load Lens Preset, **Lock Lens on Solve** - focal and distortion fixed through every adjustment: solve the lens on a shot with a move, lock it on the pans), **Read Clip Metadata** (focal, sensor, focus from the plate clip, done by itself on a new node), **Markers 3D (check)** (a 3D arrow on every point - a sliding point shows), Points / Markers drawn only on the frames that saw a point (the "floating points" were extrapolations; Show Unobserved Points restores them), solve accuracy round (depth at the solve's scale, near-nodal choice on held-out tracks, full-res refinement, readout search, movers excluded, Re-solve keeps the focal), **Consistent Depth** default 8 and the actors' depth following the optical flow, FBX keys from Range Start with no tilt flips, Normals facing the camera, corners written for Screen Comp Native, the Points view refreshing by itself after a re-solve, projection paint resident on the GPU, no upstream render for outputs that never read the plate. Plus the 30 Oct engine / hooks changes (per-node routes, LAN, offline).
@@ -558,8 +586,8 @@ card. Engine jobs can be queued from EXR sequences on disk (`tools/aifx_queue.py
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `CameraTrackNative-Tester-0.3.1.zip` | Apple Silicon Mac, 32 GB minimum, Flame 2026/2027 |
-| Linux | `CameraTrackNative-Linux-0.3.1.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 16 GB+ VRAM, Flame 2027 (projection outputs on the CPU) |
+| macOS | `CameraTrackNative-Tester-0.3.2.zip` | Apple Silicon Mac, 32 GB minimum, Flame 2026/2027 |
+| Linux | `CameraTrackNative-Linux-0.3.2.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 16 GB+ VRAM, Flame 2027 (projection outputs on the CPU) |
 
 The installer shares the engine folder of any other Higgins Post engine node already installed, adds SciPy and
 Depth Anything 3 (Large, 1.6 GB, Apache-2.0 — no Hugging Face account needed) and the Flame hooks. Isolate (SAM3) uses
@@ -612,6 +640,8 @@ and backward motion and an ST map chained from a Reference Frame are stored with
   the rest of the shape. The `aifx_autorefresh` hook adds a GMask Tracer node loaded with it to the Batch, wired to the
   same clip. GMask (check) previews the shapes, and follows the GMask by itself while you edit it.
 
+**0.2.5:** engine sync with Denoise Native 0.4.3 (a motion-only job for its Analyze Motion; jobs no node refreshes from are not announced to the auto-refresh hook) - nothing else changes.
+
 **0.2.4:** **anamorphic plates** (frames go to the engine desqueezed, results map back over the plate's width), **models stay loaded** in the engine between jobs (as many as fit), LAN worker **Allowed folders**, a code-audit round of engine fixes (shutdown refused while rendering, Cancel stops every task, a crafted FLAME .pkl can no longer run code, LAN request limits), Flame hooks 1.5 (**Check for Updates** in Setup); the installer restarts the engine only when it is idle. **Paint Carry on the GPU** (UHD 80 -> 43 ms; with Motion Blur ~120 -> ~50 ms); Off-Frame Paint = Clamp works (it rendered like Fade out); the vector / ST outputs render in float.
 
 **0.2.3:** **Where each node renders** (Local / LAN / Cloud per node), **LAN rendering** (worker pool on your own network, `tools/CLOUD.md`), offline engine with pinned model downloads, hooks crash fix; a kit installed without Matte LTX Native no longer stalls its renders. Paint Carry **Motion Blur** (shutter in degrees: 0 = off, 180 = a normal shutter) blurs the carried paint along the frame's motion.
@@ -632,8 +662,8 @@ and backward motion and an ST map chained from a Reference Frame are stored with
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `MotionVectorsNative-Tester-0.2.4.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
-| Linux | `MotionVectorsNative-Linux-0.2.4.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM, Flame 2027, **a Higgins Post engine kit installed** |
+| macOS | `MotionVectorsNative-Tester-0.2.5.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
+| Linux | `MotionVectorsNative-Linux-0.2.5.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM, Flame 2027, **a Higgins Post engine kit installed** |
 
 No downloads: the SEA-RAFT weights (Small 34 MB, Medium 75 MB) ship in the kit. The installer finds the engine folder of
 an installed Higgins Post kit, adds the flow engine files and the weights, installs the plugin and updates the Flame hooks.
@@ -649,6 +679,8 @@ directional, low golden side sun, soft overcast, strong backlight with rim…), 
 daylight to night, with an optional description. The Front's matte limits where it applies (Blend mixes it in), Input
 Colour follows the clip's tag on Flame 2026.1+, and a Z depth on Input3 gives a Normals output. Press Generate once — the
 result is stored with the node and renders instantly.
+
+**0.1.14:** engine sync with Denoise Native 0.4.3 (a motion-only job for its Analyze Motion; jobs no node refreshes from are not announced to the auto-refresh hook) - nothing else changes.
 
 **0.1.13:** **anamorphic plates** (frames go to the engine desqueezed, results map back over the plate's width), **models stay loaded** in the engine between jobs (as many as fit), LAN worker **Allowed folders**, a code-audit round of engine fixes (shutdown refused while rendering, Cancel stops every task, a crafted FLAME .pkl can no longer run code, LAN request limits), Flame hooks 1.5 (**Check for Updates** in Setup); the installer restarts the engine only when it is idle.
 
@@ -666,8 +698,8 @@ result is stored with the node and renders instantly.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `RelightNative-Tester-0.1.13.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `RelightNative-Linux-0.1.13.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `RelightNative-Tester-0.1.14.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `RelightNative-Linux-0.1.14.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus two LoRAs (Relight, Day-To-Night) and the
 Gemma-4 12B text encoder for the prompt (26 GB; Matte LTX Native does not install it), all gated on Hugging Face: accept
@@ -684,6 +716,8 @@ untouched. For static backgrounds it can first paint the object out of the first
 (when Background Native's models are installed) and lock LTX to it; **Clean Plate** mode uses Lightricks' Clean Plate
 IC-LoRA to remove every person and vehicle (and their shadows) by prompt, the matte limiting where it is used. Matte grow /
 feather, optional notes about what is behind the object, Input Colour from the clip's tag on Flame 2026.1+.
+
+**0.2.5:** engine sync with Denoise Native 0.4.3 (a motion-only job for its Analyze Motion; jobs no node refreshes from are not announced to the auto-refresh hook) - nothing else changes.
 
 **0.2.4:** **anamorphic plates** (frames go to the engine desqueezed, results map back over the plate's width), **models stay loaded** in the engine between jobs (as many as fit), LAN worker **Allowed folders**, a code-audit round of engine fixes (shutdown refused while rendering, Cancel stops every task, a crafted FLAME .pkl can no longer run code, LAN request limits), Flame hooks 1.5 (**Check for Updates** in Setup); the installer restarts the engine only when it is idle.
 
@@ -703,8 +737,8 @@ feather, optional notes about what is behind the object, Input Colour from the c
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `ObjectRemovalNative-Tester-0.2.4.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `ObjectRemovalNative-Linux-0.2.4.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `ObjectRemovalNative-Tester-0.2.5.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `ObjectRemovalNative-Linux-0.2.5.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus the In/Outpainting and Clean Plate IC-LoRAs
 and the Gemma-4 12B text encoder for the prompt (26 GB; Matte LTX Native does not install it) — all gated on Hugging Face;
@@ -723,6 +757,8 @@ expression and pose per frame). Outputs a **UV pass** (R = U, G = V, alpha = fac
 **unwrapped** into UV space: paint once on the unwrap and wrap it back with Flame's UV tools so it follows the skin.
 Optional **BootsTAPIR** dense-track refine nudges the mesh onto tracked skin points between the landmarks. Track once —
 the mesh per frame is stored with the node and the passes are drawn at plate resolution, instantly.
+
+**0.2.8:** engine sync with Denoise Native 0.4.3 (a motion-only job for its Analyze Motion; jobs no node refreshes from are not announced to the auto-refresh hook) - nothing else changes.
 
 **0.2.7:** **anamorphic plates** (frames go to the engine desqueezed, results map back over the plate's width), **models stay loaded** in the engine between jobs (as many as fit), LAN worker **Allowed folders**, a code-audit round of engine fixes (shutdown refused while rendering, Cancel stops every task, a crafted FLAME .pkl can no longer run code, LAN request limits), Flame hooks 1.5 (**Check for Updates** in Setup); the installer restarts the engine only when it is idle. Texture wrap **on the GPU**; **pins solved exactly** (close pins no longer land short); the viewer no longer freezes during a render; edge-ring / hold-frame / motion-blur fixes.
 
@@ -744,8 +780,8 @@ the mesh per frame is stored with the node and the passes are drawn at plate res
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `FaceUVNative-Tester-0.2.7.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
-| Linux | `FaceUVNative-Linux-0.2.7.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, Flame 2027, **a Higgins Post engine kit installed** |
+| macOS | `FaceUVNative-Tester-0.2.8.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
+| Linux | `FaceUVNative-Linux-0.2.8.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, Flame 2027, **a Higgins Post engine kit installed** |
 
 The face models (RetinaFace, BlazeFace, MediaPipe mesh) and FLAME 2023 Open ship in the kit; the installer adds uniface and
 ONNX Runtime to the engine's Python and downloads the BootsTAPIR checkpoint (200 MB) from Google DeepMind.
