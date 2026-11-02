@@ -63,6 +63,12 @@ No ComfyUI, no shared folders, no cloud.
 > at **any bit depth** (8 / 10 / 12-bit as well as float) with the plate's colour space. Every engine kit carries the engine
 > change Analyze Motion uses (nothing else changes in them).
 
+> **2 Nov - Camera Track Native 0.3.4 + Colour Match Native 0.6.2:** Camera Track's paint **hand-over** between paint
+> frames no longer pops: the matte's outline **morphs** from one paint to the next and both stay on the surface; new **Lock to
+> Plate** (on by default) lines the projected paint up with the plate on every frame, so it stops floating when the card or
+> surface isn't exactly on the real one. Colour Match: a **black matte** (Reference or Front) now leaves the picture untouched
+> instead of matching the whole frame; a matte that is nearly gone fades the match out.
+
 ## Install or update everything in one go
 
 **macOS:** download [`Higgins Post Updater.command`](../../raw/main/Higgins%20Post%20Updater.command), double-click it (right-click > Open the first time). It asks GitHub for the latest release of every plugin, shows what you have against what is published, and installs or updates what you pick - each plugin's own installer runs, so the shared engine and models are handled the same way as a manual install.
@@ -363,6 +369,8 @@ matches the plate at that frame follow the plate's lighting over the shot. The F
 and applied; Input Colour follows the clip's colour-space tag on Flame 2026.1+. The transform is deterministic,
 keyframeable and exports as a 33³ `.cube` LUT.
 
+**0.6.2:** a **black matte** means nothing to match: a Reference alpha or Front matte that is black on the measured frames leaves the Front untouched (it used to be matched against the whole frame); a matte that is nearly gone fades the match out instead of fitting a few pixels; Apply Through Matte leaves the Front untouched under a black matte; Match Keyframes / Selectives with an empty matte change nothing. An unconnected matte socket still means the whole frame.
+
 **0.6.1:** engine sync with Denoise Native 0.4.3 (a motion-only job for its Analyze Motion; jobs no node refreshes from are not announced to the auto-refresh hook) - nothing else changes.
 
 **0.6:** **on the GPU** (Metal / Vulkan: UHD ~20 ms, with Selectives 21-31 ms), the Tone stage no longer blows up the chroma near black, code-audit fixes (a NaN crash on Linux, Selectives with keyframes / AI Look, the covariance gain capped, Export LUT at the current frame), anamorphic Selectives.
@@ -378,8 +386,8 @@ engine the plugin works fully on Reference statistics.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `ColourMatchNative-Tester-0.6.1.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `ColourMatchNative-Linux-0.6.1.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `ColourMatchNative-Tester-0.6.2.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `ColourMatchNative-Linux-0.6.2.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
 ### Models and licences (AI Look only)
 - Qwen-Image-Edit-2511 and Qwen-Image-Lightning — Apache-2.0 (installed by Background Native).
@@ -573,6 +581,8 @@ Physical Camera), world position, normals, the 3D Scene viewer with a dense clou
 cards straight into an Action in the Batch, **GMask Tracer** from points (axis / shape / both), a **corner pin** from a
 card. Engine jobs can be queued from EXR sequences on disk (`tools/aifx_queue.py`).
 
+**0.3.4:** paint **hand-over** (Paint Frame 2 / 3): no pop at the switch - the matte's outline **morphs** from one paint's shape to the next inside the Blend window and each paint stays locked to the surface; **Lock to Plate** (Projection page, Sampling column, on by default): the paint frame's own plate is projected like the paint and lined up with every frame's plate, and what is left over (card / surface not exactly on the real one, solve error) is taken out as one smooth correction - frames that can't be measured are bridged by their neighbours. ~0.15-0.2 s per HD frame; turn it off for speed.
+
 **0.3.3:** fix - Flame could quit ("Assertion failed ... doPreventiveLock") when a solve finished and the auto-refresh reloaded the node: the node was greying parameters out during a host call where Flame allows no parameter change. Nothing else changes - every Output renders as in 0.3.2.
 
 **0.3.2:** engine sync with Denoise Native 0.4.3 (a motion-only job for its Analyze Motion; jobs no node refreshes from are not announced to the auto-refresh hook) - nothing else changes.
@@ -591,8 +601,8 @@ card. Engine jobs can be queued from EXR sequences on disk (`tools/aifx_queue.py
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `CameraTrackNative-Tester-0.3.3.zip` | Apple Silicon Mac, 32 GB minimum, Flame 2026/2027 |
-| Linux | `CameraTrackNative-Linux-0.3.3.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 16 GB+ VRAM, Flame 2027 (projection outputs on the CPU) |
+| macOS | `CameraTrackNative-Tester-0.3.4.zip` | Apple Silicon Mac, 32 GB minimum, Flame 2026/2027 |
+| Linux | `CameraTrackNative-Linux-0.3.4.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 16 GB+ VRAM, Flame 2027 (projection outputs on the CPU) |
 
 The installer shares the engine folder of any other Higgins Post engine node already installed, adds SciPy and
 Depth Anything 3 (Large, 1.6 GB, Apache-2.0 — no Hugging Face account needed) and the Flame hooks. Isolate (SAM3) uses
