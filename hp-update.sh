@@ -6,6 +6,8 @@
 #   bash hp-update.sh --only lensblur,faceuv,pixelspread,hooks   (hooks = the Flame hooks kit: Setup, Render Monitor, auto-refresh)
 #   --force   install even while the engine renders (the engine kits and the hooks kit restart it; normally they wait)
 #   bash hp-update.sh --uninstall lensblur,faceuv | --uninstall all [--purge]   (--purge also removes the shared engine + models)
+#   --flame 2027.1   install the builds for that Flame version (default: the newest Flame on this machine; Higgins Post
+#                    Updates in Flame passes the Flame it runs in)
 # macOS (Apple Silicon) and Rocky Linux. Needs curl, unzip, python3, sudo. Releases: https://github.com/whiggs14/autodesk-flame/releases
 set -u
 REPO="whiggs14/autodesk-flame"
@@ -21,38 +23,109 @@ bold() { printf "\033[1m%s\033[0m\n" "$*"; }
 fail() { printf "\033[31mERROR: %s\033[0m\n" "$*"; exit 1; }
 for t in curl unzip python3; do command -v "$t" >/dev/null || fail "$t is needed"; done
 
-MODE=menu; ONLY=""; YES=0; PURGE=0; UNINSTALL=""; FORCE=0
+MODE=menu; ONLY=""; YES=0; PURGE=0; UNINSTALL=""; FORCE=0; HOOKS_TOUCHED=0; FLAME_SEL="${AIFX_FLAME_VERSION:-}"
 HOOKS_DIR=/opt/Autodesk/shared/python/aifx_context
 while [ $# -gt 0 ]; do
   case "$1" in
     --check) MODE=check;; --all) MODE=all;; --only) MODE=only; ONLY="$2"; shift;; --yes|-y) YES=1;;
     --uninstall) MODE=uninstall; UNINSTALL="$2"; shift;; --purge) PURGE=1;;
-    --force) FORCE=1;; -h|--help) sed -n 2,10p "$0"; exit 0;; *) fail "unknown option $1";;
+    --force) FORCE=1;; --flame) FLAME_SEL="$2"; shift;; -h|--help) sed -n 2,12p "$0"; exit 0;; *) fail "unknown option $1";;
   esac; shift
 done
 
+# ---- the Flame versions on this machine: Flame / Flare / Flame Assist in /opt/Autodesk, each read from its VERSION file
+python3 - > "$WORK/flames.txt" <<'EOF'
+import os, re
+root = "/opt/Autodesk"; seen = {}
+def fv(s):
+    m = re.match(r"(\d{4})(?:\.(\d+))?(?:\.(\d+))?(?:\.pr(\d+))?", s or "")
+    return tuple(int(x or 0) for x in m.groups()) if m else (0, 0, 0, 0)
+try:
+    names = os.listdir(root)
+except OSError:
+    names = []
+for n in names:
+    m = re.match(r"^(flame|flare|flameassist|flame_assist)_(\d{4}\S*)$", n)
+    if not m:
+        continue
+    p = os.path.realpath(os.path.join(root, n))
+    if not os.path.isdir(os.path.join(p, "bin")):
+        continue
+    v = m.group(2)
+    try:
+        mm = re.search(r'VERSION\s+"([^"]+)"', open(os.path.join(p, "VERSION")).read())
+        if mm:
+            v = mm.group(1)
+    except OSError:
+        pass
+    seen[(m.group(1), v)] = p
+for (app, v), p in sorted(seen.items(), key=lambda kv: fv(kv[0][1])):
+    print(app, v, p)
+EOF
+FLAMES=$(awk '{print $1" "$2}' "$WORK/flames.txt" | paste -sd, - | sed 's/,/, /g')
+if [ -n "$FLAME_SEL" ]; then FLAME_TARGET="$FLAME_SEL"; else FLAME_TARGET=$(tail -1 "$WORK/flames.txt" | awk '{print $2}'); fi
+if [ -n "$FLAMES" ]; then bold "Flame on this machine: $FLAMES"; else echo "No Flame found in /opt/Autodesk - installing the default builds."; fi
+if [ -n "$FLAME_TARGET" ]; then
+  how=""; [ -z "$FLAME_SEL" ] && [ "$(wc -l < "$WORK/flames.txt" | tr -d ' ')" -gt 1 ] && how=" (the newest here; --flame <version> for another)"
+  echo "  Installing the builds for Flame $FLAME_TARGET$how"
+  [ -n "$FLAME_SEL" ] && [ -s "$WORK/flames.txt" ] && ! awk '{print $2}' "$WORK/flames.txt" | grep -qx "$FLAME_SEL" && echo "  (Flame $FLAME_SEL is not installed on this machine)"
+  [ "$(awk '{split($2, v, "."); print v[1]"."v[2]}' "$WORK/flames.txt" | sed 's/\.pr[0-9]*$/.0/' | sort -u | wc -l | tr -d ' ')" -gt 1 ] && \
+    echo "  Every Flame here shares one set of plugins and hooks; they adapt to the Flame they run in."
+fi
 # ---- the latest release of every plugin for this OS: "<kit> <version> <url> <title>"
 bold "Checking the latest releases on GitHub ..."
-curl -fsSL -H "Accept: application/vnd.github+json" "$API" -o "$WORK/releases.json" || fail "could not reach GitHub (api.github.com)"
-python3 - "$WORK/releases.json" "$SUFFIX" > "$WORK/latest.txt" <<'EOF'
-import json, re, sys
-rels = json.load(open(sys.argv[1])); suffix = sys.argv[2]
-pat = re.compile(r"^([A-Za-z0-9]+)-(Tester|Linux|Hotfix)-([0-9][0-9.]*)\.zip$")     # Hotfix = the Flame hooks kit, Mac + Linux
-best = {}
-def vt(v): return tuple(int(x) for x in v.split("."))
+if [ -n "${AIFX_RELEASES_JSON:-}" ]; then cp "$AIFX_RELEASES_JSON" "$WORK/releases.json"     # testing: a saved release list
+else curl -fsSL -H "Accept: application/vnd.github+json" "$API" -o "$WORK/releases.json" || fail "could not reach GitHub (api.github.com)"; fi
+python3 - "$WORK/releases.json" "$SUFFIX" "${FLAME_TARGET:-}" "$WORK" > "$WORK/latest.txt" <<'EOF'
+import json, os, re, sys
+rels = json.load(open(sys.argv[1])); suffix = sys.argv[2]; target = sys.argv[3]; work = sys.argv[4]
+# <Kit>-<Tester|Linux|Hotfix>-<version>[-Flame<major.minor>].zip   (Hotfix = the Flame hooks kit, Mac + Linux)
+pat = re.compile(r"^([A-Za-z0-9]+)-(Tester|Linux|Hotfix)-([0-9][0-9.]*?)(?:-Flame([0-9][0-9.]*))?\.zip$")
+def vt(v): return tuple(int(x) for x in v.split(".") if x)
+def fv(s):
+    m = re.match(r"(\d{4})(?:\.(\d+))?(?:\.(\d+))?(?:\.pr(\d+))?", s or "")
+    return tuple(int(x or 0) for x in m.groups()) if m else (0, 0, 0, 0)
+T = fv(target)[:2] if target else None
+MIN = {"*": "2025"}                      # the oldest Flame (major.minor) a kit is offered for; the hooks need Flame's Python 3.11+
+best = {}; blocked = {}
 for r in rels:
     if r.get("draft") or r.get("prerelease"): continue
     for a in r.get("assets", []):
         m = pat.match(a["name"])
         if not m or (m.group(2) != suffix and not (m.group(1) == "FlameHooks" and m.group(2) == "Hotfix")): continue
-        kit, ver = m.group(1), m.group(3)
-        if kit not in best or vt(ver) > vt(best[kit][0]):
-            best[kit] = (ver, a["browser_download_url"], r.get("name", ""))
+        kit, ver, tag = m.group(1), m.group(3), m.group(4)
+        if T is not None and tag and fv(tag)[:2] > T:                    # a build made for a newer Flame than this one
+            if kit not in blocked or fv(tag) < fv(blocked[kit][1]): blocked[kit] = (ver, tag)
+            continue
+        need = MIN.get(kit, MIN["*"])
+        if T is not None and T < fv(need)[:2]:
+            if kit not in blocked or vt(ver) > vt(blocked[kit][0]): blocked[kit] = (ver, need)
+            continue
+        key = (vt(ver), fv(tag)[:2] if tag else (0, 0))                  # the newest kit; for that version the closest Flame build
+        if kit not in best or key > best[kit][0]:
+            best[kit] = (key, ver, a["browser_download_url"], r.get("name", ""), tag or "")
 for kit in sorted(best):
-    ver, url, title = best[kit]
+    _, ver, url, title, tag = best[kit]
     print(kit, ver, url, title.replace(" ", "_"))
+with open(os.path.join(work, "blocked.txt"), "w") as f:
+    for kit in sorted(blocked):
+        if kit not in best: f.write(f"{kit} {blocked[kit][0]} {blocked[kit][1]}\n")
+with open(os.path.join(work, "tags.txt"), "w") as f:
+    for kit in sorted(best):
+        if best[kit][4]: f.write(f"{kit} {best[kit][4]}\n")
+notes = []
+if T is not None:
+    if T < (2026, 1): notes.append("Flame before 2026.1: Input Colour 'Auto' cannot read the clip's colour tag - set the plate's colour on each node.")
+    if T < (2027, 0): notes.append("Flame before 2027: the plugins are built and tested on Flame 2027; Camera Track cannot read the lens from the clip's metadata.")
+    if T < (2027, 2): notes.append("Flame before 2027.2: the hooks work from Flame's idle timer (no background thread) and see a batch change within 10 s; "
+                                  "Camera Track's dense cloud comes into Action as points (no Gaussian Splats node).")
+with open(os.path.join(work, "flame_notes.txt"), "w") as f:
+    f.write("".join(n + "\n" for n in notes))
 EOF
-[ -s "$WORK/latest.txt" ] || fail "no releases found for $SUFFIX"
+if [ ! -s "$WORK/latest.txt" ]; then
+  [ -s "$WORK/blocked.txt" ] && fail "Flame $FLAME_TARGET is older than these plugins support (Flame $(awk '{print $3}' "$WORK/blocked.txt" | sort -u | head -1) or newer)"
+  fail "no releases found for $SUFFIX"
+fi
 
 installed_version() {   # the version stamped by the kit (bundle / hooks folder), else recorded by this script; "present" = installed without a version; "-" = absent
   local kit="$1" v rec
@@ -117,6 +190,9 @@ while read -r kit ver url title; do
   printf "  %-24s %-12s %-12s %s\n" "$kit" "$cur" "$ver" "$what"
   case "$what" in UPDATE*|"(not installed)") TODO="$TODO $kit";; esac
 done < "$WORK/latest.txt"
+while read -r kit ver need; do printf "  %-24s %-12s %-12s %s\n" "$kit" "$(installed_version "$kit")" "$ver" "needs Flame $need+ (not offered)"; done < "$WORK/blocked.txt"
+while read -r kit tag; do echo "  ($kit: the build made for Flame $tag)"; done < "$WORK/tags.txt"
+[ -s "$WORK/flame_notes.txt" ] && { echo; sed 's/^/  /' "$WORK/flame_notes.txt"; }
 echo
 
 install_kit() {   # kit version url
@@ -133,6 +209,7 @@ install_kit() {   # kit version url
       echo "    Run the update again when the render has finished (or with --force)."; return 1; fi
   fi
   [ -f "$inst" ] || { echo "no installer in the kit"; return 1; }
+  [ -d "$dir/payload/aifx_context" ] && HOOKS_TOUCHED=1        # an engine kit: it copies its own (maybe older) Flame hooks in
   chmod +x "$inst"
   if [ "$YES" = 1 ]; then
     # the installers ask for the engine folder (Return = the default / the one already there), a models folder to search and a
@@ -208,6 +285,14 @@ for kit in $SEL; do
   if install_kit "$1" "$2" "$3"; then OK="$OK $kit"; else BAD="$BAD $kit"; fi
   echo
 done
+# the engine kits copy the Flame hooks they were built with: put the current hooks kit back on top
+case " $OK $BAD " in *" FlameHooks "*) ;; *)
+  line=$(awk '$1=="FlameHooks"' "$WORK/latest.txt")
+  if [ "${HOOKS_TOUCHED:-0}" = 1 ] && [ -n "$line" ]; then
+    set -- $line; bold "The engine kits brought their own copy of the Flame hooks - reinstalling the current hooks ($2) on top"
+    if install_kit "$1" "$2" "$3"; then OK="$OK FlameHooks"; else BAD="$BAD FlameHooks"; fi; echo
+  fi;;
+esac
 bold "Installed / updated:${OK:- none}"; [ -n "$BAD" ] && printf "\033[31mFailed:%s\033[0m\n" "$BAD"
 bold "Restart Flame to load the new versions."
 [ -z "$BAD" ]                                   # the exit status says whether everything went in (Higgins Post Updates reads it)

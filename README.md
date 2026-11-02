@@ -76,6 +76,14 @@ No ComfyUI, no shared folders, no cloud.
 > phone / laptop screen). Every engine kit carries the engine fix for **cloud rendering**: a finished Serverless job could lose
 > its result.
 
+> **2 Nov, night - Flame hooks 1.6 + the updater recognises your Flame version:** with the kits installed Flame could slow
+> down and the Batch / Media Panel highlight kept jumping to the batch name (reported on Flame 2027.1; 2027.2 had it too):
+> every 10 s the context hook made Flame sync the project and list every Batch node. Nothing on a timer touches the project
+> or the node list any more. `hp-update.sh` now lists the Flame versions on the machine, installs the builds for the newest
+> (`--flame 2027.1` for another; Check for Updates in Flame passes its own version), says what an older Flame does without,
+> and puts the current hooks back after an engine kit that carries older ones. Update with `bash hp-update.sh --only hooks`
+> (or `FlameHooks-Hotfix-1.6.zip`), then restart Flame.
+
 ## Install or update everything in one go
 
 **macOS:** download [`Higgins Post Updater.command`](../../raw/main/Higgins%20Post%20Updater.command), double-click it (right-click > Open the first time). It asks GitHub for the latest release of every plugin, shows what you have against what is published, and installs or updates what you pick - each plugin's own installer runs, so the shared engine and models are handled the same way as a manual install.
@@ -87,6 +95,7 @@ bash hp-update.sh              # interactive menu
 bash hp-update.sh --check      # just the table
 bash hp-update.sh --all --yes  # install / update everything, answering the installers' prompts with their defaults
 bash hp-update.sh --only lensblur,faceuv
+bash hp-update.sh --flame 2027.1    # the builds for another Flame on this machine (default: the newest one)
 bash hp-update.sh --uninstall lensblur,faceuv     # or: --uninstall all [--purge]   (--purge also deletes the shared engine and the models)
 ```
 Run it again whenever you like: it only downloads what is newer than what you have. Restart Flame afterwards.
