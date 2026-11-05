@@ -82,7 +82,18 @@ No ComfyUI, no shared folders, no cloud.
 > or the node list any more. `hp-update.sh` now lists the Flame versions on the machine, installs the builds for the newest
 > (`--flame 2027.1` for another; Check for Updates in Flame passes its own version), says what an older Flame does without,
 > and puts the current hooks back after an engine kit that carries older ones. Update with `bash hp-update.sh --only hooks`
-> (or `FlameHooks-Hotfix-1.6.zip`), then restart Flame.
+> (or `FlameHooks-Hotfix-1.9.zip`), then restart Flame.
+
+> **5 Nov - Face UV 0.3.1 (the whole node, public), LTX modes in Upscale, Water in Element, WAFT in Motion Vectors, hooks 1.9:**
+> **Face UV Native 0.3.1** is the first public kit with everything: Mesh = **Head Dense** (RealDenseFace, MIT), whole-shot solve,
+> lens, the **Paint page** (texture wrap, hold frames, Morph Content), **Flow Assist / Texture Lock** with keyframable amounts and
+> **Auto Off on Turns**, accurate **Snap** (Landmarks / features / whole mesh), optional **Sapiens2** landmarks (gated, your own
+> Hugging Face login), "step k of N" progress. **Upscale 0.5.8**: LTX **Pixel Upscaler / Deblur / Decompression / Restore / Refine
+> Details** (gated IC-LoRAs, downloaded under your login) and Factor set for you. **Element 0.4.9**: **Water in Plate**, the Look page
+> (AI matte, HDR, hold-out by depth, defocus, grain, light wrap), **Auto Follow / Stick To Surface**. **Motion Vectors 0.2.7**: **WAFT**.
+> Removed for licensing: Object Removal's MiniMax-Remover, Depth's VDA Large, Colour Match's AI Look (its LoRA had no licence).
+> Every engine kit: the engine fixes and **hooks 1.9** (step text in the Render Monitor, no repeating post-render bar). Update with
+> `bash hp-update.sh` or the zips below.
 
 ## Install or update everything in one go
 
@@ -110,6 +121,8 @@ runs on small subjects, and a built-in Track Box tracker drives that box without
 **Motion Detail** (x2 / x4 / x8 / Auto) repeats frames inside LTX's 8-frame latents so fast motion keeps its matte
 and its motion blur; Auto picks the repeat per frame from a quick motion analysis and only spends the time on fast frames.
 
+**0.9.17:** engine sync (Face UV's Flow Assist / Texture Lock update remembered, "step k of N" status, LTX after SeedVR2 on the Mac, Object Removal's clean frame checked for leftover patch colour; MiniMax-Remover / VDA Large / the colour-grade LoRA refused with a clear message) and hooks 1.9 - nothing else changes in this node.
+
 **0.9.16:** engine sync - cloud rendering fix (a finished Serverless job could lose its result), Motion Vectors' ST maps per Reference Frame, Background's Nano Banana fix - nothing else changes.
 
 **0.9.15:** engine sync with Denoise Native 0.4.3 (a motion-only job for its Analyze Motion; jobs no node refreshes from are not announced to the auto-refresh hook) - nothing else changes.
@@ -130,8 +143,8 @@ and its motion blur; Auto picks the repeat per frame from a quick motion analysi
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `MatteLTXNative-Tester-0.9.16.zip` | Apple Silicon Mac, 128 GB recommended (64 GB minimum), Flame 2026/2027 |
-| Linux | `MatteLTXNative-Linux-0.9.16.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB+ VRAM (60 GB+ runs fully on the GPU), Flame 2027 |
+| macOS | `MatteLTXNative-Tester-0.9.17.zip` | Apple Silicon Mac, 128 GB recommended (64 GB minimum), Flame 2026/2027 |
+| Linux | `MatteLTXNative-Linux-0.9.17.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB+ VRAM (60 GB+ runs fully on the GPU), Flame 2027 |
 
 Each zip contains the plugin, the Python engine and an installer; the installer downloads the models
 (~56 GB) under your own Hugging Face account. Read `Read Me First.txt` / `README.txt` inside the zip.
@@ -175,11 +188,15 @@ The plugin downloads models that carry their own terms — check they fit your u
 
 ## Upscale Native
 
-Video upscale / restoration with ByteDance's **SeedVR2** (3B, 7B and 7B Sharp models).
+Video upscale / restoration with ByteDance's **SeedVR2** (3B, 7B and 7B Sharp models) — and, when Matte LTX Native's engine is
+installed, Lightricks' **LTX-2.5 IC-LoRAs**: a generative **Pixel Upscaler** (2x / 4x) and the repair set **Deblur**, **Decompression**,
+**Restore** (archive footage: resolution, casts, flicker, dirt; colours from a short Scene text) and **Refine Details**.
 Flame cannot change a node's resolution, so: Resize the plate to the final size, set Factor to match
 (2x, 3x, 4x) and the node regenerates it with SeedVR2; Factor 1x restores at the plate's own size.
 Input Colour is read from the clip's colour-space tag automatically on Flame 2026.1+ (S-Log3, ARRI LogC3/LogC4,
 scene-linear) so log plates are converted for the model and back.
+
+**0.5.8:** **LTX modes** in the Model menu: **Pixel Upscaler** (generative 2x / 4x), **Deblur**, **Decompression**, **Restore** (archive footage) and **Refine Details** - Lightricks' LTX-2.5 IC-LoRAs (gated; the installer downloads them under your login, 5.1 GB; they need Matte LTX Native's engine in the same folder and the Gemma text encoder, which it also offers); new LTX Modes column (LoRA Strength, Scene, Work Res, Tiles). Choosing Deblur / Decompression / Restore sets **Factor to 1x** (they repair at the plate's own size), the Pixel Upscaler 2x; Batch Frames / Temporal Overlap / Color Correction / the noise settings are SeedVR2-only. engine sync (Face UV's Flow Assist / Texture Lock update remembered, "step k of N" status, LTX after SeedVR2 on the Mac, Object Removal's clean frame checked for leftover patch colour; MiniMax-Remover / VDA Large / the colour-grade LoRA refused with a clear message) and hooks 1.9 - nothing else changes in this node.
 
 **0.5.7:** engine sync - cloud rendering fix (a finished Serverless job could lose its result), Motion Vectors' ST maps per Reference Frame, Background's Nano Banana fix - nothing else changes.
 
@@ -203,8 +220,8 @@ scene-linear) so log plates are converted for the model and back.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `UpscaleNative-Tester-0.5.7.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for the 7B models), Flame 2026/2027 |
-| Linux | `UpscaleNative-Linux-0.5.7.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB+ for 7B), Flame 2027 |
+| macOS | `UpscaleNative-Tester-0.5.8.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for the 7B models), Flame 2026/2027 |
+| Linux | `UpscaleNative-Linux-0.5.8.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB+ for 7B), Flame 2027 |
 
 The installer downloads SeedVR2 3B + VAE (7 GB; the 7B models are optional, 16.5 GB each) — Apache-2.0, no
 Hugging Face account needed. If Matte LTX Native is installed, Upscale Native shares its engine folder and
@@ -213,6 +230,8 @@ Python environment.
 ### Models and licences
 - SeedVR2 weights — ByteDance Seed, Apache-2.0 (packaged by numz/SeedVR2_comfyUI); inference code vendored
   from ComfyUI-SeedVR2_VideoUpscaler (Apache-2.0).
+- LTX modes (optional) — the Pixel Spatial Upscaler, Deblur, Decompression, Restore and Refine Details IC-LoRAs and the Gemma-4
+  text encoder, Lightricks LTX-2 Community License (gated; downloaded under your own Hugging Face login, not in the kit).
 
 ## Depth Native
 
@@ -224,6 +243,8 @@ leaves between windows. Input Colour is read from the clip's colour-space tag on
 Lens Blur Native's Input3, but it is a plain grey depth pass (near = black) you can use anywhere.
 DA3 Metric depth comes out in real metres (scaled by the field of view DA3-Large estimates), and Output: Raw Depth feeds
 Lens Blur Native's Physical Camera.
+
+**0.3.7:** Model menu without **VDA Large** (Video Depth Anything Large is CC-BY-NC; a setup saved with it loads as VDA Small). engine sync (Face UV's Flow Assist / Texture Lock update remembered, "step k of N" status, LTX after SeedVR2 on the Mac, Object Removal's clean frame checked for leftover patch colour; MiniMax-Remover / VDA Large / the colour-grade LoRA refused with a clear message) and hooks 1.9 - nothing else changes in this node.
 
 **0.3.6:** engine sync - cloud rendering fix (a finished Serverless job could lose its result), Motion Vectors' ST maps per Reference Frame, Background's Nano Banana fix - nothing else changes.
 
@@ -245,8 +266,8 @@ Lens Blur Native's Physical Camera.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `DepthNative-Tester-0.3.6.zip` | Apple Silicon Mac, 16 GB minimum (32 GB recommended), Flame 2026/2027 |
-| Linux | `DepthNative-Linux-0.3.6.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM (16 GB for DA3 at 1008 px), Flame 2027 |
+| macOS | `DepthNative-Tester-0.3.7.zip` | Apple Silicon Mac, 16 GB minimum (32 GB recommended), Flame 2026/2027 |
+| Linux | `DepthNative-Linux-0.3.7.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM (16 GB for DA3 at 1008 px), Flame 2027 |
 
 The installer downloads DA3 Large (1.6 GB) and Video Depth Anything Small (0.1 GB); DA3 Metric (1.3 GB) is optional —
 all Apache-2.0, no Hugging Face account needed. Shares the engine folder with Matte LTX Native / Upscale Native if present.
@@ -268,6 +289,8 @@ leaves the workstation unless that engine is selected). Moving mode propagates t
 in/outpainting when Matte LTX Native is installed alongside. Variations, seed, reference strength, Matte Area
 (chroma screen / paint grey), Input Colour from the clip's colour-space tag on Flame 2026.1+.
 
+**0.3.7:** engine sync (Face UV's Flow Assist / Texture Lock update remembered, "step k of N" status, LTX after SeedVR2 on the Mac, Object Removal's clean frame checked for leftover patch colour; MiniMax-Remover / VDA Large / the colour-grade LoRA refused with a clear message) and hooks 1.9 - nothing else changes in this node.
+
 **0.3.6:** **Edit Prompt...** (the prompt in your text editor, no length limit - Flame's field caps what can be typed; saved text becomes the prompt at Generate), **Nano Banana** on small mattes (a close-up around a phone / laptop screen; an area that isn't a green / blue screen is painted grey so the model knows where the picture goes), cloud rendering fix.
 
 **0.3.5:** engine sync with Denoise Native 0.4.3 (a motion-only job for its Analyze Motion; jobs no node refreshes from are not announced to the auto-refresh hook) - nothing else changes.
@@ -288,8 +311,8 @@ in/outpainting when Matte LTX Native is installed alongside. Variations, seed, r
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `BackgroundNative-Tester-0.3.6.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for Qwen-Image-Edit), Flame 2026/2027 |
-| Linux | `BackgroundNative-Linux-0.3.6.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB for Qwen-Image-Edit), Flame 2027 |
+| macOS | `BackgroundNative-Tester-0.3.7.zip` | Apple Silicon Mac, 32 GB minimum (64 GB for Qwen-Image-Edit), Flame 2026/2027 |
+| Linux | `BackgroundNative-Linux-0.3.7.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 12 GB+ VRAM (24 GB for Qwen-Image-Edit), Flame 2027 |
 
 The installer downloads the local model(s) you choose — Qwen-Image-Edit-2511 + Lightning (55 GB) and/or FLUX.2 Klein 4B
 (15 GB), both Apache-2.0, no Hugging Face account needed — and offers the gated LTX In/Outpainting IC-LoRA for Moving
@@ -310,6 +333,8 @@ places it inside a matte on the plate: draw a matte where the element should liv
 the prompt, press Generate. The node stores the element with its own alpha and outputs it premultiplied + alpha for your
 own comp, or a quick Over / Screen / Add in place. Fit to matte (stretch / inside / cover), plate colour match, fade at
 the matte edge, luminance key with threshold / softness / grow, Input Colour from the clip's tag on Flame 2026.1+.
+
+**0.4.9:** **Water in Plate** (Flood, Stream, Rain, Surf, Splash, Custom water: the dry plate re-rendered with Lightricks' Water Simulation IC-LoRA - gated, downloaded under your login, 906 MB; Water Strength) plus four water elements on black; new **Look page** (re-comps in seconds): Element Matte (Auto / Key / **AI Matte**), **HDR** gain, **Preview Takes** / Use Take, **Hold Out by Depth**, Defocus, Motion Blur, Grain, Light Wrap, 2x Detail; **Auto Follow** (BootsTAPIR tracks the plate under the element) and **Stick To Surface** (SEA-RAFT flow bends it onto the surface). AI Matte / HDR / Hold Out / 2x Detail use models that come with Matte LTX, HDR, Depth and Upscale Native (the node says which is missing). engine sync (Face UV's Flow Assist / Texture Lock update remembered, "step k of N" status, LTX after SeedVR2 on the Mac, Object Removal's clean frame checked for leftover patch colour; MiniMax-Remover / VDA Large / the colour-grade LoRA refused with a clear message) and hooks 1.9 - nothing else changes in this node.
 
 **0.4.8:** **Edit Prompt...** (the prompt in your text editor, no length limit - Flame's field caps what can be typed; saved text becomes the prompt at Generate), cloud rendering fix.
 
@@ -333,8 +358,8 @@ the matte edge, luminance key with threshold / softness / grow, Input Colour fro
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `ElementNative-Tester-0.4.8.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `ElementNative-Linux-0.4.8.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `ElementNative-Tester-0.4.9.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `ElementNative-Linux-0.4.9.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 It uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus the **Gemma-4 12B text encoder** (26 GB,
 from the same gated Lightricks/LTX-2.5 repository) that LTX needs for the prompt — Matte LTX Native does not install it, so
@@ -343,6 +368,9 @@ the plugin, and updates the Flame hooks.
 
 ### Models and licences
 - LTX-2.5 — Lightricks LTX-2 Community License (installed by Matte LTX Native under your own Hugging Face account).
+- Water Simulation IC-LoRA (Water in Plate) — Lightricks LTX-2 Community License (gated; downloaded under your own login).
+- BootsTAPIR (Auto Follow) — Google DeepMind, Apache-2.0 (200 MB, downloaded on first use); SEA-RAFT (Stick To Surface) —
+  Princeton, BSD-3-Clause (in the kit).
 
 ## HDR Native
 
@@ -355,6 +383,8 @@ the gain above a chosen SDR level and never darkens; Whole image gives the model
 Start, HDR Strength and Range are live; Gain map and SDR-linearised outputs for checking. A matte on the Front limits where
 it applies. Optional **Depth**, **Normals** and **Hero Matte** passes (Depth Anything 3, LTX Alpha Gen) come out of the same
 Generate as extra Output choices — with Follow Duplicates, one compute feeds an HDR / depth / normals / matte set of nodes.
+
+**0.3.7:** engine sync (Face UV's Flow Assist / Texture Lock update remembered, "step k of N" status, LTX after SeedVR2 on the Mac, Object Removal's clean frame checked for leftover patch colour; MiniMax-Remover / VDA Large / the colour-grade LoRA refused with a clear message) and hooks 1.9 - nothing else changes in this node.
 
 **0.3.6:** engine sync - cloud rendering fix (a finished Serverless job could lose its result), Motion Vectors' ST maps per Reference Frame, Background's Nano Banana fix - nothing else changes.
 
@@ -376,8 +406,8 @@ Generate as extra Output choices — with Follow Duplicates, one compute feeds a
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `HDRNative-Tester-0.3.6.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `HDRNative-Linux-0.3.6.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `HDRNative-Tester-0.3.7.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `HDRNative-Linux-0.3.7.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus a 1.3 GB LoRA that is gated on Hugging Face:
 accept the licence on the model page, and the installer downloads it under your login.
@@ -397,6 +427,8 @@ matches the plate at that frame follow the plate's lighting over the shot. The F
 and applied; Input Colour follows the clip's colour-space tag on Flame 2026.1+. The transform is deterministic,
 keyframeable and exports as a 33³ `.cube` LUT.
 
+**0.6.4:** the **AI Look target is gone** (its colour-grade LoRA had no stated licence): the node always matches to the Reference statistics; saved setups load unchanged; the installer no longer touches the engine.
+
 **0.6.3:** engine sync - cloud rendering fix (a finished Serverless job could lose its result), Motion Vectors' ST maps per Reference Frame, Background's Nano Banana fix - nothing else changes.
 
 **0.6.2:** a **black matte** means nothing to match: a Reference alpha or Front matte that is black on the measured frames leaves the Front untouched (it used to be matched against the whole frame); a matte that is nearly gone fades the match out instead of fitting a few pixels; Apply Through Matte leaves the Front untouched under a black matte; Match Keyframes / Selectives with an empty matte change nothing. An unconnected matte socket still means the whole frame.
@@ -407,22 +439,15 @@ keyframeable and exports as a 33³ `.cube` LUT.
 
 **0.5:** **Distribution (3D)** match, **Selectives** (up to five Front / Reference box pairs in the viewer whose matches blend across the frame - match a part of the element to the part of the plate it will sit over, then move it downstream), shadows / mids / highlights amounts with Protect Skin, Output views (Reference, Compare wipes, Difference, Match Error), Match Keyframes along the shot, a 3-frame AI Look, and a fix for Tone double-correcting after Covariance / Levels.
 
-Optional **AI Look** target: when the Higgins Post engine from Background Native (Qwen-Image-Edit-2511 + Lightning)
-is installed, the engine recolours the analysis frame once and the plugin measures that instead of the Reference — for
-references of a different scene. The installer offers to download the colour-grade-transfer LoRA (236 MB). Without an
-engine the plugin works fully on Reference statistics.
-
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `ColourMatchNative-Tester-0.6.3.zip` | Apple Silicon Mac, Flame 2026/2027 |
-| Linux | `ColourMatchNative-Linux-0.6.3.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
+| macOS | `ColourMatchNative-Tester-0.6.4.zip` | Apple Silicon Mac, Flame 2026/2027 |
+| Linux | `ColourMatchNative-Linux-0.6.4.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 |
 
-### Models and licences (AI Look only)
-- Qwen-Image-Edit-2511 and Qwen-Image-Lightning — Apache-2.0 (installed by Background Native).
-- QIE-2511-Color-Grade-Transfer-LoRA — ovi054 / piczify.com; no licence stated on the model page, check with the
-  author before commercial use. Not bundled; the installer downloads it on request.
+### Models and licences
+- None: pure C++ (OpenFX, BSD-3). The AI Look target of 0.6.3 and earlier, and its colour-grade LoRA, are gone.
 
 ## Additive Key Native
 
@@ -506,6 +531,8 @@ softened texture. **Noise Level (%)** shifts the whole profile in one move. Also
 global or zoned **Deflicker**, inside / outside the Front matte, and QC views (Compare wipe, Removed Noise, Detail Loss,
 Temporal Coverage, Measure Sharpness). Inputs: **Front** (the plate), optional **Vectors** (Motion Vectors Native's Forward Vectors).
 
+**0.4.4:** **highlights**: bright specks and small squares in near-clipped areas are gone (block stages on log-encoded luma, colour put back in proportion to brightness, every output pixel held to the plate's local range).
+
 **0.4.3:** **Analyze Motion** (Temporal group) - one press measures per-pixel motion for the clip (SEA-RAFT, through the engine any engine kit installs) and the neighbour frames line up pixel by pixel: moving hair and fine texture keep more detail (on a hair close-up the 2-4 px detail went from 0.83 to 1.00 of Neat Video's). Or connect a Motion Vectors Native node's Forward Vectors to the new **Vectors** input (a check refuses vectors that don't fit). **Keep Moving Detail** (on by default): where the block match can't line fine moving texture up, the frame leans on itself there, as Neat does. **Cuts**: a second test (the aligned frames' textures must agree) - a cut between two similar-looking shots no longer bleeds into the frame before it. **Matte Output** now defaults to Grain profile for Regrain and works at **any bit depth** (8 / 10 / 12-bit and float), with the plate's colour space - setups saved at the old default switch to the grain matte (set Front matte (as is) where you need the Front's matte passed through).
 
 **0.4.2:** **colour kept** - the colour-noise filter took a little real colour along bright / dark edges (warm highlights lost 1-2% of their saturation, blonde hair came out less yellow); now only noise leaves. **Less mid-size grain** - the block filter no longer groups a block with its own 1-2 px shifted copies, so flat areas keep Neat's level of 2-8 px noise or less, as finer grain; Fine Keep rebalanced so hair and skin texture hold (existing setups get it as is).
@@ -522,8 +549,8 @@ Temporal Coverage, Measure Sharpness). Inputs: **Front** (the plate), optional *
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `DenoiseNative-Tester-0.4.3.zip` | Apple Silicon Mac, Flame 2026/2027 (GPU: Metal) |
-| Linux | `DenoiseNative-Linux-0.4.3.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 (GPU: NVIDIA driver with Vulkan; CPU otherwise) |
+| macOS | `DenoiseNative-Tester-0.4.4.zip` | Apple Silicon Mac, Flame 2026/2027 (GPU: Metal) |
+| Linux | `DenoiseNative-Linux-0.4.4.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 (GPU: NVIDIA driver with Vulkan; CPU otherwise) |
 
 ## Optics Native
 
@@ -611,6 +638,8 @@ Physical Camera), world position, normals, the 3D Scene viewer with a dense clou
 cards straight into an Action in the Batch, **GMask Tracer** from points (axis / shape / both), a **corner pin** from a
 card. Engine jobs can be queued from EXR sequences on disk (`tools/aifx_queue.py`).
 
+**0.3.6:** engine sync (Face UV's Flow Assist / Texture Lock update remembered, "step k of N" status, LTX after SeedVR2 on the Mac, Object Removal's clean frame checked for leftover patch colour; MiniMax-Remover / VDA Large / the colour-grade LoRA refused with a clear message) and hooks 1.9 - nothing else changes in this node.
+
 **0.3.5:** engine sync - cloud rendering fix (a finished Serverless job could lose its result), Motion Vectors' ST maps per Reference Frame, Background's Nano Banana fix - nothing else changes.
 
 **0.3.4:** paint **hand-over** (Paint Frame 2 / 3): no pop at the switch - the matte's outline **morphs** from one paint's shape to the next inside the Blend window and each paint stays locked to the surface; **Lock to Plate** (Projection page, Sampling column, on by default): the paint frame's own plate is projected like the paint and lined up with every frame's plate, and what is left over (card / surface not exactly on the real one, solve error) is taken out as one smooth correction - frames that can't be measured are bridged by their neighbours. ~0.15-0.2 s per HD frame; turn it off for speed.
@@ -633,8 +662,8 @@ card. Engine jobs can be queued from EXR sequences on disk (`tools/aifx_queue.py
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `CameraTrackNative-Tester-0.3.5.zip` | Apple Silicon Mac, 32 GB minimum, Flame 2026/2027 |
-| Linux | `CameraTrackNative-Linux-0.3.5.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 16 GB+ VRAM, Flame 2027 (projection outputs on the CPU) |
+| macOS | `CameraTrackNative-Tester-0.3.6.zip` | Apple Silicon Mac, 32 GB minimum, Flame 2026/2027 |
+| Linux | `CameraTrackNative-Linux-0.3.6.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 16 GB+ VRAM, Flame 2027 (projection outputs on the CPU) |
 
 The installer shares the engine folder of any other Higgins Post engine node already installed, adds SciPy and
 Depth Anything 3 (Large, 1.6 GB, Apache-2.0 — no Hugging Face account needed) and the Flame hooks. Isolate (SAM3) uses
@@ -669,7 +698,7 @@ spatial fill. On the Mac the fill runs on the GPU (Metal); Linux runs on every c
 
 ## Motion Vectors Native
 
-Dense optical flow with Princeton's **SEA-RAFT** (Small or Medium), put to work inside Flame. Press Analyze once — forward
+Dense optical flow with Princeton's **SEA-RAFT** (Small or Medium) or **WAFT**, put to work inside Flame. Press Analyze once — forward
 and backward motion and an ST map chained from a Reference Frame are stored with the node and render instantly:
 - **Motion vectors** in Flame's convention (pixels, y up) for Action's Motion Vectors map, Motion Blur, Pixel Spread and
   Timewarp, a **confidence** matte (forward/backward consistency x the model's own uncertainty) and a flow-colour check.
@@ -686,6 +715,8 @@ and backward motion and an ST map chained from a Reference Frame are stored with
   its own animated GMask in one **GMask Tracer** setup (`<run>_shapes.mask`), keyed every frame; covered vertices follow
   the rest of the shape. The `aifx_autorefresh` hook adds a GMask Tracer node loaded with it to the Batch, wired to the
   same clip. GMask (check) previews the shapes, and follows the GMask by itself while you edit it.
+
+**0.2.7:** Model **Precise+ - WAFT (DAv2-S)**: Princeton's WAFT optical flow (BSD-3; the a1 model with the Depth Anything V2 Small backbone, Apache-2.0; 257 MB, in the kit) - about 2.5x slower than SEA-RAFT M and not better on every shot; try it on thin structures and large motion, SEA-RAFT stays the default. engine sync (Face UV's Flow Assist / Texture Lock update remembered, "step k of N" status, LTX after SeedVR2 on the Mac, Object Removal's clean frame checked for leftover patch colour; MiniMax-Remover / VDA Large / the colour-grade LoRA refused with a clear message) and hooks 1.9 - nothing else changes in this node.
 
 **0.2.6:** Paint Carry **Transparency** (0-100 as Flame's: 0 = shown, 100 = gone; keyframe it to dissolve the paint), one **ST map per Reference Frame** (a copied node doing Paint Carry from another frame on the same analysis no longer replaces the first node's), cloud rendering fix.
 
@@ -711,14 +742,16 @@ and backward motion and an ST map chained from a Reference Frame are stored with
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `MotionVectorsNative-Tester-0.2.6.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
-| Linux | `MotionVectorsNative-Linux-0.2.6.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM, Flame 2027, **a Higgins Post engine kit installed** |
+| macOS | `MotionVectorsNative-Tester-0.2.7.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
+| Linux | `MotionVectorsNative-Linux-0.2.7.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 8 GB+ VRAM, Flame 2027, **a Higgins Post engine kit installed** |
 
 No downloads: the SEA-RAFT weights (Small 34 MB, Medium 75 MB) ship in the kit. The installer finds the engine folder of
 an installed Higgins Post kit, adds the flow engine files and the weights, installs the plugin and updates the Flame hooks.
 
 ### Models and licences
 - SEA-RAFT code and weights — Princeton Vision & Learning Lab, BSD-3-Clause.
+- WAFT a1 code and checkpoint — Princeton Vision & Learning Lab, BSD-3-Clause; its Depth Anything V2 Small backbone — Apache-2.0
+  (both in the kit).
 
 ## Relight Native
 
@@ -728,6 +761,8 @@ directional, low golden side sun, soft overcast, strong backlight with rim…), 
 daylight to night, with an optional description. The Front's matte limits where it applies (Blend mixes it in), Input
 Colour follows the clip's tag on Flame 2026.1+, and a Z depth on Input3 gives a Normals output. Press Generate once — the
 result is stored with the node and renders instantly.
+
+**0.1.16:** Mode = **Day To Night sets Work Res 768** (its training size) when Work Res was at the 1280 default, Sun Direction sets 1280 back (Day To Night at 1280 gave partial or no conversion on some plates). engine sync (Face UV's Flow Assist / Texture Lock update remembered, "step k of N" status, LTX after SeedVR2 on the Mac, Object Removal's clean frame checked for leftover patch colour; MiniMax-Remover / VDA Large / the colour-grade LoRA refused with a clear message) and hooks 1.9 - nothing else changes in this node.
 
 **0.1.15:** **Edit Prompt...** (the prompt in your text editor, no length limit - Flame's field caps what can be typed; saved text becomes the prompt at Generate), cloud rendering fix.
 
@@ -749,8 +784,8 @@ result is stored with the node and renders instantly.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `RelightNative-Tester-0.1.15.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `RelightNative-Linux-0.1.15.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `RelightNative-Tester-0.1.16.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `RelightNative-Linux-0.1.16.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus two LoRAs (Relight, Day-To-Night) and the
 Gemma-4 12B text encoder for the prompt (26 GB; Matte LTX Native does not install it), all gated on Hugging Face: accept
@@ -767,6 +802,8 @@ untouched. For static backgrounds it can first paint the object out of the first
 (when Background Native's models are installed) and lock LTX to it; **Clean Plate** mode uses Lightricks' Clean Plate
 IC-LoRA to remove every person and vehicle (and their shadows) by prompt, the matte limiting where it is used. Matte grow /
 feather, optional notes about what is behind the object, Input Colour from the clip's tag on Flame 2026.1+.
+
+**0.2.7:** **clean first frame** (Qwen / FLUX) checked for leftover patch colour before LTX fills from it (a failed try is retried with the colour the frame has least of; after three, LTX fills without a clean frame); **MiniMax-Remover removed** (CC-BY-NC) - Method = the four LTX modes, a setup saved with MiniMax loads as Clean Plate. engine sync (Face UV's Flow Assist / Texture Lock update remembered, "step k of N" status, LTX after SeedVR2 on the Mac, Object Removal's clean frame checked for leftover patch colour; MiniMax-Remover / VDA Large / the colour-grade LoRA refused with a clear message) and hooks 1.9 - nothing else changes in this node.
 
 **0.2.6:** **Edit Prompt...** (the notes in your text editor, no length limit - Flame's field caps what can be typed; saved text becomes the prompt at Generate), cloud rendering fix.
 
@@ -790,8 +827,8 @@ feather, optional notes about what is behind the object, Input Colour from the c
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `ObjectRemovalNative-Tester-0.2.6.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
-| Linux | `ObjectRemovalNative-Linux-0.2.6.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+| macOS | `ObjectRemovalNative-Tester-0.2.7.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `ObjectRemovalNative-Linux-0.2.7.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
 
 Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus the In/Outpainting and Clean Plate IC-LoRAs
 and the Gemma-4 12B text encoder for the prompt (26 GB; Matte LTX Native does not install it) — all gated on Hugging Face;
@@ -800,16 +837,21 @@ files Background Native already downloaded are reused.
 ### Models and licences
 - LTX-2.5, the In/Outpainting (LTX-2.3) and Clean Plate IC-LoRAs — Lightricks LTX-2 Community License (gated).
 - Qwen-Image-Edit-2511 / FLUX.2 Klein (optional, via Background Native) — Apache-2.0.
-- The ComfyUI version's MiniMax-Remover and ProPainter are non-commercial and are not part of the public build.
+- The ComfyUI version's MiniMax-Remover (CC-BY-NC) and ProPainter (S-Lab, non-commercial) are not part of this build.
 
 ## Face UV Native
 
-Automatic face track to a UV pass: a face detector (RetinaFace or BlazeFace) finds the face on every frame and MediaPipe's
-478-point face mesh is fitted to it — or the **FLAME** head model (ears, neck, scalp; identity solved once over the clip,
-expression and pose per frame). Outputs a **UV pass** (R = U, G = V, alpha = face matte), a face matte, or the plate
-**unwrapped** into UV space: paint once on the unwrap and wrap it back with Flame's UV tools so it follows the skin.
-Optional **BootsTAPIR** dense-track refine nudges the mesh onto tracked skin points between the landmarks. Track once —
-the mesh per frame is stored with the node and the passes are drawn at plate resolution, instantly.
+Automatic face track to a UV pass: BlazeFace finds the face on every frame (on tiles, so small faces too) and the head is fitted
+to it — **Head Dense** (RealDenseFace places every one of the 5023 FLAME head vertices in the frame with its depth: the most
+accurate, whole head with ears, neck and scalp), **Head** (FLAME fitted to MediaPipe's 478 landmarks) or **Face** (MediaPipe's
+468-point surface). One head solve over the whole shot through the lens (solved, a focal length, or Camera Track's); dense skin
+tracks (BootsTAPIR / TAPNext++), optical flow (**Flow Assist**) and the texture lock hold the mesh to the skin; **Auto Occlusion**
+keeps hair, hands and glasses out. Outputs a **UV pass** (R = U, G = V, alpha = face matte), a face matte, the plate **unwrapped**
+into UV space, or the **paint wrapped back over the plate** (Paint page: hold frames, Best View, Morph Content, Difference paint,
+Lock to Plate). **Pins**, **Snap** (landmarks / features / whole mesh) and **Re-solve with Pins** correct a frame and carry it
+through the head. Track once — the mesh per frame is stored with the node and the passes are drawn at plate resolution, instantly.
+
+**0.3.1:** the whole node, nothing in it that cannot be used on commercial work: Mesh = **Head Dense** (RealDenseFace, MIT, built with DINOv3 - half the error of Head; 905 MB downloaded once), **Whole-Shot Solve**, **Lens** (solve / focal length / from Camera Track), **Re-solve with Pins**, accurate **Snap** (Snap Sets = Landmarks / Pins on features / Whole mesh - only moves on real drift, so pressing it twice changes nothing; **Landmarks + Re-solve**; Show Landmarks), optional **Sapiens2** landmarks (Meta, gated: the installer asks and downloads with your own login - half MediaPipe's jitter), the **Paint page** (texture wrap with hold frames, Best View, **Morph Content**, Difference paint, Lock to Plate), **Flow Assist** with the texture lock - **Flow Assist (%) / Texture Lock (%)** keyframable and **Auto Off on Turns** (the lock fades out where the head turns more than 5 deg from the reference frame), **Auto Occlusion** + an Occlusion input, TAPNext++ in Dense Track Refine, Status reads "step k of N", the post-render pass no longer repeats. BlazeFace (on tiles) is the only detector; RetinaFace and CoTracker3 are gone.
 
 **0.2.9:** engine sync - cloud rendering fix (a finished Serverless job could lose its result), Motion Vectors' ST maps per Reference Frame, Background's Nano Banana fix - nothing else changes.
 
@@ -835,18 +877,24 @@ the mesh per frame is stored with the node and the passes are drawn at plate res
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `FaceUVNative-Tester-0.2.9.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
-| Linux | `FaceUVNative-Linux-0.2.9.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, Flame 2027, **a Higgins Post engine kit installed** |
+| macOS | `FaceUVNative-Tester-0.3.1.zip` | Apple Silicon Mac, 16 GB minimum, Flame 2026.1/2027, **a Higgins Post engine kit installed** (Depth Native is the lightest) |
+| Linux | `FaceUVNative-Linux-0.3.1.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, Flame 2027, **a Higgins Post engine kit installed** |
 
-The face models (RetinaFace, BlazeFace, MediaPipe mesh) and FLAME 2023 Open ship in the kit; the installer adds uniface and
-ONNX Runtime to the engine's Python and downloads the BootsTAPIR checkpoint (200 MB) from Google DeepMind.
+The face models (BlazeFace, MediaPipe mesh and segmenter, SEA-RAFT) and FLAME 2023 Open ship in the kit; the installer adds a
+few small Python packages and downloads the BootsTAPIR checkpoint (200 MB, Google DeepMind) and RealDenseFace (905 MB, Hugging
+Face, no account needed). It then offers the optional **Sapiens2** landmarks (Meta, 1.7 GB, gated under the Sapiens2 License:
+accept it on the model page and log in with your own Hugging Face token; without it the node uses MediaPipe's landmarks).
 
 ### Models and licences
-- uniface and the RetinaFace weights — MIT; MediaPipe Face Landmarker and BlazeFace — Google, Apache-2.0.
+- uniface (code) — MIT; MediaPipe Face Landmarker, BlazeFace and the multi-class selfie segmenter — Google, Apache-2.0.
+- RealDenseFace (code and weights) — Li et al., MIT; built with DINOv3, whose backbone is distributed under the DINOv3 License
+  (commercial use allowed, no military use; the licence text is installed next to the engine).
+- SEA-RAFT — Princeton, BSD-3-Clause; TAPNext++ — Google DeepMind, Apache-2.0 (fetched on first use, pinned).
+- Sapiens2 pose 0.4B (optional) — Meta, Sapiens2 License (gated; not in the kit, downloaded under your own login).
 - FLAME 2023 Open — MPI for Intelligent Systems, CC BY 4.0 (Li, Bolkart, Black, Li, Romero, *Learning a model of facial
   shape and expression from 4D scans*, SIGGRAPH Asia 2017); FLAME / MediaPipe correspondence from SMIRK — MIT.
 - BootsTAPIR — Google DeepMind, Apache-2.0.
-- SCRFD (InsightFace research weights) and CoTracker3 (CC BY-NC) are not part of the public build.
+- RetinaFace (trained on WIDER FACE, a research-only data set), SCRFD and CoTracker3 (CC BY-NC) are gone from this build.
 
 ## UV Wrap Native
 
