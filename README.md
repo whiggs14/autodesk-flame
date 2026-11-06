@@ -95,6 +95,15 @@ No ComfyUI, no shared folders, no cloud.
 > Every engine kit: the engine fixes and **hooks 1.9** (step text in the Render Monitor, no repeating post-render bar). Update with
 > `bash hp-update.sh` or the zips below.
 
+> **6 Nov - new node: Extend Native 0.2 (outpainting):** put the plate on the bigger canvas with a Resize (black borders), press
+> Extend, and **LTX-2.5 with the In/Outpainting IC-LoRA** paints the scene into the new area, consistent over time, the plate inside
+> untouched. New Area = **Auto** (the black / transparent borders), a **matte** or typed **Borders**; a **New Area preview** output
+> shows what will be painted before a render; first frame from **Qwen-Image-Edit / FLUX.2 Klein** or **your own painted first frame**
+> on the Back socket; **Fill from Shot** uses what other frames of the shot saw in the new area (a pan, a dolly) - as guidance or
+> kept as is; a **Detail Pass** (SeedVR2) for the painted band at 4K. Needs Matte LTX Native's engine; the In/Outpainting LoRA and
+> the Gemma text encoder are downloaded under your own Hugging Face login (shared with Object Removal / Background). Its installer
+> brings **hooks 1.10** (the node refreshes itself when a render is done). `bash hp-update.sh --only extend`, or the zips below.
+
 ## Install or update everything in one go
 
 **macOS:** download [`Higgins Post Updater.command`](../../raw/main/Higgins%20Post%20Updater.command), double-click it (right-click > Open the first time). It asks GitHub for the latest release of every plugin, shows what you have against what is published, and installs or updates what you pick - each plugin's own installer runs, so the shared engine and models are handled the same way as a manual install.
@@ -838,6 +847,57 @@ files Background Native already downloaded are reused.
 - LTX-2.5, the In/Outpainting (LTX-2.3) and Clean Plate IC-LoRAs — Lightricks LTX-2 Community License (gated).
 - Qwen-Image-Edit-2511 / FLUX.2 Klein (optional, via Background Native) — Apache-2.0.
 - The ComfyUI version's MiniMax-Remover (CC-BY-NC) and ProPainter (S-Lab, non-commercial) are not part of this build.
+
+## Extend Native
+
+Extends a shot beyond its framing (outpainting). Flame cannot change a node's resolution, so first put the plate on the final
+canvas - a Resize (or Action) that places it inside the bigger frame with black borders: 1920x1080 inside 2560x1080 for a
+wider frame, inside 1920x1440 for a taller one, or a 16:9 plate inside 9:16 for the vertical cut. Extend Native finds the
+**new area** and **LTX-2.5 with the In/Outpainting IC-LoRA** paints the scene into it, consistent over time; the plate inside is
+untouched. Same run folders, Follow Duplicates, Setup page and renderer as Object Removal Native.
+
+- **New Area:** **Auto** (the black or transparent border rows and columns around the plate on the first frame - what a Resize
+  leaves; one rectangle for every frame, Status says what it found), the **Matte socket** (white = paint here: a moving or
+  free-form new area) or typed **Borders** (px). Flame's Resize blends the plate's outermost pixel row with the border; Auto leaves
+  that row to the new area and the final blend reaches a few pixels into the plate, so there is no dark line at the seam.
+- **Output = New Area preview (no render):** the plate with the new area tinted orange and the Edge Overlap band blue, alpha = the
+  new area; Status reads the borders in pixels. Switch back to Extended to see a result.
+- **Method:** Extend (LTX outpainting); Extend with a first frame from **Qwen-Image-Edit** or **FLUX.2 Klein** (needs Background
+  Native's models); **Extend from your first frame (Back socket)** - paint or comp the extension yourself on the first frame of
+  the range (a set still, a wider take, Paint), connect that full-canvas frame to the Back socket, and LTX carries it through the
+  shot. The set stays the set.
+- **Fill from Shot:** **Guide the model** or **Keep what the shot saw** - on a pan or a dolly the picture beyond the frame edge was
+  in frame a moment earlier or later; frame-to-frame tracking (exact for a pan / tilt / zoom, approximate with parallax, and
+  checked so that flowing water or foliage never passes as camera motion) warps those frames in. Guide: LTX paints over it but
+  follows it. Keep: those pixels are kept at full resolution and only what no frame showed is painted. A static camera sees
+  nothing extra and just paints.
+- **Detail Pass:** the new area is painted at Work Res (1280 px long side) and resized up to the plate, so at 4K it is softer than
+  the plate - **SeedVR2 to 2x Work Res** or **to plate resolution** runs Upscale Native's model on the painted video before the
+  composite (as long as an Upscale of the shot at full; needs Upscale Native installed). The plate is never touched.
+- Edge Overlap / Edge Softness, optional notes about what continues beyond the frame (Edit Prompt...), Strength, Seed, Work Res,
+  Input Colour from the clip's tag on Flame 2026.1+; output as Extended or Extended + the new area in the alpha for your own comp.
+
+**0.2:** New Area preview, first frame from the Back socket, Detail Pass, Fill from Shot, the seam fix (Flame's filtered plate
+edge), hooks 1.10 (auto-refresh knows the node). **0.1** (5 Nov, unreleased): first build - Auto / matte / Borders new area,
+mirrored-plate conditioning (a grey fill left a visible band at the seam), the new area in the alpha.
+
+**Download:** see the [Releases](../../releases) page.
+
+| Build | File | Requirements |
+|---|---|---|
+| macOS | `ExtendNative-Tester-0.2.zip` | Apple Silicon Mac, 64 GB recommended, Flame 2026.1/2027, **Matte LTX Native 0.8+ installed** |
+| Linux | `ExtendNative-Linux-0.2.zip` | Rocky Linux 8.10 / 9.x, NVIDIA driver 560+, 24 GB VRAM, Flame 2027, **Matte LTX Native 0.8+ installed** |
+
+Uses the LTX-2.5 model and Python engine that Matte LTX Native installs, plus the In/Outpainting IC-LoRA and the Gemma-4 12B
+text encoder for the prompt (26 GB; Matte LTX Native does not install it) - gated on Hugging Face; files Object Removal or
+Background Native already downloaded are reused. Measured: a 1024x576 plate in 1280x720, 9 frames, about 2.5 minutes on a Mac
+Studio M2 Ultra; a 4K frame pair about 2 minutes.
+
+### Models and licences
+- LTX-2.5 and the In/Outpainting (LTX-2.3) IC-LoRA - Lightricks LTX-2 Community License (gated).
+- Qwen-Image-Edit-2511 / FLUX.2 Klein (optional, via Background Native) - Apache-2.0; SeedVR2 3B (optional Detail Pass, via Upscale
+  Native) - ByteDance Seed, Apache-2.0.
+- Fill from Shot is plain OpenCV (SIFT, Apache-2.0) - nothing to download.
 
 ## Face UV Native
 
