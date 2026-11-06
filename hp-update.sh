@@ -276,6 +276,7 @@ case "$MODE" in
     [ "$YES" = 1 ] || { read -r -p "Answer the installers' questions with their defaults automatically? [Y/n] " a < /dev/tty; [ "$a" = n ] || [ "$a" = N ] || YES=1; };;
 esac
 [ -n "${SEL// /}" ] || { bold "Nothing to do - everything is up to date."; exit 0; }
+case " $SEL " in *" MatteLTXNative "*) SEL="MatteLTXNative $(echo "$SEL" | tr ' ' '\n' | grep -v '^MatteLTXNative$' | tr '\n' ' ')";; esac   # first: it brings the engine the other engine kits need
 case " $SEL " in *" FlameHooks "*) SEL="$(echo "$SEL" | tr ' ' '\n' | grep -v '^FlameHooks$' | tr '\n' ' ') FlameHooks";; esac   # last: the engine kits carry hooks of their own
 echo; bold "Installing:$SEL"; echo
 sudo_keepalive
