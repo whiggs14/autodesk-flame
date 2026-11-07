@@ -111,6 +111,13 @@ No ComfyUI, no shared folders, no cloud.
 > on the Mac GPU "gather" flake, and **hooks 1.10**. `hp-update.sh` now installs **Matte LTX Native first** when it is among the
 > picks (the other engine kits need its engine), then the rest, the hooks last. `bash hp-update.sh` updates everything.
 
+> **7 Nov - Screen Comp Native 0.1.2 (a CRT session):** pins from the screen's matte, the Front matte as **the screen** (a curved
+> CRT keeps its shape), **Move Picture** under the glass, a **Graphics** input (Input4: bug, lower third, caption - over the picture
+> or pinned to the display, Add without a matte, its own zoom / offset / rotate), **Picture Detail** (a 640 x 480 CRT with a
+> 1280 x 960 picture), **Structure Scale**, a proper Mitchell resample of the content into the raster (clean and crisp instead of
+> grainy and aliased), Interlace split from Flicker, Bloom Threshold, Edge Softness that feathers only the matte, Backlight
+> Falloff on every type, "Same as the plate" content colour, Screen Type that keeps your edits. `bash hp-update.sh --only screencomp`.
+
 ## Install or update everything in one go
 
 **macOS:** download [`Higgins Post Updater.command`](../../raw/main/Higgins%20Post%20Updater.command), double-click it (right-click > Open the first time). It asks GitHub for the latest release of every plugin, shows what you have against what is published, and installs or updates what you pick - each plugin's own installer runs, so the shared engine and models are handled the same way as a manual install.
@@ -602,7 +609,8 @@ then click a light to set where the glow starts; Match Light / Match Position fi
 ## Screen Comp Native
 
 Screen replacement inside Flame (Metal on the Mac with Use GPU, all CPU cores otherwise - no engine). Front = the plate (its
-matte = hands, a mug - whatever is in front of the screen), Back = the content, Input3 = an optional reflection plate.
+matte = what is in front of the screen, or the screen itself), Back = the content, Input3 = an optional reflection plate, Input4 =
+graphics over the picture.
 **Corner Pin** in the node (drag the four corners and the bezel in the viewer, or load the corners a Camera Track Native
 card / points export wrote) or **Tracked in Action** (the Back already placed by Action, its matte = the screen). Display
 models **LCD / OLED / CRT / LED Wall / Phone**: the pixel structure and the moire come out of the sampling (RGB stripe,
@@ -613,14 +621,16 @@ corner radius, Power On / Off looks by era, Trim Content Bars. Outputs: Result /
 Emission Only. First tester build.
 
 
+**0.1.2:** **Pins from Front Matte** (this frame, or every frame of a tracked matte) and **Front Matte Is** = the occluder / **the screen** (the picture cut to the matte: a curved CRT keeps its shape) / ignored. **Move Picture** (Offset, Scale, Rotate) slides the picture under the glass; the pins stay the glass with its corners, bezel, feather and matte. **Graphics input (Input4)**: a channel bug, lower third or caption over the picture or pinned to the display, **Blend** Auto / Over / Add / Luma (a graphic on black needs no matte), Opacity, and its own **Move Graphics** (Zoom, Offset, Rotate). **Picture Detail** renders the picture at x1-x4 the display's pixel count while grille, scanlines and noise keep the display's pitch; **Structure Scale** draws the grille at x1-x8 the pixel as a look - at x1 the structure fades where the camera cannot resolve it instead of beating as moire, and the camera pixel is always integrated with the structure on. The content is **resampled into the raster with a Mitchell area filter**: a 4K clip on a 640 x 480 CRT is clean and crisp. **Interlace** split from Flicker, **Bloom Threshold**, Edge Softness feathers only the matte, Backlight Falloff / Corners on every type, Content Is **Same as the plate**, Rolling Bar at the clip's frame rate, Screen Type keeps edited settings (Apply Type Preset resets).
+
 **0.1.1:** fixes (dragging after Load Corners, an unreadable Front, point-track bounds, a degenerate Metal projection); the CPU blurs 3-8x faster on Linux; anamorphic plates.
 
 **Download:** see the [Releases](../../releases) page.
 
 | Build | File | Requirements |
 |---|---|---|
-| macOS | `ScreenCompNative-Tester-0.1.1.zip` | Apple Silicon Mac, Flame 2026/2027 (GPU: Metal) |
-| Linux | `ScreenCompNative-Linux-0.1.1.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 (CPU) |
+| macOS | `ScreenCompNative-Tester-0.1.2.zip` | Apple Silicon Mac, Flame 2026/2027 (GPU: Metal) |
+| Linux | `ScreenCompNative-Linux-0.1.2.zip` | Rocky Linux 8.10 / 9.x, Flame 2027 (CPU) |
 
 ## Regrain Native
 
