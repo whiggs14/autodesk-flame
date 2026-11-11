@@ -196,7 +196,7 @@ while read -r kit tag; do echo "  ($kit: the build made for Flame $tag)"; done <
 echo
 
 install_kit() {   # kit version url
-  local kit="$1" ver="$2" url="$3" zip="$WORK/$kit-$SUFFIX-$ver.zip" dir
+  local kit="$1" ver="$2" url="$3"; local zip="$WORK/$kit-$SUFFIX-$ver.zip" dir
   bold ">>> $kit $ver"
   curl -fL --progress-bar "$url" -o "$zip" || { echo "download failed: $url"; return 1; }
   rm -rf "$WORK/$kit"; mkdir -p "$WORK/$kit"; unzip -q "$zip" -d "$WORK/$kit" || { echo "unzip failed"; return 1; }
@@ -225,7 +225,7 @@ install_kit() {   # kit version url
   if [ -d "$PLUGIN_DIR/$kit.ofx.bundle" ]; then record_version "$kit" "$ver"; echo "    $kit $ver installed."; else echo "    $kit: the bundle is not in $PLUGIN_DIR after the install - check the installer's output"; return 1; fi
 }
 uninstall_kit() {
-  local kit="$1" b="$PLUGIN_DIR/$kit.ofx.bundle"
+  local kit="$1"; local b="$PLUGIN_DIR/$kit.ofx.bundle"   # two locals: one statement expands $kit before it is set
   if [ -d "$b" ]; then sudo rm -rf "$b" && echo "    removed $b"; else echo "    $kit was not installed"; fi
   record_version "$kit" ""
 }
